@@ -11,8 +11,8 @@
 <meta property="og:url" content="http://hanhailong.com/2015/09/20/Android-通过-Keep注解来防止类、构造函数、方法、变量等混淆/index.html">
 <meta property="og:site_name" content="韩海龙的博客">
 <meta property="og:description" content="我们在开发Android应用的时候，经常遇到这样一种问题：那就是防止proguard混淆我们特定的变量、方法等等。">
-<meta property="og:image" content="http://d.pcs.baidu.com/thumbnail/ecbdc2ad0bad738a643e24a5cbdff610?fid=2366937272-250528-545121550524912&time=1442754000&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-gQ27s8g3n8b%2BPLAfViNi%2BPTqdSg%3D&rt=sh&expires=2h&r=189039303&sharesign=unknown&size=c710_u500&quality=100">
-<meta property="og:updated_time" content="2015-09-20T13:28:26.000Z">
+<meta property="og:image" content="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/android_keep.png?raw=true">
+<meta property="og:updated_time" content="2015-09-23T22:37:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android-通过@Keep注解来防止类、构造函数、方法、变量等混淆">
 <meta name="twitter:description" content="我们在开发Android应用的时候，经常遇到这样一种问题：那就是防止proguard混淆我们特定的变量、方法等等。">
@@ -254,7 +254,7 @@ public int <span class="function">getAge</span>(){}
 </span>-<span class="ruby">keepclassmembers <span class="class"><span class="keyword">class</span> * {</span>
 </span>    @android.support.annotation.Keep *;
 }
-</code></pre><p>加入后如下：<br><img src="http://d.pcs.baidu.com/thumbnail/ecbdc2ad0bad738a643e24a5cbdff610?fid=2366937272-250528-545121550524912&amp;time=1442754000&amp;sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-gQ27s8g3n8b%2BPLAfViNi%2BPTqdSg%3D&amp;rt=sh&amp;expires=2h&amp;r=189039303&amp;sharesign=unknown&amp;size=c710_u500&amp;quality=100" alt="image"></p>
+</code></pre><p>加入后如下：<br><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/android_keep.png?raw=true" alt="image"></p>
 <p>这样就开启了，重新打Realease包发现程序可以正常运行了！</p>
 
       
