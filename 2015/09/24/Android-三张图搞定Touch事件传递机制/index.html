@@ -3,19 +3,21 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Hexo主题-在博客左上角添加ForkMeOnGithub功能 | 韩海龙的博客</title>
+  <title>Android-三张图搞定Touch事件传递机制 | 韩海龙的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="群里有同学问我博客左上角的Fork me on Github是怎么实现的，我这里简单介绍一下，其实实现原理很简单，因为我这里用的yilia主题，你只要改下themes/yilia/layout/_partial/left-col.ejs文件下的&amp;lt;div class=&amp;quot;overlay&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;，在这个标签里面添加下面的代码，具体代码请看详情：">
+  <meta name="description" content="之前看了很多关于Android事件Touch传递机制的文章，感觉还是老外讲的最清楚。原版PDF地址：Mastering the Android Touch System，github的demo地址：demo">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo主题-在博客左上角添加ForkMeOnGithub功能">
-<meta property="og:url" content="http://hanhailong.com/2015/09/17/Hexo主题-在博客左上角添加ForkMeOnGithub功能/index.html">
+<meta property="og:title" content="Android-三张图搞定Touch事件传递机制">
+<meta property="og:url" content="http://hanhailong.com/2015/09/24/Android-三张图搞定Touch事件传递机制/index.html">
 <meta property="og:site_name" content="韩海龙的博客">
-<meta property="og:description" content="群里有同学问我博客左上角的Fork me on Github是怎么实现的，我这里简单介绍一下，其实实现原理很简单，因为我这里用的yilia主题，你只要改下themes/yilia/layout/_partial/left-col.ejs文件下的&amp;lt;div class=&amp;quot;overlay&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;，在这个标签里面添加下面的代码，具体代码请看详情：">
-<meta property="og:image" content="http://d.pcs.baidu.com/thumbnail/ed5a676c5d4c3c3ea9c571ba5747dc6b?fid=2366937272-250528-753169378554083&time=1442458800&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-qtKptHjSorEN7d8g3MJs%2BIYPvGA%3D&rt=sh&expires=2h&r=829908147&sharesign=unknown&size=c710_u500&quality=100">
-<meta property="og:updated_time" content="2015-09-17T03:52:19.000Z">
+<meta property="og:description" content="之前看了很多关于Android事件Touch传递机制的文章，感觉还是老外讲的最清楚。原版PDF地址：Mastering the Android Touch System，github的demo地址：demo">
+<meta property="og:image" content="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/view_touch_ignorant.png?raw=true">
+<meta property="og:image" content="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/view_touch_interested.png?raw=true">
+<meta property="og:image" content="https://raw.githubusercontent.com/hanhailong/AndroidStudyResources/master/screenshot/view_touch_intercept.png">
+<meta property="og:updated_time" content="2015-09-23T22:33:28.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo主题-在博客左上角添加ForkMeOnGithub功能">
-<meta name="twitter:description" content="群里有同学问我博客左上角的Fork me on Github是怎么实现的，我这里简单介绍一下，其实实现原理很简单，因为我这里用的yilia主题，你只要改下themes/yilia/layout/_partial/left-col.ejs文件下的&amp;lt;div class=&amp;quot;overlay&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;，在这个标签里面添加下面的代码，具体代码请看详情：">
+<meta name="twitter:title" content="Android-三张图搞定Touch事件传递机制">
+<meta name="twitter:description" content="之前看了很多关于Android事件Touch传递机制的文章，感觉还是老外讲的最清楚。原版PDF地址：Mastering the Android Touch System，github的demo地址：demo">
   
     <link rel="alternative" href="/atom.xml" title="韩海龙的博客" type="application/atom+xml">
   
@@ -178,11 +180,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-Hexo主题-在博客左上角添加ForkMeOnGithub功能" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Android-三张图搞定Touch事件传递机制" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/09/17/Hexo主题-在博客左上角添加ForkMeOnGithub功能/" class="article-date">
-  	<time datetime="2015-09-17T03:28:31.000Z" itemprop="datePublished">2015-09-17</time>
+      <a href="/2015/09/24/Android-三张图搞定Touch事件传递机制/" class="article-date">
+  	<time datetime="2015-09-23T22:27:43.000Z" itemprop="datePublished">2015-09-24</time>
 </a>
     </div>
   
@@ -195,7 +197,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Hexo主题-在博客左上角添加ForkMeOnGithub功能
+      Android-三张图搞定Touch事件传递机制
     </h1>
   
 
@@ -204,7 +206,7 @@
       <div class="article-info article-info-post">
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo主题/">Hexo主题</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
 	</div>
 
         
@@ -215,12 +217,29 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>群里有同学问我博客左上角的Fork me on Github是怎么实现的，我这里简单介绍一下，其实实现原理很简单，因为我这里用的yilia主题，你只要改下themes/yilia/layout/_partial/left-col.ejs文件下的<code>&lt;div class=&quot;overlay&quot;&gt;&lt;/div&gt;</code>，在这个<div>标签里面添加下面的代码，具体代码请看详情：</div></p>
+        <p>之前看了很多关于Android事件Touch传递机制的文章，感觉还是老外讲的最清楚。原版PDF地址：<a href="http://wugengxin.cn/download/pdf/android/PRE_andevcon_mastering-the-android-touch-system.pdf" target="_blank" rel="external">Mastering the Android Touch System</a>，github的demo地址：<a href="https://github.com/devunwired/custom-touch-examples" target="_blank" rel="external">demo</a></p>
 <a id="more"></a>
-<p><code>&lt;a href=&quot;https://github.com/hanhailong&quot; target=&quot;_Blank&quot;&gt;&lt;img style=&quot;position: absolute; top: 0; left: 0; border: 0;&quot; src=&quot;http://img01.taobaocdn.com/imgextra/i1/102975691/TB2YWCacpXXXXaCXXXXXXXXXXXX-102975691.png&quot; alt=&quot;Fork me on GitHub&quot; data-canonical-src=&quot;http://img01.taobaocdn.com/imgextra/i1/102975691/TB2YWCacpXXXXaCXXXXXXXXXXXX-102975691.png&quot;&gt;&lt;/a&gt;</code></p>
-<p>其中href中的链接换成你自己的github链接就可以了，这样就实现了！</p>
+<p>上图之前先讲下Android事件的基础知识：</p>
+<ol>
+<li>所有的Touch事件都封装到MotionEvent里面</li>
+<li>事件处理包括三种情况，分别为：传递—-dispatchTouchEvent()函数、拦截——onInterceptTouchEvent()函数、消费—-onTouchEvent()函数和OnTouchListener </li>
+<li>事件类型分为ACTION_DOWN, ACTION_UP, ACTION_MOVE, ACTION_POINTER_DOWN, ACTION_POINTER_UP, ACTION_CANCEL等，每个事件都是以ACTION_DOWN开始ACTION_UP结束</li>
+</ol>
+<p>Android事件传递流程：</p>
+<ol>
+<li>事件都是从Activity.dispatchTouchEvent()开始传递</li>
+<li>事件由父View传递给子View，ViewGroup可以通过onInterceptTouchEvent()方法对事件拦截，停止其向子view传递</li>
+<li>如果事件从上往下传递过程中一直没有被停止，且最底层子View没有消费事件，事件会反向往上传递，这时父View(ViewGroup)可以进行消费，如果还是没有被消费的话，最后会到Activity的onTouchEvent()函数。</li>
+<li>如果View没有对ACTION_DOWN进行消费，之后的其他事件不会传递过来，也就是说ACTION_DOWN必须返回true，之后的事件才会传递进来</li>
+<li>OnTouchListener优先于onTouchEvent()对事件进行消费</li>
+</ol>
+<hr>
 <p>效果图如下：</p>
-<p><img src="http://d.pcs.baidu.com/thumbnail/ed5a676c5d4c3c3ea9c571ba5747dc6b?fid=2366937272-250528-753169378554083&amp;time=1442458800&amp;sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-qtKptHjSorEN7d8g3MJs%2BIYPvGA%3D&amp;rt=sh&amp;expires=2h&amp;r=829908147&amp;sharesign=unknown&amp;size=c710_u500&amp;quality=100" alt="image"></p>
+<ol>
+<li>View不处理事件流程图（View没有消费事件）<br><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/view_touch_ignorant.png?raw=true" alt="Touch Ignore"></li>
+<li>View处理事件<br><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/view_touch_interested.png?raw=true" alt="Touch interest"></li>
+<li>事件拦截<br><img src="https://raw.githubusercontent.com/hanhailong/AndroidStudyResources/master/screenshot/view_touch_intercept.png" alt="Touch Intercept"></li>
+</ol>
 
       
     </div>
@@ -230,18 +249,9 @@
     
 <nav id="article-nav">
   
-    <a href="/2015/09/18/alfi-一个Android-Library-Finder/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          alfi-一个Android Library Finder
-        
-      </div>
-    </a>
   
-  
-    <a href="/2015/09/17/Hexo主题-yilia和next/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Hexo主题-yilia和next</div>
+    <a href="/2015/09/20/Android-通过-Keep注解来防止类、构造函数、方法、变量等混淆/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Android-通过@Keep注解来防止类、构造函数、方法、变量等混淆</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -270,7 +280,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="Hexo主题-在博客左上角添加ForkMeOnGithub功能" data-title="Hexo主题-在博客左上角添加ForkMeOnGithub功能" data-url="http://hanhailong.com/2015/09/17/Hexo主题-在博客左上角添加ForkMeOnGithub功能/"></div>
+	<div class="ds-thread" data-thread-key="Android-三张图搞定Touch事件传递机制" data-title="Android-三张图搞定Touch事件传递机制" data-url="http://hanhailong.com/2015/09/24/Android-三张图搞定Touch事件传递机制/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
