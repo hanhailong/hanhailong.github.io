@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>IOS-通过自定义iCarousel来高仿土巴兔选择装修风格效果(中间选中项放大) | 韩海龙的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="这是Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果的姐妹篇，上篇通过自定义ViewPager来实现了选中的一项居中并放大的效果，这里通过iCarousel来实现这个效果，iCarousel是我最喜欢的一个IOS开源库之一，我几乎每个IOS项目都用到了它，真的是非常的赞。好了，废话不多说，马上进入主题，在开始之前，先看下我们高仿后的效果图：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IOS-通过自定义iCarousel来高仿土巴兔选择装修风格效果(中间选中项放大)">
+<meta property="og:url" content="http://hanhailong.com/2015/09/28/IOS-通过自定义iCarousel来高仿土巴兔选择装修风格效果-中间选中项放大/index.html">
+<meta property="og:site_name" content="韩海龙的博客">
+<meta property="og:description" content="这是Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果的姐妹篇，上篇通过自定义ViewPager来实现了选中的一项居中并放大的效果，这里通过iCarousel来实现这个效果，iCarousel是我最喜欢的一个IOS开源库之一，我几乎每个IOS项目都用到了它，真的是非常的赞。好了，废话不多说，马上进入主题，在开始之前，先看下我们高仿后的效果图：">
+<meta property="og:image" content="https://github.com/hanhailong/tubatu-iCarousel/raw/master/screenshot/tubatu-viewpager-fang-ios.gif?raw=true">
+<meta property="og:updated_time" content="2015-09-28T11:25:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="IOS-通过自定义iCarousel来高仿土巴兔选择装修风格效果(中间选中项放大)">
+<meta name="twitter:description" content="这是Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果的姐妹篇，上篇通过自定义ViewPager来实现了选中的一项居中并放大的效果，这里通过iCarousel来实现这个效果，iCarousel是我最喜欢的一个IOS开源库之一，我几乎每个IOS项目都用到了它，真的是非常的赞。好了，废话不多说，马上进入主题，在开始之前，先看下我们高仿后的效果图：">
+  
+    <link rel="alternative" href="/atom.xml" title="韩海龙的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="overlay">
+	<a href="https://github.com/hanhailong" target="_Blank"><img style="position: absolute; top: 0; left: 0; border: 0;" src="http://img01.taobaocdn.com/imgextra/i1/102975691/TB2YWCacpXXXXaCXXXXXXXXXXXX-102975691.png" alt="Fork me on GitHub" data-canonical-src="http://img01.taobaocdn.com/imgextra/i1/102975691/TB2YWCacpXXXXaCXXXXXXXXXXXX-102975691.png"></a>
+</div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars2.githubusercontent.com/u/4241807?v=3&amp;s=460" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">韩海龙</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">学习总结 思考感悟 知识管理</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/tags/随笔">随笔</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/hanhailong" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/u/2824905385" title="weibo">weibo</a>
+					        
+								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/han-hai-long-16" title="zhihu">zhihu</a>
+					        
+								<a class="twitter" target="_blank" href="http://blog.csdn.net/hanhailong726188" title="twitter">twitter</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android工具/" style="font-size: 10px;">Android工具</a> <a href="/tags/Hexo主题/" style="font-size: 15px;">Hexo主题</a> <a href="/tags/IOS/" style="font-size: 10px;">IOS</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">12年加入到移动开发领域，从事Android、IOS手机App研发工作，15年加入极客学院，开始新的征程... QQ:826605224 邮箱:hanhailong.cool@163.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">韩海龙</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="https://avatars2.githubusercontent.com/u/4241807?v=3&amp;s=460" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">韩海龙</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">学习总结 思考感悟 知识管理</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/tags/随笔">随笔</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/hanhailong" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/u/2824905385" title="weibo">weibo</a>
+			        
+						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/han-hai-long-16" title="zhihu">zhihu</a>
+			        
+						<a class="twitter" target="_blank" href="http://blog.csdn.net/hanhailong726188" title="twitter">twitter</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-IOS-通过自定义iCarousel来高仿土巴兔选择装修风格效果-中间选中项放大" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/09/28/IOS-通过自定义iCarousel来高仿土巴兔选择装修风格效果-中间选中项放大/" class="article-date">
+  	<time datetime="2015-09-28T10:22:33.000Z" itemprop="datePublished">2015-09-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      IOS-通过自定义iCarousel来高仿土巴兔选择装修风格效果(中间选中项放大)
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IOS/">IOS</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这是<a href="http://hanhailong.com/2015/09/27/Android-%E9%80%9A%E8%BF%87%E8%87%AA%E5%AE%9A%E4%B9%89ViewPager%E6%9D%A5%E9%AB%98%E4%BB%BF%E5%9C%9F%E5%B7%B4%E5%85%94%E9%80%89%E6%8B%A9%E8%A3%85%E4%BF%AE%E9%A3%8E%E6%A0%BC%E6%95%88%E6%9E%9C/">Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果</a>的姐妹篇，上篇通过自定义ViewPager来实现了选中的一项居中并放大的效果，这里通过<a href="https://github.com/nicklockwood/iCarousel" target="_blank" rel="external">iCarousel</a>来实现这个效果，<a href="https://github.com/nicklockwood/iCarousel" target="_blank" rel="external">iCarousel</a>是我最喜欢的一个IOS开源库之一，我几乎每个IOS项目都用到了它，真的是非常的赞。好了，废话不多说，马上进入主题，在开始之前，先看下我们高仿后的效果图：</p>
+<p><img src="https://github.com/hanhailong/tubatu-iCarousel/raw/master/screenshot/tubatu-viewpager-fang-ios.gif?raw=true" alt="image"> </p>
+<a id="more"></a>
+<p>要实现这个效果，总体难度上要比Android上轻松不少，你不需要关心点击左右边缘切换到相应的Item，iCarousel都已经帮你实现了，而且iCarousel的每个View都是支持复用。</p>
+<p><strong>总体难点就一个地方，那就是自定义iCarousel，然后设置相应的缩放动画。</strong></p>
+<p>首先，我们需要把iCarousel的type值设置成<strong>iCarouselTypeCustom</strong>，看代码</p>
+<pre><code>-(iCarousel *)iCarousel{
+    <span class="built_in">CGFloat</span> height = ScreenWidth - <span class="number">2</span> *PAGE_OFFSET;
+    <span class="keyword">if</span> (_iCarousel == <span class="literal">nil</span>) {
+        _iCarousel = [[iCarousel alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, (ScreenHeight-height)*<span class="number">0.5</span>, ScreenWidth, height)];
+        _iCarousel<span class="variable">.delegate</span> = <span class="keyword">self</span>;
+        _iCarousel<span class="variable">.dataSource</span> = <span class="keyword">self</span>;
+        _iCarousel<span class="variable">.bounces</span> = <span class="literal">NO</span>;
+        _iCarousel<span class="variable">.pagingEnabled</span> = <span class="literal">YES</span>;
+        _iCarousel<span class="variable">.type</span> = iCarouselTypeCustom;
+    }
+    <span class="keyword">return</span> _iCarousel;
+}
+</code></pre><p>然后，我们设置iCarousel两个必须的代理方法<strong>viewForItemAtIndex</strong>和<strong>numberOfItemsInCarousel</strong>，看代码：</p>
+<pre><code><span class="preprocessor">#pragma mark - iCarousel代理</span>
+-(<span class="built_in">UIView</span> *)carousel:(iCarousel *)carousel viewForItemAtIndex:(<span class="built_in">NSInteger</span>)index reusingView:(<span class="built_in">UIView</span> *)view{
+    <span class="keyword">if</span> (view == <span class="literal">nil</span>) {
+        <span class="built_in">CGFloat</span> viewWidth = ScreenWidth - <span class="number">2</span>*PAGE_OFFSET;
+        view = [[<span class="built_in">UIImageView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, viewWidth, viewWidth)];
+    }
+
+    ((<span class="built_in">UIImageView</span> *)view)<span class="variable">.image</span> = [<span class="built_in">UIImage</span> imageNamed:[<span class="keyword">self</span><span class="variable">.dataList</span> objectAtIndex:index]];
+
+    <span class="keyword">return</span> view;
+}
+
+-(<span class="built_in">NSInteger</span>)numberOfItemsInCarousel:(iCarousel *)carousel{
+    <span class="keyword">return</span> <span class="keyword">self</span><span class="variable">.dataList</span><span class="variable">.count</span>;
+}
+</code></pre><p>经过上面设置后，我们的iCarousel就加进来了，但是你会发现，加进来的iCarousel不能滑动了，这是什么鬼。。。。</p>
+<p>这是为什么呢？这是因为我们有一个非常重要的方法没有实现，这个方法是:</p>
+<pre><code><span class="pp">-<span class="params">(<span class="variable">CATransform3D</span>)</span>carousel:<span class="params">(i<span class="variable">Carousel</span> *)</span>carousel itemTransformForOffset:<span class="params">(<span class="variable">CGFloat</span>)</span>offset baseTransform:<span class="params">(<span class="variable">CATransform3D</span>)</span>transform</span>
+</code></pre><p>这个方法就是整个iCarousel的核心所在，所有的动画效果都是这个方法来实现的</p>
+<p>这里稍微讲解下iCarousel的原理：</p>
+<ol>
+<li>iCarousel不是基于UIScrollView实现的，而是直接继承UIView来实现</li>
+<li>iCarousel通过UIPanGestureRecognizer来计算和维护scrollOffset这个变量</li>
+<li>iCarousel本身并不会改变itemView的位置 而是靠修改itemView的layer.transform来实现位移和形变</li>
+</ol>
+<p>为了实现我们想要中间放大的效果，就必须重写这个方法，看下我们的代码：</p>
+<pre><code>-(CATransform3D)carousel:(iCarousel *)carousel itemTransformForOffset:(CGFloat)offset baseTransform:(CATransform3D)transform{
+    <span class="keyword">static</span> CGFloat max_sacle = <span class="number">1.0f</span>;
+    <span class="keyword">static</span> CGFloat min_scale = <span class="number">0.6f</span>;
+    <span class="keyword">if</span> (offset &lt;= <span class="number">1</span> &amp;&amp; offset &gt;= -<span class="number">1</span>) {
+        <span class="keyword">float</span> tempScale = offset &lt; <span class="number">0</span> ? <span class="number">1</span>+offset : <span class="number">1</span>-offset;
+        <span class="keyword">float</span> slope = (max_sacle - min_scale) / <span class="number">1</span>;
+
+        CGFloat scale = min_scale + slope*tempScale;
+        transform = CATransform3DScale(transform, scale, scale, <span class="number">1</span>);
+    }<span class="keyword">else</span>{
+        transform = CATransform3DScale(transform, min_scale, min_scale, <span class="number">1</span>);
+    }
+
+    <span class="keyword">return</span> CATransform3DTranslate(transform, offset * self.iCarousel.itemWidth * <span class="number">1.4</span>, <span class="number">0.0</span>, <span class="number">0.0</span>);
+}
+</code></pre><p>核心的算法和我们Android版本的是一样的，只不过这里加了这个形变，一个是Scale形变，一个是移动Translate形变。经过上面的代码就实现我们想要的结果了。</p>
+<p><strong>小结</strong></p>
+<p>总体实现来说，这个要比Android版本的要简单多了，核心代码就是改变layer.transform属性值。</p>
+<p>这也说明<a href="https://github.com/nicklockwood/iCarousel" target="_blank" rel="external">iCarousel</a>是多么优秀的一个开源库，说到这里，我个人是非常不喜欢重复造轮子的，能用最少的代码达到所需的要求是我一直以来的准则，而且很多经典的轮子库(比如iCarousel)也值得你去深入探索和学习，了解作者的想法和思路(站在巨人的肩膀)是一种非常不错的学习方法和开阔视野的途径。</p>
+<p>最后附上源码<a href="https://github.com/hanhailong/tubatu-iCarousel" target="_blank" rel="external">github</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/09/27/Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="IOS-通过自定义iCarousel来高仿土巴兔选择装修风格效果-中间选中项放大" data-title="IOS-通过自定义iCarousel来高仿土巴兔选择装修风格效果(中间选中项放大)" data-url="http://hanhailong.com/2015/09/28/IOS-通过自定义iCarousel来高仿土巴兔选择装修风格效果-中间选中项放大/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2015 韩海龙
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
