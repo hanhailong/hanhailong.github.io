@@ -5,18 +5,18 @@
   
   <title>Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果 | 韩海龙的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="最近看到有同事在用土巴兔这个app，看了里面的一些效果非常的不错，就试着模仿了一下，首先模仿的是土巴兔里面一个选择装修风格的效果，效果图如下：">
+  <meta name="description" content="最近看到有同事在用土巴兔这个app，看了里面的一些效果非常的不错，就试着模仿了一下，首先模仿的是土巴兔里面一个选择装修风格的效果，先看原版效果图如下：">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果">
 <meta property="og:url" content="http://hanhailong.com/2015/09/27/Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果/index.html">
 <meta property="og:site_name" content="韩海龙的博客">
-<meta property="og:description" content="最近看到有同事在用土巴兔这个app，看了里面的一些效果非常的不错，就试着模仿了一下，首先模仿的是土巴兔里面一个选择装修风格的效果，效果图如下：">
-<meta property="og:image" content="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tubatu-viewpager.gif?raw=true">
-<meta property="og:image" content="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tubatu-viewpager-fang.gif?raw=true">
-<meta property="og:updated_time" content="2015-09-27T15:56:44.000Z">
+<meta property="og:description" content="最近看到有同事在用土巴兔这个app，看了里面的一些效果非常的不错，就试着模仿了一下，首先模仿的是土巴兔里面一个选择装修风格的效果，先看原版效果图如下：">
+<meta property="og:image" content="http://img.blog.csdn.net/20150928093046209">
+<meta property="og:image" content="http://img.blog.csdn.net/20150928093108444">
+<meta property="og:updated_time" content="2015-09-28T01:38:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果">
-<meta name="twitter:description" content="最近看到有同事在用土巴兔这个app，看了里面的一些效果非常的不错，就试着模仿了一下，首先模仿的是土巴兔里面一个选择装修风格的效果，效果图如下：">
+<meta name="twitter:description" content="最近看到有同事在用土巴兔这个app，看了里面的一些效果非常的不错，就试着模仿了一下，首先模仿的是土巴兔里面一个选择装修风格的效果，先看原版效果图如下：">
   
     <link rel="alternative" href="/atom.xml" title="韩海龙的博客" type="application/atom+xml">
   
@@ -216,9 +216,9 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>最近看到有同事在用土巴兔这个app，看了里面的一些效果非常的不错，就试着模仿了一下，首先模仿的是土巴兔里面一个选择装修风格的效果，效果图如下：<br><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tubatu-viewpager.gif?raw=true" alt="image"></p>
+        <p>最近看到有同事在用土巴兔这个app，看了里面的一些效果非常的不错，就试着模仿了一下，首先模仿的是土巴兔里面一个选择装修风格的效果，先看原版效果图如下：<br><img src="http://img.blog.csdn.net/20150928093046209" alt="image"></p>
 <a id="more"></a>
-<p>这种效果实现的方式很多，比如HorizonalScrollView、Recyclerview(水平)、ViewPager等等，这里我使用ViewPager来高仿，为啥通过ViewPager来高仿呢，一是ViewPager提供了PageTransformer，很容易的实现切换动画效果，二是ViewPager很容易控制滑动选中的一项居中，这里先看下高仿后的效果图，效果还是很不错的：<br><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tubatu-viewpager-fang.gif?raw=true" alt="image"></p>
+<p>这种效果实现的方式很多，比如HorizonalScrollView、Recyclerview(水平)、ViewPager等等，这里我使用ViewPager来高仿，为啥通过ViewPager来高仿呢，一是ViewPager提供了PageTransformer，很容易的实现切换动画效果，二是ViewPager很容易控制滑动选中的一项居中，这里先看下高仿后的效果图，效果还是很不错的：<br><img src="http://img.blog.csdn.net/20150928093108444" alt="image"></p>
 <hr>
 <p>要实现这种效果，核心知识点有如下几个：</p>
 <ol>
