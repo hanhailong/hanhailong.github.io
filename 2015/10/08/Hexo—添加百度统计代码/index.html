@@ -23,7 +23,7 @@ baidu_tongji: true
 
 新建文件themes/yilia/layout/_partial/baidu_tongji.ejs，内容如下：
 &amp;lt;% if (theme.baidu_tong">
-<meta property="og:updated_time" content="2015-10-08T15:48:10.000Z">
+<meta property="og:updated_time" content="2015-10-08T16:05:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo—添加百度统计代码">
 <meta name="twitter:description" content="本博客采用的是Yilia主题，这里就以Yilia讲解为例，首先你要去百度统计注册账号，并获取到相关的百度统计代码：
@@ -72,7 +72,7 @@ var _hmt = _hmt || [];
 		</hgroup>
 
 		
-		<p class="header-subtitle">学习总结 思考感悟 知识管理</p>
+		<p class="header-subtitle">学习总结 思考感悟 知识管理 代码分享</p>
 		
 
 		
@@ -165,7 +165,7 @@ var _hmt = _hmt || [];
 			  <h1 class="header-author">韩海龙</h1>
 			</hgroup>
 			
-			<p class="header-subtitle">学习总结 思考感悟 知识管理</p>
+			<p class="header-subtitle">学习总结 思考感悟 知识管理 代码分享</p>
 			
 			<nav class="header-menu">
 				<ul>
@@ -240,9 +240,12 @@ var _hmt = _hmt || [];
 <pre><code><span class="string">baidu_tongji:</span> <span class="literal">true</span>
 </code></pre></li>
 <li><p>新建文件<font color="blue"><strong>themes/yilia/layout/_partial/baidu_tongji.ejs</strong></font>，内容如下：</p>
-<pre><code>&lt;<span class="preprocessor">%</span> <span class="keyword">if</span> <span class="comment">(theme.baidu_tongji)</span> { <span class="preprocessor">%</span>&gt;
-</code></pre><p> <script type="text/javascript"><br> #申请的百度统计代码<br> </script><br> &lt;% } %&gt;</p>
-</li>
+<pre><code><span class="xml"></span>&lt;%<span class="ruby"> <span class="keyword">if</span> (theme.baidu_tongji) { </span>%&gt;<span class="xml">
+<span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="undefined">
+#申请的百度统计代码
+</span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+</span>&lt;%<span class="ruby"> } </span>%&gt;<span class="xml"></span>
+</code></pre></li>
 <li><p>编辑<font color="blue">themes/yilia/layout/_partial/head.ejs</font>文件，在<font color="red">&lt;/head&gt;</font>之前添加代码：</p>
 <pre><code>&lt;<span class="preprocessor">%</span>- partial<span class="comment">("baidu_tongji")</span> <span class="preprocessor">%</span>&gt;
 </code></pre></li>
