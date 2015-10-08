@@ -3,17 +3,36 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Tag: Hexo主题 | 韩海龙的博客</title>
+  <title>Hexo—添加百度统计代码 | 韩海龙的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="学习总结 思考感悟 知识管理 代码分享">
-<meta property="og:type" content="website">
-<meta property="og:title" content="韩海龙的博客">
-<meta property="og:url" content="http://hanhailong.com/tags/Hexo主题/index.html">
+  <meta name="description" content="本博客采用的是Yilia主题，这里就以Yilia讲解为例，首先你要去百度统计注册账号，并获取到相关的百度统计代码：
+
+编辑文件themes/yilia/_config.yml，添加一行配置代码：
+baidu_tongji: true
+
+新建文件themes/yilia/layout/_partial/baidu_tongji.ejs，内容如下：
+&amp;lt;% if (theme.baidu_tong">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo—添加百度统计代码">
+<meta property="og:url" content="http://hanhailong.com/2015/10/08/Hexo—添加百度统计代码/index.html">
 <meta property="og:site_name" content="韩海龙的博客">
-<meta property="og:description" content="学习总结 思考感悟 知识管理 代码分享">
+<meta property="og:description" content="本博客采用的是Yilia主题，这里就以Yilia讲解为例，首先你要去百度统计注册账号，并获取到相关的百度统计代码：
+
+编辑文件themes/yilia/_config.yml，添加一行配置代码：
+baidu_tongji: true
+
+新建文件themes/yilia/layout/_partial/baidu_tongji.ejs，内容如下：
+&amp;lt;% if (theme.baidu_tong">
+<meta property="og:updated_time" content="2015-10-08T15:48:10.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="韩海龙的博客">
-<meta name="twitter:description" content="学习总结 思考感悟 知识管理 代码分享">
+<meta name="twitter:title" content="Hexo—添加百度统计代码">
+<meta name="twitter:description" content="本博客采用的是Yilia主题，这里就以Yilia讲解为例，首先你要去百度统计注册账号，并获取到相关的百度统计代码：
+
+编辑文件themes/yilia/_config.yml，添加一行配置代码：
+baidu_tongji: true
+
+新建文件themes/yilia/layout/_partial/baidu_tongji.ejs，内容如下：
+&amp;lt;% if (theme.baidu_tong">
   
     <link rel="alternative" href="/atom.xml" title="韩海龙的博客" type="application/atom+xml">
   
@@ -178,146 +197,117 @@ var _hmt = _hmt || [];
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap">
+      <div class="body-wrap"><article id="post-Hexo—添加百度统计代码" class="article article-type-post" itemscope itemprop="blogPost">
   
+    <div class="article-meta">
+      <a href="/2015/10/08/Hexo—添加百度统计代码/" class="article-date">
+  	<time datetime="2015-10-08T15:31:31.000Z" itemprop="datePublished">2015-10-08</time>
+</a>
+    </div>
   
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
     
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Hexo—添加百度统计代码
+    </h1>
+  
+
+      </header>
       
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo主题/">Hexo主题</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2015" class="archive-year">2015</a>
-        </div>
-        <div class="archives">
     
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/10/08/Hexo—添加百度统计代码/" class="archive-article-date">
-  	<time datetime="2015-10-08T15:31:31.000Z" itemprop="datePublished">10月 8</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/10/08/Hexo—添加百度统计代码/">Hexo—添加百度统计代码</a>
-    </h1>
-  
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本博客采用的是<a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="external">Yilia</a>主题，这里就以Yilia讲解为例，首先你要去<a href="http://tongji.baidu.com/" target="_blank" rel="external">百度统计</a>注册账号，并获取到相关的百度统计代码：</p>
+<ol>
+<li><p>编辑文件<font color="blue"><strong>themes/yilia/_config.yml</strong></font>，添加一行配置代码：</p>
+<pre><code><span class="string">baidu_tongji:</span> <span class="literal">true</span>
+</code></pre></li>
+<li><p>新建文件<font color="blue"><strong>themes/yilia/layout/_partial/baidu_tongji.ejs</strong></font>，内容如下：</p>
+<pre><code>&lt;<span class="preprocessor">%</span> <span class="keyword">if</span> <span class="comment">(theme.baidu_tongji)</span> { <span class="preprocessor">%</span>&gt;
+</code></pre><p> <script type="text/javascript"><br> #申请的百度统计代码<br> </script><br> &lt;% } %&gt;</p>
+</li>
+<li><p>编辑<font color="blue">themes/yilia/layout/_partial/head.ejs</font>文件，在<font color="red">&lt;/head&gt;</font>之前添加代码：</p>
+<pre><code>&lt;<span class="preprocessor">%</span>- partial<span class="comment">("baidu_tongji")</span> <span class="preprocessor">%</span>&gt;
+</code></pre></li>
+<li><p>重新部署发布，搞定睡觉！！！</p>
+</li>
+</ol>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo主题/">Hexo主题</a></li></ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    
   </div>
-</article>
   
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/10/08/Hexo—正确添加RSS订阅/" class="archive-article-date">
-  	<time datetime="2015-10-08T13:07:13.000Z" itemprop="datePublished">10月 8</time>
-</a>
-        </div>
-    	 
+<nav id="article-nav">
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/10/08/Hexo—正确添加RSS订阅/">Hexo—正确添加RSS订阅</a>
-    </h1>
   
+    <a href="/2015/10/08/Hexo—正确添加RSS订阅/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Hexo—正确添加RSS订阅</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo主题/">Hexo主题</a></li></ul>
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
 	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/09/17/Hexo主题-在博客左上角添加ForkMeOnGithub功能/" class="archive-article-date">
-  	<time datetime="2015-09-17T03:28:31.000Z" itemprop="datePublished">9月 17</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/09/17/Hexo主题-在博客左上角添加ForkMeOnGithub功能/">Hexo主题-在博客左上角添加ForkMeOnGithub功能</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo主题/">Hexo主题</a></li></ul>
-	</div>
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="Hexo—添加百度统计代码" data-title="Hexo—添加百度统计代码" data-url="http://hanhailong.com/2015/10/08/Hexo—添加百度统计代码/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"hanhailong"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/09/17/Hexo主题-yilia和next/" class="archive-article-date">
-  	<time datetime="2015-09-17T03:04:05.000Z" itemprop="datePublished">9月 17</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/09/17/Hexo主题-yilia和next/">Hexo主题-yilia和next</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo主题/">Hexo主题</a></li></ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
 
 </div>
       <footer id="footer">
@@ -343,9 +333,9 @@ var _hmt = _hmt || [];
 		mathjax: true,
 		animate: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false
 	}
