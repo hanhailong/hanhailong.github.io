@@ -1,0 +1,1058 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[韩海龙的博客]]></title>
+  <subtitle><![CDATA[学习总结 思考感悟 知识管理]]></subtitle>
+  <link href="/atom.xml" rel="self"/>
+  <link href="http://hanhailong.com/"/>
+  <updated>2015-10-08T08:27:38.000Z</updated>
+  <id>http://hanhailong.com/</id>
+  
+  <author>
+    <name><![CDATA[韩海龙]]></name>
+    <email><![CDATA[hanhailong.cool@163.com]]></email>
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[不错的学习技术博客之三—泡在网上的日子]]></title>
+    <link href="http://hanhailong.com/2015/10/08/%E4%B8%8D%E9%94%99%E7%9A%84%E5%AD%A6%E4%B9%A0%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%E4%B9%8B%E4%B8%89%E2%80%94%E6%B3%A1%E5%9C%A8%E7%BD%91%E4%B8%8A%E7%9A%84%E6%97%A5%E5%AD%90/"/>
+    <id>http://hanhailong.com/2015/10/08/不错的学习技术博客之三—泡在网上的日子/</id>
+    <published>2015-10-08T08:19:33.000Z</published>
+    <updated>2015-10-08T08:27:38.000Z</updated>
+    <content type="html"><![CDATA[<p>这是<a href="http://hanhailong.com/tags/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/">不错的学习技术博客系列</a>第三篇，<a href="http://www.jcodecraeer.com/" target="_blank" rel="external">泡在网上的日子</a>上面的技术博客质量都非常高，文章内容非常广泛，不仅包括Android和IOS，还包括Html5/css3、JS、java、php等，甚至还包括设计模式和算法。</p>
+<p>还有就是包括代码，里面的代码大部分都托管在github上面，这里做了比较详细的系统分类，总体做的非常不错，我经常去上面浏览学习！！！</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>这是<a href="http://hanhailong.com/tags/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/">不错的学习技术博客系列</a>第三篇，<a href="http://www.jcodecraeer.com/" tar]]>
+    </summary>
+    
+      <category term="技术博客" scheme="http://hanhailong.com/tags/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Android-内存优化之图片优化]]></title>
+    <link href="http://hanhailong.com/2015/10/06/Android-%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96%E4%B9%8B%E5%9B%BE%E7%89%87%E4%BC%98%E5%8C%96/"/>
+    <id>http://hanhailong.com/2015/10/06/Android-内存优化之图片优化/</id>
+    <published>2015-10-06T12:21:39.000Z</published>
+    <updated>2015-10-06T12:41:12.000Z</updated>
+    <content type="html"><![CDATA[<p>网上有很多大拿分享的关于Android性能优化的文章，主要是通过各种工具分析，使用合理的技巧优化APP的体验，提升APP的流畅度，但关于内存优化的文章很少有看到。在Android设备内存动不动就上G的情况下，的确没有必要去太在意APP对Android系统内存的消耗，但在实际工作中我做的是教育类的小学APP，APP中的按钮、背景、动画变换基本上全是图片，在2K屏上（分辨率2048*1536）一张背景图片就会占用内存12M，来回切换几次内存占用就会增涨到上百兆，为了在不影响APP的视觉效果的前提下，有必要通过各种手段来降低APP对内存的消耗，下面是我在实践过程中使用的一些方法，很多都是不太成熟的项目，也不够深入，只是将其作为一种处理方式分享给大家。</p>
+<a id="more"></a>
+<p>   通过DDMS的APP内存占用查看工具分析发现，APP中占用内存最多的是图片，每个Activity中图片占用内存占大半，本文重点分享对图片的内存优化。</p>
+<h2>不要将Button的背景设置为selector</h2>
+
+<p>   在布局文件和代码中，都可以为Button设置background为selector，这样方便实现按钮的正反选效果，但实际跟踪发现，如果是将Button的背景设置为selector，在初始化Button的时候会将正反选图片都加载在内存中（具体可以查看Android源码，在类Drawable.java的createFromXmlInner方法中对图片进行解析，最终调用Drawable的inflate方法），相当于一个按钮占用了两张相同大小图片所使用的内存，如果一个界面上按钮很多或者是按钮很大，光是按钮占用的内存就会很大，可以通过在布局文件中给按钮只设置正常状态下的背景图片，然后在代码中监听按钮的点击状态，当按下按钮时为按钮设置反选效果的图片，抬起时重新设置为正常状态下的背景，具体实现方式如下：</p>
+<pre><code><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ImageButtonClickUtils</span> </span>{
+        <span class="function"><span class="keyword">private</span> <span class="title">ImageButtonClickUtils</span><span class="params">()</span></span>{
+
+        }
+
+        <span class="comment">/**
+         * 设置按钮的正反选效果
+         * 
+         * */</span>
+        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setClickState</span><span class="params">(View view, <span class="keyword">final</span> <span class="keyword">int</span> normalResId, <span class="keyword">final</span> <span class="keyword">int</span> pressResId)</span></span>{
+            view.setOnTouchListener(<span class="keyword">new</span> OnTouchListener() {
+                <span class="annotation">@Override</span>
+                <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouch</span><span class="params">(View v, MotionEvent event)</span> </span>{
+                    <span class="keyword">switch</span>(event.getAction()){
+                    <span class="keyword">case</span> MotionEvent.ACTION_DOWN:{
+                        v.setBackgroundResource(pressResId);
+                    }
+                    <span class="keyword">break</span>;
+                    <span class="keyword">case</span> MotionEvent.ACTION_MOVE:{
+                        v.setBackgroundResource(pressResId);
+                    }
+                    <span class="keyword">break</span>;
+                    <span class="keyword">case</span> MotionEvent.ACTION_UP:{
+                        v.setBackgroundResource(normalResId);
+                    }
+                    <span class="keyword">break</span>;
+                    <span class="keyword">default</span>:{
+
+                    }
+                    <span class="keyword">break</span>;
+                    }
+
+                    <span class="comment">// 为了不影响监听按钮的onClick回调，返回值应为false</span>
+                    <span class="keyword">return</span> <span class="keyword">false</span>;
+                }
+            });
+        }
+}
+</code></pre><p>通过上面这种方式就可以解决同一个按钮占用两倍内存的问题，如果你觉得为一个按钮提供正反选两张图片会导致APK的体积变大，可以通过如下方式实现按钮点击的反选效果，这种方式既不会存在Button占用两倍内存的情况，又减小了APK的体积（Android 5.0中的tintColor也可以实现类似的效果）：</p>
+<pre><code>ImageButton personalInfoBtn = (ImageButton)findViewById(R.id.personalBtnId);
+    personalInfoBtn.setOnTouchListener(<span class="keyword">new</span> OnTouchListener() {
+        <span class="annotation">@SuppressLint</span>(<span class="string">"ClickableViewAccessibility"</span>)
+        <span class="annotation">@Override</span>
+        <span class="keyword">public</span> <span class="function"><span class="keyword">boolean</span> <span class="title">onTouch</span><span class="params">(View v, MotionEvent event)</span> </span>{
+            <span class="keyword">int</span> action = event.getAction();
+
+            <span class="keyword">if</span>(action == MotionEvent.ACTION_DOWN){
+                ((ImageButton)v).setColorFilter(getResources().getColor(<span class="number">0X50000000</span>));
+            }<span class="function"><span class="keyword">else</span> <span class="title">if</span><span class="params">(action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL)</span></span>{
+                ((ImageButton)v).clearColorFilter();
+            }
+
+            <span class="comment">// 为了不影响监听按钮的onClick回调，返回值应为false</span>
+            <span class="keyword">return</span> <span class="keyword">false</span>;
+        }
+    });
+</code></pre><h2>将背景图片放在非UI线程绘制，提升APP的效率</h2>
+
+<p>在高分辨率的平板设备上，绘制大背景的图片会影响程序的运行效率，严重情况下就和没有开硬件加速的时候使用手写功能一样，相当地卡，最后我们的解决方案是将背景图片通过SurfaceView来绘制，这样相当于是在非UI线程绘制，不会影响到UI线程做其它事情：</p>
+<pre><code><span class="keyword">import</span> android.content.Context;
+<span class="keyword">import</span> android.content.res.TypedArray;
+<span class="keyword">import</span> android.graphics.Bitmap;
+<span class="keyword">import</span> android.graphics.BitmapFactory;
+<span class="keyword">import</span> android.graphics.Canvas;
+<span class="keyword">import</span> android.graphics.Matrix;
+<span class="keyword">import</span> android.graphics.PixelFormat;
+<span class="keyword">import</span> android.util.AttributeSet;
+<span class="keyword">import</span> android.util.DisplayMetrics;
+<span class="keyword">import</span> android.view.SurfaceHolder;
+<span class="keyword">import</span> android.view.SurfaceView;
+
+<span class="keyword">import</span> com.hhl.activity.R;
+
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RootSurfaceView</span> <span class="keyword">extends</span> <span class="title">SurfaceView</span> <span class="keyword">implements</span> <span class="title">SurfaceHolder</span>.<span class="title">Callback</span>, <span class="title">Runnable</span></span>{
+    <span class="keyword">private</span> <span class="keyword">float</span> mViewWidth = <span class="number">0</span>;
+    <span class="keyword">private</span> <span class="keyword">float</span> mViewHeight = <span class="number">0</span>;
+    <span class="keyword">private</span> <span class="keyword">int</span> mResourceId = <span class="number">0</span>;
+    <span class="keyword">private</span> Context mContext = <span class="keyword">null</span>;
+    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">boolean</span> isRunning = <span class="keyword">false</span>;
+    <span class="keyword">private</span> SurfaceHolder mSurfaceHolder = <span class="keyword">null</span>;
+
+    <span class="function"><span class="keyword">public</span> <span class="title">RootSurfaceView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>{
+        <span class="keyword">super</span>(context, attrs, defStyleAttr);
+        initRootSurfaceView(context, attrs, defStyleAttr, <span class="number">0</span>);
+    }
+
+    <span class="function"><span class="keyword">public</span> <span class="title">RootSurfaceView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>{
+        <span class="keyword">super</span>(context, attrs);
+        initRootSurfaceView(context, attrs, <span class="number">0</span>, <span class="number">0</span>);
+    }
+
+    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initRootSurfaceView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr, <span class="keyword">int</span> defStyleRes)</span></span>{
+        mContext = context;
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RootSurfaceView, defStyleAttr, defStyleRes);
+        <span class="keyword">int</span> n = a.getIndexCount();
+        mViewWidth = displayMetrics.widthPixels;
+        mViewHeight = displayMetrics.heightPixels;
+        <span class="keyword">for</span>(<span class="keyword">int</span> index=<span class="number">0</span>; index&lt;n; index++){
+            <span class="keyword">int</span> attr = a.getIndex(index);
+            <span class="keyword">switch</span>(attr){
+            <span class="keyword">case</span> R.styleable.RootSurfaceView_background:{
+                mResourceId = a.getResourceId(attr, <span class="number">0</span>);
+            }
+            <span class="keyword">break</span>;
+            <span class="keyword">case</span> R.styleable.RootSurfaceView_view_width:{
+                mViewWidth = a.getDimension(attr, displayMetrics.widthPixels);
+            }
+            <span class="keyword">break</span>;
+            <span class="keyword">case</span> R.styleable.RootSurfaceView_view_height:{
+                mViewHeight = a.getDimension(attr, displayMetrics.heightPixels);
+            }
+            <span class="keyword">break</span>;
+            <span class="keyword">default</span>:{
+
+            }
+            <span class="keyword">break</span>;
+            }
+        }
+        a.recycle();
+        mSurfaceHolder = getHolder();
+        mSurfaceHolder.addCallback(<span class="keyword">this</span>);
+        mSurfaceHolder.setFormat(PixelFormat.TRANSLUCENT);
+    }
+
+    <span class="function"><span class="keyword">private</span> Bitmap <span class="title">getDrawBitmap</span><span class="params">(Context context, <span class="keyword">float</span> width, <span class="keyword">float</span> height)</span> </span>{
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), mResourceId);
+        Bitmap resultBitmap = zoomImage(bitmap, width, height);
+        <span class="keyword">return</span> resultBitmap;
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">surfaceChanged</span><span class="params">(SurfaceHolder arg0, <span class="keyword">int</span> arg1, <span class="keyword">int</span> arg2, <span class="keyword">int</span> arg3)</span> </span>{
+        System.out.println(<span class="string">"RootSurfaceView surfaceChanged"</span>);
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">surfaceCreated</span><span class="params">(SurfaceHolder holder)</span> </span>{
+        drawBackGround(holder);
+        System.out.println(<span class="string">"RootSurfaceView surfaceCreated"</span>);
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">surfaceDestroyed</span><span class="params">(SurfaceHolder holder)</span> </span>{
+        isRunning = <span class="keyword">false</span>;
+        System.out.println(<span class="string">"RootSurfaceView surfaceDestroyed"</span>);
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onAttachedToWindow</span><span class="params">()</span> </span>{
+        <span class="keyword">super</span>.onAttachedToWindow();
+        System.out.println(<span class="string">"RootSurfaceView onAttachedToWindow"</span>);
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDetachedFromWindow</span><span class="params">()</span> </span>{
+        <span class="keyword">super</span>.onDetachedFromWindow();
+        System.out.println(<span class="string">"RootSurfaceView onDetachedFromWindow"</span>);
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>{  
+        <span class="keyword">while</span>(isRunning){  
+            <span class="keyword">synchronized</span> (mSurfaceHolder) { 
+                <span class="keyword">if</span>(!mSurfaceHolder.getSurface().isValid()){
+                    <span class="keyword">continue</span>;
+                }
+                drawBackGround(mSurfaceHolder);
+            }
+            isRunning = <span class="keyword">false</span>;
+            <span class="keyword">break</span>;
+        }  
+    }
+
+    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">drawBackGround</span><span class="params">(SurfaceHolder holder)</span> </span>{
+        Canvas canvas = holder.lockCanvas();
+        Bitmap bitmap = getDrawBitmap(mContext, mViewWidth, mViewHeight);
+        canvas.drawBitmap(bitmap, <span class="number">0</span>, <span class="number">0</span>, <span class="keyword">null</span>);
+        bitmap.recycle();
+        holder.unlockCanvasAndPost(canvas);
+    }
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Bitmap <span class="title">zoomImage</span><span class="params">( Bitmap bgimage , <span class="keyword">float</span> newWidth , <span class="keyword">float</span> newHeight )</span> </span>{
+        <span class="keyword">float</span> width = bgimage.getWidth( );
+        <span class="keyword">float</span> height = bgimage.getHeight( );
+        Matrix matrix = <span class="keyword">new</span> Matrix();
+        <span class="keyword">float</span> scaleWidth = newWidth/width;
+        <span class="keyword">float</span> scaleHeight = newHeight/height;
+        matrix.postScale( scaleWidth, scaleHeight );
+        Bitmap bitmap = Bitmap.createBitmap( bgimage, <span class="number">0</span>, <span class="number">0</span>, ( <span class="keyword">int</span> ) width , ( <span class="keyword">int</span> ) height, matrix, <span class="keyword">true</span> );
+        <span class="keyword">if</span>( bitmap != bgimage ){
+            bgimage.recycle();
+            bgimage = <span class="keyword">null</span>;
+        }
+        <span class="keyword">return</span> bitmap;
+    }
+}
+</code></pre><p>在res/values/attr.xml文件中定义自定义View的自定义属性：</p>
+<pre><code><span class="tag">&lt;<span class="title">declare-styleable</span> <span class="attribute">name</span>=<span class="value">"RootSurfaceView"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"background"</span> <span class="attribute">format</span>=<span class="value">"reference"</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"view_width"</span> <span class="attribute">format</span>=<span class="value">"dimension"</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"view_height"</span> <span class="attribute">format</span>=<span class="value">"dimension"</span> /&gt;</span>
+<span class="tag">&lt;/<span class="title">declare-styleable</span>&gt;</span>
+</code></pre><h2> 没有必要使用硬件加速的界面建议关掉硬件加速 </h2>
+
+<p>通过DDMS的heap跟踪发现，相比于关闭硬件加速，在打开硬件加速的情况下会消耗更多的内存，但有的界面打开或者关闭硬件加速对程序的运行效率并没有太大的影响，此种情况下可以考虑在AndroidManifest.xml文件中关闭掉对应Activity的硬件加速，like this：</p>
+<pre><code><span class="comment">&lt;!-- 设置界面 --&gt;</span>
+<span class="tag">&lt;<span class="title">activity</span>
+    <span class="attribute">android:name</span>=<span class="value">".SettingActivity"</span>
+    <span class="attribute">android:hardwareAccelerated</span>=<span class="value">"false"</span>
+    <span class="attribute">android:screenOrientation</span>=<span class="value">"sensorLandscape"</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">activity</span>&gt;</span>
+</code></pre><p>注意：如果使用到WebView、视频播放、手写、动画等功能时，关掉硬件加速会严重音效程序的运行效率，这种情况可以只关闭掉Activity中某些view的硬件加速，整个Activity的硬件加速不关闭。</p>
+<p>如果Activity中某个View需要关闭硬件加速，但整个Activity不能关闭，可以调用view层级关闭硬件加速的方法：</p>
+<pre><code><span class="comment">// view.setLayerType || 在定义view的构造方法中调用该方法</span>
+setLayerType(View.LAYER_TYPE_SOFTWARE, <span class="literal">null</span>);
+</code></pre><h2>尽量少用AnimationDrawable，如果必须要可以自定义图片切换器代替AnimationDrawable</h2>
+
+<p>AnimationDrawable也是一个耗内存大户，图片帧数越多耗内存越大，具体可以查看AnimationDrawable的源码，在AnimationDrawable实例化的时候，Drawable的createFromXmlInner方法会调用AnimationDrawable的inflate方法，该方法里面有一个while循环去一次性将所有帧都读取出来，也就是在初始化的时候就将所有的帧读在内存中了，有多少张图片，它就要消耗对应大小的内存。</p>
+<p>虽然可以通过如下方式释放AnimationDrawable占用的内存，但是当退出使用AnimationDrawable的界面，再次进入使用其播放动画时，会报使用已经回收了的图片的异常，这个应该是Android对图片的处理机制导致的，虽然Activity被finish掉了，但是这个Activity中使用到的图片还是在内存中，如果被回收，下次进入时就会报异常信息：</p>
+<pre><code><span class="comment">/**
+ * 释放AnimationDrawable占用的内存
+ * 
+ * 
+ * */</span>
+<span class="annotation">@SuppressWarnings</span>(<span class="string">"unused"</span>)
+<span class="keyword">private</span> <span class="function"><span class="keyword">void</span> <span class="title">freeAnimationDrawable</span><span class="params">(AnimationDrawable animationDrawable)</span> </span>{
+    animationDrawable.stop(); 
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; animationDrawable.getNumberOfFrames(); ++i){
+        Drawable frame = animationDrawable.getFrame(i);
+        <span class="keyword">if</span> (frame <span class="keyword">instanceof</span> BitmapDrawable) {
+            ((BitmapDrawable)frame).getBitmap().recycle();
+        } 
+        frame.setCallback(<span class="keyword">null</span>);
+    } 
+
+    animationDrawable.setCallback(<span class="keyword">null</span>);
+}
+</code></pre><p>通常情况下我会自定义一个ImageView来实现AnimationDrawable的功能，根据图片之间切换的时间间隔来定时设置ImageView的背景图片，这样始终只是一个ImageView实例，更换的只是其背景，占用内存会比AnimationDrawable小很多：</p>
+<pre><code><span class="comment">/**
+ * 图片动态切换器
+ * 
+ * */</span>
+<span class="keyword">public</span> <span class="keyword">class</span> AnimImageView {
+    <span class="keyword">private</span> <span class="keyword">static</span> final <span class="keyword">int</span> MSG_START = <span class="number">0xf1</span>;
+    <span class="keyword">private</span> <span class="keyword">static</span> final <span class="keyword">int</span> MSG_STOP  = <span class="number">0xf2</span>;
+    <span class="keyword">private</span> <span class="keyword">static</span> final <span class="keyword">int</span> STATE_STOP = <span class="number">0xf3</span>;
+    <span class="keyword">private</span> <span class="keyword">static</span> final <span class="keyword">int</span> STATE_RUNNING = <span class="number">0xf4</span>;
+
+    <span class="comment">/* 运行状态*/</span>
+    <span class="keyword">private</span> <span class="keyword">int</span> mState = STATE_RUNNING;
+    <span class="keyword">private</span> ImageView mImageView;
+    <span class="comment">/* 图片资源ID列表*/</span>
+    <span class="keyword">private</span> List&lt;Integer&gt; mResourceIdList = null;
+    <span class="comment">/* 定时任务*/</span>
+    <span class="keyword">private</span> Timer mTimer = null;
+    <span class="keyword">private</span> AnimTimerTask mTimeTask = null;
+    <span class="comment">/* 记录播放位置*/</span>
+    <span class="keyword">private</span> <span class="keyword">int</span> mFrameIndex = <span class="number">0</span>;
+    <span class="comment">/* 播放形式*/</span>
+    <span class="keyword">private</span> boolean isLooping = <span class="literal">false</span>;
+
+    <span class="function"><span class="keyword">public</span> <span class="title">AnimImageView</span><span class="params">( )</span></span>{
+        mTimer = <span class="keyword">new</span> Timer();
+    }
+
+    <span class="comment">/**
+     * 设置动画播放资源
+     * 
+     * */</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAnimation</span><span class="params">( HanziImageView imageview, List&lt;Integer&gt; resourceIdList )</span></span>{
+        mImageView = imageview;
+        mResourceIdList = resourceIdList;
+    }
+
+    <span class="comment">/**
+     *  开始播放动画
+     *  @param loop 时候循环播放
+     *  @param duration 动画播放时间间隔
+     * */</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">(boolean loop, <span class="keyword">int</span> duration)</span></span>{
+        stop();
+        isLooping = loop;
+        mFrameIndex = <span class="number">0</span>;
+        mState = STATE_RUNNING;
+        mTimeTask = <span class="keyword">new</span> AnimTimerTask( );
+        mTimer.schedule(mTimeTask, <span class="number">0</span>, duration);
+    }
+
+    <span class="comment">/**
+     * 停止动画播放
+     * 
+     * */</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span></span>{
+        <span class="keyword">if</span> (mTimeTask != null) {
+            mFrameIndex = <span class="number">0</span>;
+            mState = STATE_STOP;
+            mTimer.purge();
+            mTimeTask.cancel();
+            mTimeTask = null;
+            mImageView.setBackgroundResource(<span class="number">0</span>);
+        }
+    }
+
+    <span class="comment">/**
+     * 定时器任务
+     * 
+     * 
+     */</span>
+    <span class="keyword">class</span> AnimTimerTask extends TimerTask {
+        @<span class="function">Override
+        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{
+            <span class="keyword">if</span>(mFrameIndex &lt; <span class="number">0</span> || mState == STATE_STOP){
+                <span class="keyword">return</span>;
+            }
+
+            <span class="keyword">if</span>( mFrameIndex &lt; mResourceIdList.size() ){
+                Message msg = AnimHanlder.obtainMessage(MSG_START,<span class="number">0</span>,<span class="number">0</span>,null);
+                msg.sendToTarget();
+            }<span class="keyword">else</span>{
+                mFrameIndex = <span class="number">0</span>;
+                <span class="keyword">if</span>(!isLooping){
+                    Message msg = AnimHanlder.obtainMessage(MSG_STOP,<span class="number">0</span>,<span class="number">0</span>,null);
+                    msg.sendToTarget();
+                }
+            }
+        }
+    }
+
+    <span class="keyword">private</span> Handler AnimHanlder = <span class="keyword">new</span> Handler(){
+         <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(android.os.Message msg)</span> </span>{
+                <span class="keyword">switch</span> (msg.what) {
+                <span class="keyword">case</span> MSG_START:{
+                    <span class="keyword">if</span>(mFrameIndex &gt;=<span class="number">0</span> &amp;&amp; mFrameIndex &lt; mResourceIdList.size() &amp;&amp; mState == STATE_RUNNING){
+                        mImageView.setImageResource(mResourceIdList.get(mFrameIndex));
+                        mFrameIndex++;
+                    }
+                }
+                    <span class="keyword">break</span>;
+                <span class="keyword">case</span> MSG_STOP:{
+                    <span class="keyword">if</span> (mTimeTask != null) {
+                        mFrameIndex = <span class="number">0</span>;
+                        mTimer.purge();
+                        mTimeTask.cancel();
+                        mState = STATE_STOP;
+                        mTimeTask = null;
+                        mImageView.setImageResource(<span class="number">0</span>);
+                    }
+                }
+                    <span class="keyword">break</span>;
+                <span class="keyword">default</span>:
+                    <span class="keyword">break</span>;
+                }
+         }
+    };
+}
+</code></pre><h2>其它优化方式</h2>
+
+<ul>
+<li>尽量将Activity中的小图片和背景合并，一张小图片既浪费布局的时间，又平白地增加了内存占用；</li>
+<li><p>不要在Activity的主题中为Activity设置默认的背景图片，这样会导致Activity占用的内存翻倍：</p>
+<pre><code><span class="comment">&lt;!--千万不要在主题中为Activity设置默认背景--&gt;</span>
+<span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"Activity_Style"</span> <span class="attribute">parent</span>=<span class="value">"@android:Theme.Holo.Light.NoActionBar"</span>&gt;</span><span class="css">
+&lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="rule"><span class="attribute">android</span>:<span class="value">background<span class="string">"&gt;@drawable/*&lt;/item&gt;
+</span></span></span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span>
+</code></pre></li>
+<li><p>对于在需要时才显示的图片或者布局，可以使用ViewStub标签，通过sdk/tools目录下的hierarchyviewer.bat查看布局文件会发现，使用viewstub标签的组件几乎不消耗布局的时间，在代码中当需要显示时再去实例化有助于提高Activity的布局效率和节省Activity消耗的内存。</p>
+</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>网上有很多大拿分享的关于Android性能优化的文章，主要是通过各种工具分析，使用合理的技巧优化APP的体验，提升APP的流畅度，但关于内存优化的文章很少有看到。在Android设备内存动不动就上G的情况下，的确没有必要去太在意APP对Android系统内存的消耗，但在实际工作中我做的是教育类的小学APP，APP中的按钮、背景、动画变换基本上全是图片，在2K屏上（分辨率2048*1536）一张背景图片就会占用内存12M，来回切换几次内存占用就会增涨到上百兆，为了在不影响APP的视觉效果的前提下，有必要通过各种手段来降低APP对内存的消耗，下面是我在实践过程中使用的一些方法，很多都是不太成熟的项目，也不够深入，只是将其作为一种处理方式分享给大家。</p>]]>
+    
+    </summary>
+    
+      <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[不错的学习技术博客之二————trinea.cn]]></title>
+    <link href="http://hanhailong.com/2015/10/06/%E4%B8%8D%E9%94%99%E7%9A%84%E5%AD%A6%E4%B9%A0%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%E4%B9%8B%E4%BA%8C%E2%80%94%E2%80%94%E2%80%94%E2%80%94trinea-cn/"/>
+    <id>http://hanhailong.com/2015/10/06/不错的学习技术博客之二————trinea-cn/</id>
+    <published>2015-10-06T03:14:05.000Z</published>
+    <updated>2015-10-06T03:28:28.000Z</updated>
+    <content type="html"><![CDATA[<p>这是<a href="http://hanhailong.com/tags/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/">不错的学习技术博客系列</a>第二篇，<a href="http://www.trinea.cn/" target="_blank" rel="external">trinea</a>这个技术博客主要记录Android和Java方面的技术文章，侧重点在于性能调优、开源项目经验分享、新技术调研等等，而作者本身编程功底很深，2010年加入阿里巴巴，目前在<a href="http://codekk.com/jobs/detail/%E6%9D%AD%E5%B7%9E/%E5%BF%AB%E7%9A%84%E6%89%93%E8%BD%A6/Android%20%E5%BC%80%E5%8F%91杭州快的" target="_blank" rel="external">杭州快的</a>担任移动端架构师！</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>这是<a href="http://hanhailong.com/tags/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/">不错的学习技术博客系列</a>第二篇，<a href="http://www.trinea.cn/" target="_]]>
+    </summary>
+    
+      <category term="技术博客" scheme="http://hanhailong.com/tags/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[不错的学习技术博客之一————美团tech.meituan]]></title>
+    <link href="http://hanhailong.com/2015/10/06/%E4%B8%8D%E9%94%99%E7%9A%84%E5%AD%A6%E4%B9%A0%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%E4%B9%8B%E4%B8%80%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E7%BE%8E%E5%9B%A2tech-meituan/"/>
+    <id>http://hanhailong.com/2015/10/06/不错的学习技术博客之一————美团tech-meituan/</id>
+    <published>2015-10-06T03:00:14.000Z</published>
+    <updated>2015-10-06T03:16:58.000Z</updated>
+    <content type="html"><![CDATA[<p>之前看过很多的技术博客，<a href="http://tech.meituan.com/" target="_blank" rel="external">美团</a>的教学技术博客还是蛮不错的，之前看过里面的一篇文章<a href="http://tech.meituan.com/mt-apk-adaptation.html" target="_blank" rel="external">美团Android自动化之旅—适配渠道包</a>，讲的真心不错，如果再配合<a href="http://hugozhu.myalert.info/2014/08/03/50-use-gradle-to-customize-apk-build.html" target="_blank" rel="external">使用Gradle生成一个App的不同版本，且可以同时安装在一个手机上</a>，基本上使用<font color="red">Gradle</font>来构建Android应用就没啥问题了！</p>
+<p>里面的文章讲的透彻清晰！非常值得去学习！</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>之前看过很多的技术博客，<a href="http://tech.meituan.com/" target="_blank" rel="external">美团</a>的教学技术博客还是蛮不错的，之前看过里面的一篇文章<a href="http://tech.meituan]]>
+    </summary>
+    
+      <category term="技术博客" scheme="http://hanhailong.com/tags/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Android不错的开源库之-ExplosionField（View粒子炸裂效果）]]></title>
+    <link href="http://hanhailong.com/2015/10/06/Android%E4%B8%8D%E9%94%99%E7%9A%84%E5%BC%80%E6%BA%90%E5%BA%93%E4%B9%8B-ExplosionField%EF%BC%88View%E7%B2%92%E5%AD%90%E7%82%B8%E8%A3%82%E6%95%88%E6%9E%9C%EF%BC%89/"/>
+    <id>http://hanhailong.com/2015/10/06/Android不错的开源库之-ExplosionField（View粒子炸裂效果）/</id>
+    <published>2015-10-06T00:36:16.000Z</published>
+    <updated>2015-10-06T01:14:31.000Z</updated>
+    <content type="html"><![CDATA[<p>前几天微博上出了一个非常优秀的Android开源组件-<a href="https://github.com/tyrantgit/ExplosionField" target="_blank" rel="external">ExplosionField</a>，效果非常的炫酷，类似MIUI卸载app的动画，先看效果：</p>
+<p><img src="https://github.com/tyrantgit/ExplosionField/blob/master/explosionfield.gif?raw=true" alt="image"></p>
+<a id="more"></a>
+<p>我阅读了下源码，代码写的非常的不错，作者的代码功力非常深厚。这里就不赘述了，有需要的可以自己去看。</p>
+<p>怎么使用呢？</p>
+<p>在你的<font color="red">build.gradle</font>:</p>
+<pre><code><span class="keyword">dependencies</span> {
+   <span class="keyword">compile</span> <span class="string">'tyrantgit:explosionfield:1.0.0'</span>
+ }
+</code></pre><p>在<font color="red">Java</font>代码里：</p>
+<pre><code>ExplosionField explosionField = ...<span class="comment">;</span>
+explosionField.explode(view)<span class="comment">;</span>
+</code></pre>]]></content>
+    <summary type="html">
+    <![CDATA[<p>前几天微博上出了一个非常优秀的Android开源组件-<a href="https://github.com/tyrantgit/ExplosionField">ExplosionField</a>，效果非常的炫酷，类似MIUI卸载app的动画，先看效果：</p>
+<p><img src="https://github.com/tyrantgit/ExplosionField/blob/master/explosionfield.gif?raw=true" alt="image"></p>]]>
+    
+    </summary>
+    
+      <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[The resource could not be loaded because the App Transport Security policy requires the use of a secure connection]]></title>
+    <link href="http://hanhailong.com/2015/10/05/The-resource-could-not-be-loaded-because-the-App-Transport-Security-policy-requires-the-use-of-a-secure-connection/"/>
+    <id>http://hanhailong.com/2015/10/05/The-resource-could-not-be-loaded-because-the-App-Transport-Security-policy-requires-the-use-of-a-secure-connection/</id>
+    <published>2015-10-05T01:36:33.000Z</published>
+    <updated>2015-10-05T02:12:54.000Z</updated>
+    <content type="html"><![CDATA[<p>   最近把Xcode升级到最新正式版7.0.1后，发现所有的项目凡是有http请求的都访问失败了，只有https请求的可以访问成功。报错内容如下：</p>
+<p>   <img src="https://github.com/hanhailong/IOSStudyResource/blob/master/screenshot/ios-9-http-error.png?raw=true" alt="image"></p>
+<a id="more"></a>
+<p>Google后查证，iOS9引入了新特性<a href="https://developer.apple.com/library/prerelease/ios/releasenotes/General/WhatsNewIniOS/Articles/iOS9.html#//apple_ref/doc/uid/TP40016198-DontLinkElementID_13" target="_blank" rel="external">App Transport Security (ATS)</a></p>
+<p>新特性要求App内访问的网络必须使用<font color="red">HTTPS</font>协议。<br>但是现在公司的项目使用的是HTTP协议，使用私有加密方式保证数据安全。现在也不能马上改成HTTPS协议传输。</p>
+<hr>
+<p>如果要让ios9支持http访问怎么做呢？我们可以采用如下方式：</p>
+<ol>
+<li>在Info.plist中添加使用<font color="red"> NSAppTransportSecurity</font>类型使用<font color="red"> Dictionary</font></li>
+<li>在使用<font color="red">NSAppTransportSecurity</font>下添加使用<font color="red">NSAllowsArbitraryLoads</font>类型Boolean,值设为使用<font color="red">YES</font></li>
+</ol>
+<p>最后，修改完后Info.plist的效果图如下：</p>
+<p><img src="https://github.com/hanhailong/IOSStudyResource/blob/master/screenshot/ios-9-http-resolve.png?raw=true" alt="image"></p>
+<p>经过修改之后再请求网络，发现就正常了！</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>   最近把Xcode升级到最新正式版7.0.1后，发现所有的项目凡是有http请求的都访问失败了，只有https请求的可以访问成功。报错内容如下：</p>
+<p>   <img src="https://github.com/hanhailong/IOSStudyResource/blob/master/screenshot/ios-9-http-error.png?raw=true" alt="image"></p>]]>
+    
+    </summary>
+    
+      <category term="IOS" scheme="http://hanhailong.com/tags/IOS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[IOS-通过自定义iCarousel来高仿土巴兔选择装修风格效果(中间选中项放大)]]></title>
+    <link href="http://hanhailong.com/2015/09/28/IOS-%E9%80%9A%E8%BF%87%E8%87%AA%E5%AE%9A%E4%B9%89iCarousel%E6%9D%A5%E9%AB%98%E4%BB%BF%E5%9C%9F%E5%B7%B4%E5%85%94%E9%80%89%E6%8B%A9%E8%A3%85%E4%BF%AE%E9%A3%8E%E6%A0%BC%E6%95%88%E6%9E%9C-%E4%B8%AD%E9%97%B4%E9%80%89%E4%B8%AD%E9%A1%B9%E6%94%BE%E5%A4%A7/"/>
+    <id>http://hanhailong.com/2015/09/28/IOS-通过自定义iCarousel来高仿土巴兔选择装修风格效果-中间选中项放大/</id>
+    <published>2015-09-28T10:22:33.000Z</published>
+    <updated>2015-09-28T11:25:54.000Z</updated>
+    <content type="html"><![CDATA[<p>这是<a href="http://hanhailong.com/2015/09/27/Android-%E9%80%9A%E8%BF%87%E8%87%AA%E5%AE%9A%E4%B9%89ViewPager%E6%9D%A5%E9%AB%98%E4%BB%BF%E5%9C%9F%E5%B7%B4%E5%85%94%E9%80%89%E6%8B%A9%E8%A3%85%E4%BF%AE%E9%A3%8E%E6%A0%BC%E6%95%88%E6%9E%9C/">Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果</a>的姐妹篇，上篇通过自定义ViewPager来实现了选中的一项居中并放大的效果，这里通过<a href="https://github.com/nicklockwood/iCarousel" target="_blank" rel="external">iCarousel</a>来实现这个效果，<a href="https://github.com/nicklockwood/iCarousel" target="_blank" rel="external">iCarousel</a>是我最喜欢的一个IOS开源库之一，我几乎每个IOS项目都用到了它，真的是非常的赞。好了，废话不多说，马上进入主题，在开始之前，先看下我们高仿后的效果图：</p>
+<p><img src="https://github.com/hanhailong/tubatu-iCarousel/raw/master/screenshot/tubatu-viewpager-fang-ios.gif?raw=true" alt="image"> </p>
+<a id="more"></a>
+<p>要实现这个效果，总体难度上要比Android上轻松不少，你不需要关心点击左右边缘切换到相应的Item，iCarousel都已经帮你实现了，而且iCarousel的每个View都是支持复用。</p>
+<p><strong>总体难点就一个地方，那就是自定义iCarousel，然后设置相应的缩放动画。</strong></p>
+<p>首先，我们需要把iCarousel的type值设置成<strong>iCarouselTypeCustom</strong>，看代码</p>
+<pre><code>-(iCarousel *)iCarousel{
+    <span class="built_in">CGFloat</span> height = ScreenWidth - <span class="number">2</span> *PAGE_OFFSET;
+    <span class="keyword">if</span> (_iCarousel == <span class="literal">nil</span>) {
+        _iCarousel = [[iCarousel alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, (ScreenHeight-height)*<span class="number">0.5</span>, ScreenWidth, height)];
+        _iCarousel<span class="variable">.delegate</span> = <span class="keyword">self</span>;
+        _iCarousel<span class="variable">.dataSource</span> = <span class="keyword">self</span>;
+        _iCarousel<span class="variable">.bounces</span> = <span class="literal">NO</span>;
+        _iCarousel<span class="variable">.pagingEnabled</span> = <span class="literal">YES</span>;
+        _iCarousel<span class="variable">.type</span> = iCarouselTypeCustom;
+    }
+    <span class="keyword">return</span> _iCarousel;
+}
+</code></pre><p>然后，我们设置iCarousel两个必须的代理方法<strong>viewForItemAtIndex</strong>和<strong>numberOfItemsInCarousel</strong>，看代码：</p>
+<pre><code><span class="preprocessor">#pragma mark - iCarousel代理</span>
+-(<span class="built_in">UIView</span> *)carousel:(iCarousel *)carousel viewForItemAtIndex:(<span class="built_in">NSInteger</span>)index reusingView:(<span class="built_in">UIView</span> *)view{
+    <span class="keyword">if</span> (view == <span class="literal">nil</span>) {
+        <span class="built_in">CGFloat</span> viewWidth = ScreenWidth - <span class="number">2</span>*PAGE_OFFSET;
+        view = [[<span class="built_in">UIImageView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, viewWidth, viewWidth)];
+    }
+
+    ((<span class="built_in">UIImageView</span> *)view)<span class="variable">.image</span> = [<span class="built_in">UIImage</span> imageNamed:[<span class="keyword">self</span><span class="variable">.dataList</span> objectAtIndex:index]];
+
+    <span class="keyword">return</span> view;
+}
+
+-(<span class="built_in">NSInteger</span>)numberOfItemsInCarousel:(iCarousel *)carousel{
+    <span class="keyword">return</span> <span class="keyword">self</span><span class="variable">.dataList</span><span class="variable">.count</span>;
+}
+</code></pre><p>经过上面设置后，我们的iCarousel就加进来了，但是你会发现，加进来的iCarousel不能滑动了，这是什么鬼。。。。</p>
+<p>这是为什么呢？这是因为我们有一个非常重要的方法没有实现，这个方法是:</p>
+<pre><code><span class="pp">-<span class="params">(<span class="variable">CATransform3D</span>)</span>carousel:<span class="params">(i<span class="variable">Carousel</span> *)</span>carousel itemTransformForOffset:<span class="params">(<span class="variable">CGFloat</span>)</span>offset baseTransform:<span class="params">(<span class="variable">CATransform3D</span>)</span>transform</span>
+</code></pre><p>这个方法就是整个iCarousel的核心所在，所有的动画效果都是这个方法来实现的</p>
+<p>这里稍微讲解下iCarousel的原理：</p>
+<ol>
+<li>iCarousel不是基于UIScrollView实现的，而是直接继承UIView来实现</li>
+<li>iCarousel通过UIPanGestureRecognizer来计算和维护scrollOffset这个变量</li>
+<li>iCarousel本身并不会改变itemView的位置 而是靠修改itemView的layer.transform来实现位移和形变</li>
+</ol>
+<p>为了实现我们想要中间放大的效果，就必须重写这个方法，看下我们的代码：</p>
+<pre><code>-(CATransform3D)carousel:(iCarousel *)carousel itemTransformForOffset:(CGFloat)offset baseTransform:(CATransform3D)transform{
+    <span class="keyword">static</span> CGFloat max_sacle = <span class="number">1.0f</span>;
+    <span class="keyword">static</span> CGFloat min_scale = <span class="number">0.6f</span>;
+    <span class="keyword">if</span> (offset &lt;= <span class="number">1</span> &amp;&amp; offset &gt;= -<span class="number">1</span>) {
+        <span class="keyword">float</span> tempScale = offset &lt; <span class="number">0</span> ? <span class="number">1</span>+offset : <span class="number">1</span>-offset;
+        <span class="keyword">float</span> slope = (max_sacle - min_scale) / <span class="number">1</span>;
+
+        CGFloat scale = min_scale + slope*tempScale;
+        transform = CATransform3DScale(transform, scale, scale, <span class="number">1</span>);
+    }<span class="keyword">else</span>{
+        transform = CATransform3DScale(transform, min_scale, min_scale, <span class="number">1</span>);
+    }
+
+    <span class="keyword">return</span> CATransform3DTranslate(transform, offset * self.iCarousel.itemWidth * <span class="number">1.4</span>, <span class="number">0.0</span>, <span class="number">0.0</span>);
+}
+</code></pre><p>核心的算法和我们Android版本的是一样的，只不过这里加了这个形变，一个是Scale形变，一个是移动Translate形变。经过上面的代码就实现我们想要的结果了。</p>
+<p><strong>小结</strong></p>
+<p>总体实现来说，这个要比Android版本的要简单多了，核心代码就是改变layer.transform属性值。</p>
+<p>这也说明<a href="https://github.com/nicklockwood/iCarousel" target="_blank" rel="external">iCarousel</a>是多么优秀的一个开源库，说到这里，我个人是非常不喜欢重复造轮子的，能用最少的代码达到所需的要求是我一直以来的准则，而且很多经典的轮子库(比如iCarousel)也值得你去深入探索和学习，了解作者的想法和思路(站在巨人的肩膀)是一种非常不错的学习方法和开阔视野的途径。</p>
+<p>最后附上源码<a href="https://github.com/hanhailong/tubatu-iCarousel" target="_blank" rel="external">github</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>这是<a href="http://hanhailong.com/2015/09/27/Android-%E9%80%9A%E8%BF%87%E8%87%AA%E5%AE%9A%E4%B9%89ViewPager%E6%9D%A5%E9%AB%98%E4%BB%BF%E5%9C%9F%E5%B7%B4%E5%85%94%E9%80%89%E6%8B%A9%E8%A3%85%E4%BF%AE%E9%A3%8E%E6%A0%BC%E6%95%88%E6%9E%9C/">Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果</a>的姐妹篇，上篇通过自定义ViewPager来实现了选中的一项居中并放大的效果，这里通过<a href="https://github.com/nicklockwood/iCarousel">iCarousel</a>来实现这个效果，<a href="https://github.com/nicklockwood/iCarousel">iCarousel</a>是我最喜欢的一个IOS开源库之一，我几乎每个IOS项目都用到了它，真的是非常的赞。好了，废话不多说，马上进入主题，在开始之前，先看下我们高仿后的效果图：</p>
+<p><img src="https://github.com/hanhailong/tubatu-iCarousel/raw/master/screenshot/tubatu-viewpager-fang-ios.gif?raw=true" alt="image"> </p>]]>
+    
+    </summary>
+    
+      <category term="IOS" scheme="http://hanhailong.com/tags/IOS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果]]></title>
+    <link href="http://hanhailong.com/2015/09/27/Android-%E9%80%9A%E8%BF%87%E8%87%AA%E5%AE%9A%E4%B9%89ViewPager%E6%9D%A5%E9%AB%98%E4%BB%BF%E5%9C%9F%E5%B7%B4%E5%85%94%E9%80%89%E6%8B%A9%E8%A3%85%E4%BF%AE%E9%A3%8E%E6%A0%BC%E6%95%88%E6%9E%9C/"/>
+    <id>http://hanhailong.com/2015/09/27/Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果/</id>
+    <published>2015-09-27T08:30:20.000Z</published>
+    <updated>2015-09-28T01:38:47.000Z</updated>
+    <content type="html"><![CDATA[<p>最近看到有同事在用土巴兔这个app，看了里面的一些效果非常的不错，就试着模仿了一下，首先模仿的是土巴兔里面一个选择装修风格的效果，先看原版效果图如下：<br><img src="http://img.blog.csdn.net/20150928093046209" alt="image"></p>
+<a id="more"></a>
+<p>这种效果实现的方式很多，比如HorizonalScrollView、Recyclerview(水平)、ViewPager等等，这里我使用ViewPager来高仿，为啥通过ViewPager来高仿呢，一是ViewPager提供了PageTransformer，很容易的实现切换动画效果，二是ViewPager很容易控制滑动选中的一项居中，这里先看下高仿后的效果图，效果还是很不错的：<br><img src="http://img.blog.csdn.net/20150928093108444" alt="image"></p>
+<hr>
+<p>要实现这种效果，核心知识点有如下几个：</p>
+<ol>
+<li>android:clipChildren设置为false，意味着不限制子View在其范围内，也就是说子view可以超出父view的范围</li>
+<li>通过PageTransformer来实现缩放动画</li>
+<li>拦截点击事件的位置来实现点击切换viewpager，这个为什么要实现，后面再说</li>
+</ol>
+<hr>
+<p>下面我们一步一步讲解来实现这个布局效果</p>
+<p><strong>定义布局xml</strong></p>
+<pre><code>    <span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+    <span class="tag">&lt;<span class="title">RelativeLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span>
+    <span class="attribute">xmlns:app</span>=<span class="value">"http://schemas.android.com/apk/res-auto"</span>
+    <span class="attribute">xmlns:tools</span>=<span class="value">"http://schemas.android.com/tools"</span>
+    <span class="attribute">android:id</span>=<span class="value">"@+id/page_container"</span>
+    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span>
+    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span>
+    <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span>
+    <span class="attribute">android:clipChildren</span>=<span class="value">"false"</span>
+    <span class="attribute">app:layout_behavior</span>=<span class="value">"@string/appbar_scrolling_view_behavior"</span>
+    <span class="attribute">tools:context</span>=<span class="value">".MainActivity"</span>
+    <span class="attribute">tools:showIn</span>=<span class="value">"@layout/activity_main"</span>&gt;</span>
+
+    <span class="tag">&lt;<span class="title">com.hhl.tubatu.ClipViewPager</span>
+        <span class="attribute">android:id</span>=<span class="value">"@+id/viewpager"</span>
+        <span class="attribute">android:layout_width</span>=<span class="value">"200dp"</span>
+        <span class="attribute">android:layout_height</span>=<span class="value">"200dp"</span>
+        <span class="attribute">android:layout_centerInParent</span>=<span class="value">"true"</span>
+        <span class="attribute">android:clipChildren</span>=<span class="value">"false"</span>
+        <span class="attribute">android:overScrollMode</span>=<span class="value">"never"</span> /&gt;</span>
+
+<span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span>
+</code></pre><p>上面的RelativeLayout和自定义的ClipViewPager都各自添加了一个属性<strong>android:clipChildren=”false”</strong>，clipChildren的意思是是否限制子View在其范围内，这个默认是true，也就是默认是限制子view在其范围的</p>
+<p><strong>给ViewPager设置缩放动画，这里通过PageTransformer来实现</strong></p>
+<pre><code>mViewPager = (ClipViewPager) findViewById(R.id.viewpager);
+    mViewPager.setPageTransformer(<span class="literal">true</span>, <span class="keyword">new</span> ScalePageTransformer());
+</code></pre><p><strong>再来看ScalePageTransformer的实现，核心就是实现transformPage(View page, float position)这个方法</strong></p>
+<pre><code><span class="comment">/**
+ * Created by HanHailong on 15/9/27.
+ */</span>
+<span class="keyword">public</span> <span class="keyword">class</span> ScalePageTransformer implements ViewPager.PageTransformer {
+
+    <span class="keyword">public</span> <span class="keyword">static</span> final <span class="keyword">float</span> MAX_SCALE = <span class="number">1.2f</span>;
+    <span class="keyword">public</span> <span class="keyword">static</span> final <span class="keyword">float</span> MIN_SCALE = <span class="number">0.6f</span>;
+
+    @<span class="function">Override
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transformPage</span><span class="params">(View page, <span class="keyword">float</span> position)</span> </span>{
+
+        <span class="keyword">if</span> (position &lt; -<span class="number">1</span>) {
+            position = -<span class="number">1</span>;
+        } <span class="keyword">else</span> <span class="keyword">if</span> (position &gt; <span class="number">1</span>) {
+            position = <span class="number">1</span>;
+        }
+
+        <span class="keyword">float</span> tempScale = position &lt; <span class="number">0</span> ? <span class="number">1</span> + position : <span class="number">1</span> - position;
+
+        <span class="keyword">float</span> slope = (MAX_SCALE - MIN_SCALE) / <span class="number">1</span>;
+        <span class="comment">//一个公式</span>
+        <span class="keyword">float</span> scaleValue = MIN_SCALE + tempScale * slope;
+        page.setScaleX(scaleValue);
+        page.setScaleY(scaleValue);
+    }
+}
+</code></pre><p>其实核心代码就是这个动画实现部分，这里设置了一个最大缩放和最小缩放比例，当处于最中间的view忘左边滑动时，它的position值是小于0的，并且是越来越小,它右边的view的position是从1逐渐减小到0的。</p>
+<p><strong>下面我们看下在Activity的完整实现代码</strong></p>
+<pre><code><span class="preprocessor"><span class="keyword">import</span> android.content.Context;</span>
+<span class="preprocessor"><span class="keyword">import</span> android.os.Bundle;</span>
+<span class="preprocessor"><span class="keyword">import</span> android.support.design.widget.FloatingActionButton;</span>
+<span class="preprocessor"><span class="keyword">import</span> android.support.design.widget.Snackbar;</span>
+<span class="preprocessor"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity;</span>
+<span class="preprocessor"><span class="keyword">import</span> android.support.v7.widget.Toolbar;</span>
+<span class="preprocessor"><span class="keyword">import</span> android.view.Menu;</span>
+<span class="preprocessor"><span class="keyword">import</span> android.view.MenuItem;</span>
+<span class="preprocessor"><span class="keyword">import</span> android.view.MotionEvent;</span>
+<span class="preprocessor"><span class="keyword">import</span> android.view.View;</span>
+<span class="preprocessor"><span class="keyword">import</span> android.view.ViewGroup;</span>
+<span class="preprocessor"><span class="keyword">import</span> android.widget.ImageView;</span>
+
+<span class="preprocessor"><span class="keyword">import</span> com.hhl.tubatu.adapter.RecyclingPagerAdapter;</span>
+
+<span class="preprocessor"><span class="keyword">import</span> java.util.ArrayList;</span>
+<span class="preprocessor"><span class="keyword">import</span> java.util.List;</span>
+
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>{
+
+    <span class="keyword">private</span> ClipViewPager mViewPager;
+    <span class="keyword">private</span> TubatuAdapter mPagerAdapter;
+
+    @Override
+    <span class="keyword">protected</span> <span class="keyword">void</span> onCreate(Bundle savedInstanceState) {
+        <span class="keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() {
+            @Override
+            <span class="keyword">public</span> <span class="keyword">void</span> onClick(View view) {
+                Snackbar.make(view, <span class="string">"Replace with your own action"</span>, Snackbar.LENGTH_LONG)
+                        .setAction(<span class="string">"Action"</span>, <span class="literal">null</span>).show();
+            }
+        });
+
+        mViewPager = (ClipViewPager) findViewById(R.id.viewpager);
+        mViewPager.setPageTransformer(<span class="literal">true</span>, <span class="keyword">new</span> ScalePageTransformer());
+
+        findViewById(R.id.page_container).setOnTouchListener(<span class="keyword">new</span> View.OnTouchListener() {
+            @Override
+            <span class="keyword">public</span> boolean onTouch(View v, MotionEvent event) {
+                <span class="keyword">return</span> mViewPager.dispatchTouchEvent(event);
+            }
+        });
+
+        mPagerAdapter = <span class="keyword">new</span> TubatuAdapter(<span class="keyword">this</span>);
+        mViewPager.setAdapter(mPagerAdapter);
+
+        initData();
+    }
+
+    <span class="keyword">private</span> <span class="keyword">void</span> initData() {
+        List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();
+        list.add(R.drawable.style_xiandai);
+        list.add(R.drawable.style_jianyue);
+        list.add(R.drawable.style_oushi);
+        list.add(R.drawable.style_zhongshi);
+        list.add(R.drawable.style_meishi);
+        list.add(R.drawable.style_dzh);
+        list.add(R.drawable.style_dny);
+        list.add(R.drawable.style_rishi);
+
+        <span class="comment">//设置OffscreenPageLimit</span>
+        mViewPager.setOffscreenPageLimit(list.size());
+        mPagerAdapter.addAll(list);
+    }
+
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TubatuAdapter</span> <span class="keyword">extends</span> <span class="title">RecyclingPagerAdapter</span> </span>{
+
+        <span class="keyword">private</span> <span class="keyword">final</span> List&lt;Integer&gt; mList;
+        <span class="keyword">private</span> <span class="keyword">final</span> Context mContext;
+
+        <span class="keyword">public</span> TubatuAdapter(Context context) {
+            mList = <span class="keyword">new</span> ArrayList&lt;&gt;();
+            mContext = context;
+        }
+
+        <span class="keyword">public</span> <span class="keyword">void</span> addAll(List&lt;Integer&gt; list) {
+            mList.addAll(list);
+            notifyDataSetChanged();
+        }
+
+        @Override
+        <span class="keyword">public</span> View getView(int position, View convertView, ViewGroup container) {
+            ImageView imageView = <span class="literal">null</span>;
+            <span class="keyword">if</span> (convertView == <span class="literal">null</span>) {
+                imageView = <span class="keyword">new</span> ImageView(mContext);
+            } <span class="keyword">else</span> {
+                imageView = (ImageView) convertView;
+            }
+            imageView.setTag(position);
+            imageView.setImageResource(mList.<span class="keyword">get</span>(position));
+            <span class="keyword">return</span> imageView;
+        }
+
+        @Override
+        <span class="keyword">public</span> int getCount() {
+            <span class="keyword">return</span> mList.size();
+        }
+    }
+}
+</code></pre><p>这里需要注意几点，一是            mViewPager.setOffscreenPageLimit(list.size());<br>这里需要将setOffscreenPageLimit的值设置成数据源的总个数，如果不加这句话，会导致左右切换异常；二是需要将整个页面的事件分发给ViewPager，不然的话只有ViewPager中间的view能滑动，其他的都不能滑动，这是肯定的，因为ViewPager总体布局就是中间那一块大小，其他的子布局都跑到ViewPager外面来了。三是你发现ViewPager加了setOnTouchListener方法后，滑动是可以了，但是点击左右两边不能切换，这里需要重写ViewPager的<strong>dispatchTouchEvent</strong>方法，下面看ClipViewPager代码：</p>
+<pre><code><span class="keyword">package</span> com.hhl.tubatu;
+
+<span class="keyword">import</span> android.content.Context;
+<span class="keyword">import</span> android.support.v4.view.ViewPager;
+<span class="keyword">import</span> android.util.AttributeSet;
+<span class="keyword">import</span> android.view.MotionEvent;
+<span class="keyword">import</span> android.view.View;
+
+<span class="comment">/**
+ * Created by HanHailong on 15/9/27.
+ */</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClipViewPager</span> <span class="keyword">extends</span> <span class="title">ViewPager</span> </span>{
+
+    <span class="function"><span class="keyword">public</span> <span class="title">ClipViewPager</span><span class="params">(Context context)</span> </span>{
+        <span class="keyword">super</span>(context);
+    }
+
+    <span class="function"><span class="keyword">public</span> <span class="title">ClipViewPager</span><span class="params">(Context context, AttributeSet attrs)</span> </span>{
+        <span class="keyword">super</span>(context, attrs);
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="function"><span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>{
+
+        <span class="keyword">if</span> (ev.getAction() == MotionEvent.ACTION_UP) {
+            View view = viewOfClickOnScreen(ev);
+            <span class="keyword">if</span> (view != <span class="keyword">null</span>) {
+                setCurrentItem(indexOfChild(view));
+            }
+        }
+
+        <span class="function"><span class="keyword">return</span> <span class="keyword">super</span>.<span class="title">dispatchTouchEvent</span><span class="params">(ev)</span></span>;
+    }
+
+    <span class="comment">/**
+     * <span class="doctag">@param</span> ev
+     * <span class="doctag">@return</span>
+     */</span>
+    <span class="keyword">private</span> <span class="function">View <span class="title">viewOfClickOnScreen</span><span class="params">(MotionEvent ev)</span> </span>{
+        <span class="keyword">int</span> childCount = getChildCount();
+        <span class="keyword">int</span>[] location = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; childCount; i++) {
+            View v = getChildAt(i);
+            v.getLocationOnScreen(location);
+            <span class="keyword">int</span> minX = location[<span class="number">0</span>];
+            <span class="keyword">int</span> minY = getTop();
+
+            <span class="keyword">int</span> maxX = location[<span class="number">0</span>] + v.getWidth();
+            <span class="keyword">int</span> maxY = getBottom();
+
+            <span class="keyword">float</span> x = ev.getX();
+            <span class="keyword">float</span> y = ev.getY();
+
+            <span class="keyword">if</span> ((x &gt; minX &amp;&amp; x &lt; maxX) &amp;&amp; (y &gt; minY &amp;&amp; y &lt; maxY)) {
+                <span class="keyword">return</span> v;
+            }
+        }
+        <span class="keyword">return</span> <span class="keyword">null</span>;
+    }
+}
+</code></pre><p>实现原理就是手指点击屏幕，如果点击的位置恰好落在ViewPager某个子View范围内，就让ViewPager切换到哪个子View！<strong>viewOfClickOnScreen</strong>方法是获取手指点击ViewPager中的哪个子View，最后调用setCurrentItem切换到相应的子View，经过以上设置就大功告成了！</p>
+<p>补充一下，<a href="https://github.com/JakeWharton/salvage/blob/e065bf9b775f372967b8ae0f49204dafc5dd91fc/salvage/src/main/java/com/jakewharton/salvage/RecyclingPagerAdapter.java" target="_blank" rel="external">RecyclingPagerAdapter</a>是<a href="https://github.com/JakeWharton" target="_blank" rel="external">Jake Wharton</a>Android大神封装的可用于复用的PagerAdapter。</p>
+<p>最后附上源码<a href="https://github.com/hanhailong/tubatu-viewpager" target="_blank" rel="external">github</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>最近看到有同事在用土巴兔这个app，看了里面的一些效果非常的不错，就试着模仿了一下，首先模仿的是土巴兔里面一个选择装修风格的效果，先看原版效果图如下：<br><img src="http://img.blog.csdn.net/20150928093046209" alt="image"></p>]]>
+    
+    </summary>
+    
+      <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Android：第一个App用户量突破十万大关，正迈向二十万...]]></title>
+    <link href="http://hanhailong.com/2015/09/24/Android%EF%BC%9A%E7%AC%AC%E4%B8%80%E4%B8%AAApp%E7%94%A8%E6%88%B7%E9%87%8F%E7%AA%81%E7%A0%B4%E5%8D%81%E4%B8%87%E5%A4%A7%E5%85%B3%EF%BC%8C%E6%AD%A3%E8%BF%88%E5%90%91%E4%BA%8C%E5%8D%81%E4%B8%87/"/>
+    <id>http://hanhailong.com/2015/09/24/Android：第一个App用户量突破十万大关，正迈向二十万/</id>
+    <published>2015-09-24T02:48:11.000Z</published>
+    <updated>2015-09-24T02:55:00.000Z</updated>
+    <content type="html"><![CDATA[<p>做了N个app了，这是第一个app用户量突破十万的，极客学院Android客户端用户量已经达到13万了，每天活跃用户量三四千，每天新增用户不到1千。</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/jike_user_num.png?raw=true" alt="极客"></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>做了N个app了，这是第一个app用户量突破十万的，极客学院Android客户端用户量已经达到13万了，每天活跃用户量三四千，每天新增用户不到1千。</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyRes]]>
+    </summary>
+    
+      <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Android-三张图搞定Touch事件传递机制]]></title>
+    <link href="http://hanhailong.com/2015/09/24/Android-%E4%B8%89%E5%BC%A0%E5%9B%BE%E6%90%9E%E5%AE%9ATouch%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6/"/>
+    <id>http://hanhailong.com/2015/09/24/Android-三张图搞定Touch事件传递机制/</id>
+    <published>2015-09-23T22:27:43.000Z</published>
+    <updated>2015-09-23T22:33:28.000Z</updated>
+    <content type="html"><![CDATA[<p>之前看了很多关于Android事件Touch传递机制的文章，感觉还是老外讲的最清楚。原版PDF地址：<a href="http://wugengxin.cn/download/pdf/android/PRE_andevcon_mastering-the-android-touch-system.pdf" target="_blank" rel="external">Mastering the Android Touch System</a>，github的demo地址：<a href="https://github.com/devunwired/custom-touch-examples" target="_blank" rel="external">demo</a></p>
+<a id="more"></a>
+<p>上图之前先讲下Android事件的基础知识：</p>
+<ol>
+<li>所有的Touch事件都封装到MotionEvent里面</li>
+<li>事件处理包括三种情况，分别为：传递—-dispatchTouchEvent()函数、拦截——onInterceptTouchEvent()函数、消费—-onTouchEvent()函数和OnTouchListener </li>
+<li>事件类型分为ACTION_DOWN, ACTION_UP, ACTION_MOVE, ACTION_POINTER_DOWN, ACTION_POINTER_UP, ACTION_CANCEL等，每个事件都是以ACTION_DOWN开始ACTION_UP结束</li>
+</ol>
+<p>Android事件传递流程：</p>
+<ol>
+<li>事件都是从Activity.dispatchTouchEvent()开始传递</li>
+<li>事件由父View传递给子View，ViewGroup可以通过onInterceptTouchEvent()方法对事件拦截，停止其向子view传递</li>
+<li>如果事件从上往下传递过程中一直没有被停止，且最底层子View没有消费事件，事件会反向往上传递，这时父View(ViewGroup)可以进行消费，如果还是没有被消费的话，最后会到Activity的onTouchEvent()函数。</li>
+<li>如果View没有对ACTION_DOWN进行消费，之后的其他事件不会传递过来，也就是说ACTION_DOWN必须返回true，之后的事件才会传递进来</li>
+<li>OnTouchListener优先于onTouchEvent()对事件进行消费</li>
+</ol>
+<hr>
+<p>效果图如下：</p>
+<ol>
+<li>View不处理事件流程图（View没有消费事件）<br><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/view_touch_ignorant.png?raw=true" alt="Touch Ignore"></li>
+<li>View处理事件<br><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/view_touch_interested.png?raw=true" alt="Touch interest"></li>
+<li>事件拦截<br><img src="https://raw.githubusercontent.com/hanhailong/AndroidStudyResources/master/screenshot/view_touch_intercept.png" alt="Touch Intercept"></li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>之前看了很多关于Android事件Touch传递机制的文章，感觉还是老外讲的最清楚。原版PDF地址：<a href="http://wugengxin.cn/download/pdf/android/PRE_andevcon_mastering-the-android-touch-system.pdf">Mastering the Android Touch System</a>，github的demo地址：<a href="https://github.com/devunwired/custom-touch-examples">demo</a></p>]]>
+    
+    </summary>
+    
+      <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Android-通过@Keep注解来防止类、构造函数、方法、变量等混淆]]></title>
+    <link href="http://hanhailong.com/2015/09/20/Android-%E9%80%9A%E8%BF%87-Keep%E6%B3%A8%E8%A7%A3%E6%9D%A5%E9%98%B2%E6%AD%A2%E7%B1%BB%E3%80%81%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E3%80%81%E6%96%B9%E6%B3%95%E3%80%81%E5%8F%98%E9%87%8F%E7%AD%89%E6%B7%B7%E6%B7%86/"/>
+    <id>http://hanhailong.com/2015/09/20/Android-通过-Keep注解来防止类、构造函数、方法、变量等混淆/</id>
+    <published>2015-09-20T13:01:28.000Z</published>
+    <updated>2015-09-23T22:37:22.000Z</updated>
+    <content type="html"><![CDATA[<p>我们在开发Android应用的时候，经常遇到这样一种问题：那就是防止proguard混淆我们特定的变量、方法等等。</p>
+<a id="more"></a>
+<hr>
+<p>举个例子，我们定义了一个类，这个类实现了Serializable接口；当然这个类不能混淆，否则反序列化会出错。通常这种情况下，我们会在proguard-rules.pro配置文件中加入以下代码：</p>
+<pre><code>-keepnames <span class="class"><span class="keyword">class</span> * <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span>
+ -<span class="title">keepclassmembers</span> <span class="title">class</span> * <span class="keyword">implements</span>     <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>{
+<span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID;
+<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> java.io.ObjectStreamField[]     serialPersistentFields;
+!<span class="keyword">static</span> !<span class="keyword">transient</span> &lt;fields&gt;;
+<span class="function"><span class="keyword">private</span> <span class="keyword">void</span>         <span class="title">writeObject</span><span class="params">(java.io.ObjectOutputStream)</span></span>;
+<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readObject</span><span class="params">(java.io.ObjectInputStream)</span></span>;
+java.lang.<span class="function">Object <span class="title">writeReplace</span><span class="params">()</span></span>;
+java.lang.<span class="function">Object <span class="title">readResolve</span><span class="params">()</span></span>;
+}
+</code></pre><p>但是这个是混淆的实现Serializable的类，有时候我们需要混淆没有共同特征的类、方法和属性时，这种写法就非常蛋疼了。</p>
+<p>这里介绍一种比较新颖、轻快的方法，通过@Keep注解来灵活的防止混淆，用起来非常的灵活、快捷、方便，怎样用呢？像普通的注解一样，如下：</p>
+<pre><code><span class="comment">//防止混淆类</span>
+<span class="variable">@Keep</span>
+public class Person {}
+
+<span class="comment">//防止混淆变量</span>
+<span class="variable">@Keep</span>
+public String name;
+
+<span class="comment">//防止混淆方法</span>
+<span class="variable">@Keep</span>
+public int <span class="function">getAge</span>(){}
+</code></pre><p>但是当你加上上面的注解后，发现@Keep并没有起作用，该混淆的还是混淆了，这是为什么呢？</p>
+<p>原因目前Gradle还不支持@Keep混淆，Google只是定义好了一个这种注解，并没有实现它，也就是说@Keep目前只是一个空壳。这里我们来手动开启它，让它支持防止混淆，在你的progurad-rules.pro配置文件里面加入以下代码：</p>
+<pre><code>#手动启用support keep注解
+#http://tools.android.com/tech-docs/support-    annotations
+-<span class="ruby">dontskipnonpubliclibraryclassmembers
+</span>-<span class="ruby">printconfiguration
+</span>-<span class="ruby">keep,allowobfuscation <span class="variable">@interface</span>         android.support.annotation.<span class="constant">Keep</span>
+</span>
+-<span class="ruby">keep <span class="variable">@android</span>.support.annotation.<span class="constant">Keep</span> <span class="class"><span class="keyword">class</span> *</span>
+</span>-<span class="ruby">keepclassmembers <span class="class"><span class="keyword">class</span> * {</span>
+</span>    @android.support.annotation.Keep *;
+}
+</code></pre><p>加入后如下：<br><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/android_keep.png?raw=true" alt="image"></p>
+<p>这样就开启了，重新打Realease包发现程序可以正常运行了！</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>我们在开发Android应用的时候，经常遇到这样一种问题：那就是防止proguard混淆我们特定的变量、方法等等。</p>]]>
+    
+    </summary>
+    
+      <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[alfi-一个Android Library Finder]]></title>
+    <link href="http://hanhailong.com/2015/09/18/alfi-%E4%B8%80%E4%B8%AAAndroid-Library-Finder/"/>
+    <id>http://hanhailong.com/2015/09/18/alfi-一个Android-Library-Finder/</id>
+    <published>2015-09-18T02:50:53.000Z</published>
+    <updated>2015-09-18T03:00:42.000Z</updated>
+    <content type="html"><![CDATA[<p>#alfi<br>    Android Library Finder</p>
+<p><img src="https://raw.githubusercontent.com/cesarferreira/alfi/master/extras/images/logov2.png" alt="image"></p>
+<p>Search through thousands of android libraries that can help you scale your projects elegantly</p>
+<a id="more"></a>
+<p>##安装<br>打开终端terminal：</p>
+<pre><code>$ gem <span class="keyword">install</span> alfi
+</code></pre><p>##使用<br>搜索一个Android Library库：</p>
+<pre><code><span class="title">alfi</span> picasso
+</code></pre><p><img src="https://camo.githubusercontent.com/afa6678a7a5a98040461b3f597df3b2808b7abd5/68747470733a2f2f7261772e6769746875622e636f6d2f636573617266657272656972612f616c66692f6d61737465722f6578747261732f696d616765732f7465726d696e616c30312e676966" alt="image"></p>
+<p>##最后一步</p>
+<p>复制这个查询出的库到你的build.gradle并且sync it</p>
+<p>##github库地址</p>
+<p>##<a href="https://github.com/cesarferreira/alfi" target="_blank" rel="external">alfi</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>#alfi<br>    Android Library Finder</p>
+<p><img src="https://raw.githubusercontent.com/cesarferreira/alfi/master/extras/images/logov2.png" alt="image"></p>
+<p>Search through thousands of android libraries that can help you scale your projects elegantly</p>]]>
+    
+    </summary>
+    
+      <category term="Android工具" scheme="http://hanhailong.com/tags/Android%E5%B7%A5%E5%85%B7/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Hexo主题-在博客左上角添加ForkMeOnGithub功能]]></title>
+    <link href="http://hanhailong.com/2015/09/17/Hexo%E4%B8%BB%E9%A2%98-%E5%9C%A8%E5%8D%9A%E5%AE%A2%E5%B7%A6%E4%B8%8A%E8%A7%92%E6%B7%BB%E5%8A%A0ForkMeOnGithub%E5%8A%9F%E8%83%BD/"/>
+    <id>http://hanhailong.com/2015/09/17/Hexo主题-在博客左上角添加ForkMeOnGithub功能/</id>
+    <published>2015-09-17T03:28:31.000Z</published>
+    <updated>2015-09-17T03:52:19.000Z</updated>
+    <content type="html"><![CDATA[<p>群里有同学问我博客左上角的Fork me on Github是怎么实现的，我这里简单介绍一下，其实实现原理很简单，因为我这里用的yilia主题，你只要改下themes/yilia/layout/_partial/left-col.ejs文件下的<code>&lt;div class=&quot;overlay&quot;&gt;&lt;/div&gt;</code>，在这个<div>标签里面添加下面的代码，具体代码请看详情：</div></p>
+<a id="more"></a>
+<p><code>&lt;a href=&quot;https://github.com/hanhailong&quot; target=&quot;_Blank&quot;&gt;&lt;img style=&quot;position: absolute; top: 0; left: 0; border: 0;&quot; src=&quot;http://img01.taobaocdn.com/imgextra/i1/102975691/TB2YWCacpXXXXaCXXXXXXXXXXXX-102975691.png&quot; alt=&quot;Fork me on GitHub&quot; data-canonical-src=&quot;http://img01.taobaocdn.com/imgextra/i1/102975691/TB2YWCacpXXXXaCXXXXXXXXXXXX-102975691.png&quot;&gt;&lt;/a&gt;</code></p>
+<p>其中href中的链接换成你自己的github链接就可以了，这样就实现了！</p>
+<p>效果图如下：</p>
+<p><img src="http://d.pcs.baidu.com/thumbnail/ed5a676c5d4c3c3ea9c571ba5747dc6b?fid=2366937272-250528-753169378554083&amp;time=1442458800&amp;sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-qtKptHjSorEN7d8g3MJs%2BIYPvGA%3D&amp;rt=sh&amp;expires=2h&amp;r=829908147&amp;sharesign=unknown&amp;size=c710_u500&amp;quality=100" alt="image"></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>群里有同学问我博客左上角的Fork me on Github是怎么实现的，我这里简单介绍一下，其实实现原理很简单，因为我这里用的yilia主题，你只要改下themes/yilia/layout/_partial/left-col.ejs文件下的<code>&lt;div class=&quot;overlay&quot;&gt;&lt;/div&gt;</code>，在这个<div>标签里面添加下面的代码，具体代码请看详情：</p>]]>
+    
+    </summary>
+    
+      <category term="Hexo主题" scheme="http://hanhailong.com/tags/Hexo%E4%B8%BB%E9%A2%98/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Hexo主题-yilia和next]]></title>
+    <link href="http://hanhailong.com/2015/09/17/Hexo%E4%B8%BB%E9%A2%98-yilia%E5%92%8Cnext/"/>
+    <id>http://hanhailong.com/2015/09/17/Hexo主题-yilia和next/</id>
+    <published>2015-09-17T03:04:05.000Z</published>
+    <updated>2015-09-17T03:21:34.000Z</updated>
+    <content type="html"><![CDATA[<p>最近在看Hexo主题相关的东西，我现在正在使用的是<a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="external">yilia</a>主题，效果非常赞哦！另外再介绍一个star数量也比较高的主题<a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">next</a>，效果也是很不错的！两个主题的具体内容看详情…</p>
+<a id="more"></a>
+<p>yilia主题的效果图为：<br><img src="https://camo.githubusercontent.com/1a7175617e4d866305b091857c7517ae542df65d/687474703a2f2f6c697474656e646f6d6f2e73696e616170702e636f6d2f79696c69612f79696c69612d7063312e706e67" alt="image"></p>
+<hr>
+<p>最近又看到了<a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">next</a>，效果也挺不错，看效果图：<br><img src="https://camo.githubusercontent.com/2e2c5c6d351ebe899fcebed0f56a5b72b2660b06/687474703a2f2f696973736e616e2e636f6d2f6e657875732f6e6578742f6e6578742d736368656d65732e6a7067" alt="image"><br>    最重要的是，里面有个非常详细的wiki，详细讲解了怎么设置头像、关于我、创建分类、侧边栏等等，链接wiki地址在<a href="https://github.com/iissnan/hexo-theme-next/wiki" target="_blank" rel="external">next-wiki</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>最近在看Hexo主题相关的东西，我现在正在使用的是<a href="https://github.com/litten/hexo-theme-yilia">yilia</a>主题，效果非常赞哦！另外再介绍一个star数量也比较高的主题<a href="https://github.com/iissnan/hexo-theme-next">next</a>，效果也是很不错的！两个主题的具体内容看详情…</p>]]>
+    
+    </summary>
+    
+      <category term="Hexo主题" scheme="http://hanhailong.com/tags/Hexo%E4%B8%BB%E9%A2%98/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[欢迎来到极客学院！]]></title>
+    <link href="http://hanhailong.com/2015/09/16/%E6%AC%A2%E8%BF%8E%E6%9D%A5%E5%88%B0%E6%9E%81%E5%AE%A2%E5%AD%A6%E9%99%A2%EF%BC%81/"/>
+    <id>http://hanhailong.com/2015/09/16/欢迎来到极客学院！/</id>
+    <published>2015-09-16T06:16:26.000Z</published>
+    <updated>2015-09-28T03:44:47.000Z</updated>
+    <content type="html"><![CDATA[<p>2015年加入<a href="http://www.jikexueyuan.com/" target="_blank" rel="external">极客学院</a>，开始新的移动研发里程！！！</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>2015年加入<a href="http://www.jikexueyuan.com/" target="_blank" rel="external">极客学院</a>，开始新的移动研发里程！！！</p>
+]]>
+    </summary>
+    
+      <category term="随笔" scheme="http://hanhailong.com/tags/%E9%9A%8F%E7%AC%94/"/>
+    
+  </entry>
+  
+</feed>
