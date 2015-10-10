@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>RxBus—通过RxJava来替换EventBus | 韩海龙的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言
+
+RxJava有多火？看看Github上star数量就知道了，那什么是RxJava呢？
+RxJava 在 GitHub 主页上的自我介绍是 “a library for composing asynchronous and event-based programs using observable sequences for the Java VM”（一个在 Java VM 上使用可观测的序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RxBus—通过RxJava来替换EventBus">
+<meta property="og:url" content="http://hanhailong.com/2015/10/09/RxBus—通过RxJava来替换EventBus/index.html">
+<meta property="og:site_name" content="韩海龙的博客">
+<meta property="og:description" content="前言
+
+RxJava有多火？看看Github上star数量就知道了，那什么是RxJava呢？
+RxJava 在 GitHub 主页上的自我介绍是 “a library for composing asynchronous and event-based programs using observable sequences for the Java VM”（一个在 Java VM 上使用可观测的序">
+<meta property="og:updated_time" content="2015-10-10T02:18:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RxBus—通过RxJava来替换EventBus">
+<meta name="twitter:description" content="前言
+
+RxJava有多火？看看Github上star数量就知道了，那什么是RxJava呢？
+RxJava 在 GitHub 主页上的自我介绍是 “a library for composing asynchronous and event-based programs using observable sequences for the Java VM”（一个在 Java VM 上使用可观测的序">
+  
+    <link rel="alternative" href="/atom.xml" title="韩海龙的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+<script type="text/javascript">
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?1a0ff1f7e5512b17801970593ac2f9cb";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="overlay">
+	<a href="https://github.com/hanhailong" target="_Blank"><img style="position: absolute; top: 0; left: 0; border: 0;" src="http://img01.taobaocdn.com/imgextra/i1/102975691/TB2YWCacpXXXXaCXXXXXXXXXXXX-102975691.png" alt="Fork me on GitHub" data-canonical-src="http://img01.taobaocdn.com/imgextra/i1/102975691/TB2YWCacpXXXXaCXXXXXXXXXXXX-102975691.png"></a>
+</div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars2.githubusercontent.com/u/4241807?v=3&amp;s=460" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">韩海龙</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">学习总结 思考感悟 知识管理 代码分享</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/tags/随笔">随笔</a></li>
+				        
+							<li><a href="/aboutme">关于我</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/hanhailong" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/u/2824905385" title="weibo">weibo</a>
+					        
+								<a class="twitter" target="_blank" href="http://blog.csdn.net/hanhailong726188" title="twitter">twitter</a>
+					        
+								<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android工具/" style="font-size: 10px;">Android工具</a> <a href="/tags/Hexo主题/" style="font-size: 17.5px;">Hexo主题</a> <a href="/tags/IOS/" style="font-size: 12.5px;">IOS</a> <a href="/tags/RxAndroid/" style="font-size: 10px;">RxAndroid</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/技术博客/" style="font-size: 15px;">技术博客</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">韩海龙</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="https://avatars2.githubusercontent.com/u/4241807?v=3&amp;s=460" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">韩海龙</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">学习总结 思考感悟 知识管理 代码分享</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/tags/随笔">随笔</a></li>
+		        
+					<li><a href="/aboutme">关于我</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/hanhailong" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/u/2824905385" title="weibo">weibo</a>
+			        
+						<a class="twitter" target="_blank" href="http://blog.csdn.net/hanhailong726188" title="twitter">twitter</a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-RxBus—通过RxJava来替换EventBus" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/10/09/RxBus—通过RxJava来替换EventBus/" class="article-date">
+  	<time datetime="2015-10-09T15:25:07.000Z" itemprop="datePublished">2015-10-09</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      RxBus—通过RxJava来替换EventBus
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RxAndroid/">RxAndroid</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RxJava/">RxJava</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2>前言</h2>
+
+<p><a href="https://github.com/ReactiveX/RxJava" target="_blank" rel="external">RxJava</a>有多火？看看Github上star数量就知道了，那什么是RxJava呢？</p>
+<p>RxJava 在 GitHub 主页上的自我介绍是 “a library for composing asynchronous and event-based programs using observable sequences for the Java VM”（一个在 Java VM 上使用可观测的序列来组成异步的、基于事件的程序的库）。这就是 RxJava ，概括得非常精准。</p>
+<p>换一种说法，RxJava 是一个响应式编程框架，采用观察者设计模式。所以自然少不了 Observable 和 Subscriber 这两个东东了。</p>
+<a id="more"></a>
+<p>而针对Android，则有一个基于RxJava的<a href="https://github.com/ReactiveX/RxAndroid" target="_blank" rel="external">RxAndroid</a></p>
+<p>甚至Jake Wharton大神还基于RxJava写了一个针对Android平台的binding api<a href="https://github.com/JakeWharton/RxBinding" target="_blank" rel="external">RxBinding</a></p>
+<p>而这篇博文讲的就是基于RxJava实现的一个Event Bus-&gt;<a href="https://github.com/hanhailong/AndroidStudyResources/blob/master/javacode/RxBus.java" target="_blank" rel="external">RxBus</a></p>
+<p>懂得Android的开发者都知道，目前Android上最火的两个Event Bus库是<a href="http://square.github.io/otto/" target="_blank" rel="external">Otto</a>和Green Robot’s<a href="https://github.com/greenrobot/EventBus" target="_blank" rel="external">EventBus</a>，两个事件总线库写的都非常不错。不过这里不是讲事件总线，而是讲如何通过RxJava来实现事件总线的效果。</p>
+<p>总体来说，代码非常的简单，十几行代码就搞定了！</p>
+<p>首先，我们来定义一个RxBus单例类：</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"><span class="keyword">import</span> rx.Observable;</span></span><br><span class="line"><span class="preprocessor"><span class="keyword">import</span> rx.subjects.PublishSubject;</span></span><br><span class="line"><span class="preprocessor"><span class="keyword">import</span> rx.subjects.SerializedSubject;</span></span><br><span class="line"><span class="preprocessor"><span class="keyword">import</span> rx.subjects.Subject;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Created by HanHailong on 15/10/9.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RxBus</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> volatile RxBus mDefaultInstance;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> RxBus() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> RxBus getDefault() &#123;</span><br><span class="line">        <span class="keyword">if</span> (mDefaultInstance == <span class="literal">null</span>) &#123;</span><br><span class="line">            synchronized (RxBus.<span class="keyword">class</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (mDefaultInstance == <span class="literal">null</span>) &#123;</span><br><span class="line">                    mDefaultInstance = <span class="keyword">new</span> RxBus();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mDefaultInstance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Subject&lt;Object, Object&gt; _bus = <span class="keyword">new</span> SerializedSubject&lt;&gt;(PublishSubject.create());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> send(Object o) &#123;</span><br><span class="line">        _bus.onNext(o);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Observable&lt;Object&gt; toObservable() &#123;</span><br><span class="line">        <span class="keyword">return</span> _bus;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码非常的简单，使用呢？则更简单了，一般来讲，事件总线，包括一个发送事件和多个接收事件。</p>
+<p>先看发送事件的代码：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">RxBus</span><span class="class">.getDefault</span>()<span class="class">.send</span>(<span class="tag">new</span> <span class="tag">TapEvent</span>());</span><br></pre></td></tr></table></figure>
+<p>而在你想接收事件的地方，只需要加上下面代码就可以了：</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">RxBus.getDefault().toObservable().subscribe(<span class="keyword">new</span> Action1&lt;Object&gt;() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">call</span><span class="params">(Object event)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">if</span> (event <span class="keyword">instanceof</span> TapEvent) &#123;</span><br><span class="line">                   <span class="comment">//do something</span></span><br><span class="line">                &#125;<span class="function"><span class="keyword">else</span> <span class="title">if</span><span class="params">(event <span class="keyword">instanceof</span> otherEvent)</span></span>&#123;</span><br><span class="line">                		<span class="comment">//do otherthing</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+<p>这样，一个简单的Event Bus就实现了！如果你的项目已经开始使用RxJava，建议可以把<a href="http://square.github.io/otto/" target="_blank" rel="external">Otto</a>和Green Robot’s<a href="https://github.com/greenrobot/EventBus" target="_blank" rel="external">EventBus</a>去掉了，直接使用<a href="https://github.com/hanhailong/AndroidStudyResources/blob/master/javacode/RxBus.java" target="_blank" rel="external">RxBus</a>！！</p>
+<p>当然，不要忘了在build.gradle引入RxJava和RxAndroid：</p>
+<pre><code><span class="keyword">compile</span> <span class="string">'io.reactivex:rxandroid:1.0.1'</span>
+<span class="keyword">compile</span> <span class="string">'io.reactivex:rxjava:1.0.14'</span>
+</code></pre>
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/10/08/Hexo—添加百度统计代码/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Hexo—添加百度统计代码</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="RxBus—通过RxJava来替换EventBus" data-title="RxBus—通过RxJava来替换EventBus" data-url="http://hanhailong.com/2015/10/09/RxBus—通过RxJava来替换EventBus/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"hanhailong"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2015 韩海龙
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
