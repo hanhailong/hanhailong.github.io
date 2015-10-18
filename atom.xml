@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2015-10-10T02:18:49.000Z</updated>
+  <updated>2015-10-18T16:51:54.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -13,6 +13,275 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Android-一步一步教你自定义IOS样式的UISwitch]]></title>
+    <link href="http://hanhailong.com/2015/10/17/Android-%E4%B8%80%E6%AD%A5%E4%B8%80%E6%AD%A5%E6%95%99%E4%BD%A0%E8%87%AA%E5%AE%9A%E4%B9%89IOS%E6%A0%B7%E5%BC%8F%E7%9A%84UISwitch/"/>
+    <id>http://hanhailong.com/2015/10/17/Android-一步一步教你自定义IOS样式的UISwitch/</id>
+    <published>2015-10-17T13:08:13.000Z</published>
+    <updated>2015-10-18T16:51:54.000Z</updated>
+    <content type="html"><![CDATA[<p>在这一章节，我们将开始在Android上做一个IOS风格的UISwitch控件。这篇文章主要涉及如下知识点：</p>
+<ol>
+<li>Android属性动画Animator</li>
+<li>自定义手势GestureDetector</li>
+<li>自定义View属性attrs</li>
+</ol>
+<p>首先，让我们来看一下效果图：</p>
+<p><img src="https://github.com/hanhailong/IOSStudyResource/blob/master/screenshot/uiswitch.gif?raw=true" alt="uiswitch"></p>
+<a id="more"></a>
+<h3>自定义View属性</h3>
+
+<p>接下来，我们要先新建<font color="red">IOSSwitchView</font>类，继承自View类，重写其构造方法，代码如下：</p>
+<pre><code><span class="comment">/**
+ * 高仿IOS风格的UISwitchView
+ * Created by HanHailong on 15/10/15.
+ */</span>
+public <span class="class"><span class="keyword">class</span> <span class="title">IOSSwitchView</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">View</span> {</span>
+    public <span class="type">IOSSwitchView</span>(<span class="type">Context</span> context) {
+        <span class="keyword">this</span>(context, <span class="literal">null</span>);
+    }
+
+    public <span class="type">IOSSwitchView</span>(<span class="type">Context</span> context, <span class="type">AttributeSet</span> attrs) {
+        <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);
+    }
+
+    public <span class="type">IOSSwitchView</span>(<span class="type">Context</span> context, <span class="type">AttributeSet</span> attrs, int defStyleAttr) {
+        <span class="keyword">super</span>(context, attrs, defStyleAttr);
+        init(context, attrs);
+    }
+}
+</code></pre><p>然后，自定义我们需要的View属性，代码如下：</p>
+<!-- IOSSwitchView -->
+<pre><code><span class="tag">&lt;<span class="title">declare-styleable</span> <span class="attribute">name</span>=<span class="value">"IOSSwitchView"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"tintColor"</span> <span class="attribute">format</span>=<span class="value">"reference|color"</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"thumbTintColor"</span> <span class="attribute">format</span>=<span class="value">"reference|color"</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"strokeWidth"</span> <span class="attribute">format</span>=<span class="value">"reference|dimension"</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"isOn"</span> <span class="attribute">format</span>=<span class="value">"reference|boolean"</span> /&gt;</span>
+<span class="tag">&lt;/<span class="title">declare-styleable</span>&gt;</span>
+</code></pre><p>其中，<font color="red">tintColor</font>是Switch控件选中的颜色，，<font color="red">thumbTintColor</font>是里面可拖动开关扳手的颜色，，<font color="red">strokeWidth</font>是开关扳手的外边距宽度，<font color="red">isOn</font>是开关的打开状态，true是打开状态，false是关闭状态。</p>
+<p>代码里怎么接收在布局里设置的属性值呢？答案：<font color="red">TypedArray</font>，我们继续看代码：</p>
+<pre><code><span class="title">TypedArray</span> a = context.obtainStyledAttributes(attrs, R.styleable.IOSSwitchView);
+       <span class="title">mTintColor</span> = a.getColor(R.styleable.IOSSwitchView_tintColor, Color.GREEN);
+       <span class="title">mThumbTintColor</span> = a.getColor(R.styleable.IOSSwitchView_thumbTintColor, Color.WHITE);
+
+       <span class="title">int</span> defaultStrokeWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, <span class="number">1</span>.5f, context.getResources()
+               .getDisplayMetrics());
+       <span class="title">mStrokeWidth</span> = a.getDimensionPixelOffset(R.styleable.IOSSwitchView_strokeWidth, defaultStrokeWidth);
+       <span class="title">isOn</span> = a.getBoolean(R.styleable.IOSSwitchView_isOn, <span class="built_in">false</span>);
+</code></pre><p>上面的代码都很简单，都是自定义View常规的步骤，接下来我们再看添加动画的代码，看我们的gif效果图，你会发现，中间的开关把手在你手指点击它（此时没松手）的时候，它会有一个拉伸的动画，松手的时候，它会移动到另一侧，所以我们这里需要两个属性动画，一个是：拉伸动画，一个是移动动画。另外，因为我们这里有个背景颜色的变化：在默认关闭的情况下，背景色是灰白色的，打开的情况下是我们设置的tintColor颜色的，这里我们采用的是画了两个圆角矩形实现的，先画的tintColor颜色的圆角矩形，后画的灰白色的圆角矩形，刚开始开关关闭的时候灰白色的圆角矩形完全覆盖在上面，此时它的大小和它下面的矩形大小是一样的，之后在我们打开开关thumb的时候，灰白色的圆角矩形大小变成0，这样我们就看到tintColor颜色的圆角矩形了，这就实现了我们的背景切换。所以，这里又加了一个属性动画：灰白色圆角矩形的放大缩小动画。介绍到这里，我们总算理清了，我们要实现三个动画：一个thumb拉伸动画、一个thumb位移动画、一个灰白色圆角矩形形变动画（放大缩小动画）。这里我们添加初始化动画代码：</p>
+<pre><code><span class="comment">//灰白色矩形形变动画</span>
+        mInnerContentAnimator = ObjectAnimator.ofFloat(<span class="keyword">this</span>, <span class="keyword">new</span> Property&lt;IOSSwitchView, Float&gt;(Float.class, <span class="string">"innerbound"</span>) {
+            @<span class="function">Override
+            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span>(<span class="params">IOSSwitchView <span class="keyword">object</span>, Float <span class="keyword">value</span></span>) </span>{
+                <span class="keyword">object</span>.setInnerContentRate(<span class="keyword">value</span>);
+            }
+
+            @<span class="function">Override
+            <span class="keyword">public</span> Float <span class="title">get</span>(<span class="params">IOSSwitchView <span class="keyword">object</span></span>) </span>{
+                <span class="keyword">return</span> <span class="keyword">object</span>.getInnerContentRate();
+            }
+        }, innerContentRate, <span class="number">1.0</span>f);
+        mInnerContentAnimator.setDuration(<span class="number">300</span>);
+        mInnerContentAnimator.setInterpolator(<span class="keyword">new</span> DecelerateInterpolator());
+
+        <span class="comment">//thumb拉伸动画</span>
+        mThumbExpandAnimator = ObjectAnimator.ofFloat(<span class="keyword">this</span>, <span class="keyword">new</span> Property&lt;IOSSwitchView, Float&gt;(Float.class, <span class="string">"thumbExpand"</span>) {
+            @<span class="function">Override
+            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span>(<span class="params">IOSSwitchView <span class="keyword">object</span>, Float <span class="keyword">value</span></span>) </span>{
+                <span class="keyword">object</span>.setThumbExpandRate(<span class="keyword">value</span>);
+            }
+
+            @<span class="function">Override
+            <span class="keyword">public</span> Float <span class="title">get</span>(<span class="params">IOSSwitchView <span class="keyword">object</span></span>) </span>{
+                <span class="keyword">return</span> <span class="keyword">object</span>.getThumbExpandRate();
+            }
+        }, thumbExpandRate, <span class="number">1.0</span>f);
+        mThumbExpandAnimator.setDuration(<span class="number">300</span>);
+        mThumbExpandAnimator.setInterpolator(<span class="keyword">new</span> DecelerateInterpolator());
+
+        <span class="comment">//thumb位移动画</span>
+        mThumbMoveAnimator = ObjectAnimator.ofFloat(<span class="keyword">this</span>, <span class="keyword">new</span> Property&lt;IOSSwitchView, Float&gt;(Float.class, <span class="string">"thumbMove"</span>) {
+            @<span class="function">Override
+            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span>(<span class="params">IOSSwitchView <span class="keyword">object</span>, Float <span class="keyword">value</span></span>) </span>{
+                <span class="keyword">object</span>.setThumbMoveRate(<span class="keyword">value</span>);
+            }
+
+            @<span class="function">Override
+            <span class="keyword">public</span> Float <span class="title">get</span>(<span class="params">IOSSwitchView <span class="keyword">object</span></span>) </span>{
+                <span class="keyword">return</span> <span class="keyword">object</span>.getThumbMoveRate();
+            }
+        }, thumbMoveRate, <span class="number">1.0</span>f);
+        mThumbMoveAnimator.setDuration(<span class="number">300</span>);
+        mThumbMoveAnimator.setInterpolator(<span class="keyword">new</span> DecelerateInterpolator());
+</code></pre><p>初始化完三个属性动画后，我们下一步就该初始化滑动手势了，因为我们的<font color="red">IOSSwitchView</font>支持thumb滑动而改变打开关闭状态，所以我们要添加支持滑动手势<font color="red">GestureDetector</font>代码：</p>
+<pre><code><span class="comment">//手势</span>
+        mGestureDetector = <span class="keyword">new</span> GestureDetector(context, <span class="keyword">new</span> GestureDetector.SimpleOnGestureListener() {
+            @<span class="function">Override
+            <span class="keyword">public</span> boolean <span class="title">onDown</span><span class="params">(MotionEvent e)</span> </span>{
+
+                <span class="keyword">if</span> (!isEnabled()) <span class="keyword">return</span> <span class="literal">false</span>;
+
+                preIsOn = isOn;
+
+                <span class="comment">//灰白色矩形缩小到0</span>
+                mInnerContentAnimator.setFloatValues(innerContentRate, <span class="number">0.0f</span>);
+                mInnerContentAnimator.start();
+
+                <span class="comment">//thumb有个拉伸的动作</span>
+                mThumbExpandAnimator.setFloatValues(thumbExpandRate, <span class="number">1.0f</span>);
+                mThumbExpandAnimator.start();
+
+                <span class="keyword">return</span> <span class="literal">true</span>;
+            }
+
+            @<span class="function">Override
+            <span class="keyword">public</span> boolean <span class="title">onSingleTapUp</span><span class="params">(MotionEvent e)</span> </span>{
+                <span class="comment">//手指抬起执行一系列的动画</span>
+                isOn = thumbState;
+
+                <span class="keyword">if</span> (preIsOn == isOn) {<span class="comment">//反转</span>
+                    isOn = !isOn;
+                    thumbState = !thumbState;
+                }
+
+                <span class="comment">//打开状态</span>
+                <span class="keyword">if</span> (thumbState) {
+                    <span class="comment">//thumb移动到右侧打开区域</span>
+                    mThumbMoveAnimator.setFloatValues(thumbMoveRate, <span class="number">1.0F</span>);
+                    mThumbMoveAnimator.start();
+
+                    <span class="comment">//灰白色圆角矩形缩小到0</span>
+                    mInnerContentAnimator.setFloatValues(innerContentRate, <span class="number">0.0F</span>);
+                    mInnerContentAnimator.start();
+                } <span class="keyword">else</span> {<span class="comment">//关闭状态</span>
+                    <span class="comment">//thumb移动到左侧关闭区域</span>
+                    mThumbMoveAnimator.setFloatValues(thumbMoveRate, <span class="number">0.0F</span>);
+                    mThumbMoveAnimator.start();
+
+                    <span class="comment">//灰白色圆角矩形放大到覆盖背景大小</span>
+                    mInnerContentAnimator.setFloatValues(innerContentRate, <span class="number">1.0F</span>);
+                    mInnerContentAnimator.start();
+                }
+                <span class="comment">//thumb恢复原大小</span>
+                mThumbExpandAnimator.setFloatValues(thumbExpandRate, <span class="number">0.0F</span>);
+                mThumbExpandAnimator.start();
+
+                <span class="keyword">if</span> (mOnSwitchStateChangeListener != null &amp;&amp; preIsOn != isOn) {
+                    mOnSwitchStateChangeListener.onStateSwitched(isOn);
+                }
+
+                <span class="keyword">return</span> <span class="literal">true</span>;
+            }
+
+            @<span class="function">Override
+            <span class="keyword">public</span> boolean <span class="title">onScroll</span><span class="params">(MotionEvent e1, MotionEvent e2, <span class="keyword">float</span> distanceX, <span class="keyword">float</span> distanceY)</span> </span>{
+
+                <span class="comment">//在打开开关的区域</span>
+                <span class="keyword">if</span> (e2.getX() &gt; centerX) {
+                    <span class="comment">//并且开关状态是关闭的，就执行打开开关操作</span>
+                    <span class="keyword">if</span> (!thumbState) {
+                        thumbState = !thumbState;
+
+                        mThumbMoveAnimator.setFloatValues(thumbMoveRate, <span class="number">1.0F</span>);
+                        mThumbMoveAnimator.start();
+
+                        mInnerContentAnimator.setFloatValues(innerContentRate, <span class="number">0.0F</span>);
+                        mInnerContentAnimator.start();
+                    }
+                } <span class="keyword">else</span> {<span class="comment">//在关闭区域</span>
+                    <span class="comment">//开关处于打开状态</span>
+                    <span class="keyword">if</span> (thumbState) {
+                        thumbState = !thumbState;
+                        <span class="comment">//执行关闭开关动画</span>
+                        mThumbMoveAnimator.setFloatValues(thumbMoveRate, <span class="number">0.0F</span>);
+                        mThumbMoveAnimator.start();
+                    }
+                }
+
+                <span class="keyword">return</span> <span class="literal">true</span>;
+            }
+
+        });
+        <span class="comment">//禁止长按</span>
+        mGestureDetector.setIsLongpressEnabled(<span class="literal">false</span>);
+</code></pre><p>因为<font color="red">OnGestureListener</font>里面的方法没必要都实现，我们这用的是它的子静态类<font color="red">SimpleOnGestureListener</font>，我们重写了里面的<font color="red">onDown</font>、<font color="red">onSingleTapUp</font>、<font color="red">onScroll</font>方法。</p>
+<font color="red">onDown</font>方法的作用就是在按下控件的时候，thumb执行一个拉伸动画，灰白色圆角矩形则执行缩小到0的动画。如下图所示：<br><br><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/uiswitch-expand.gif?raw=true" alt="switch-expand"><br><br><font color="red">onSingleTapUp</font>则是单点抬起手指后执行的操作，这里执行的就是开关互斥动画和互斥逻辑，之前如果是打开的状态，就变成关闭状态，相反则反之。。。<br><br><font color="red">onScroll</font>方法则是手指滑动时的坐标大于中间X时则执行一个选中动画，相反则反之…<br><br>手势识别添加完后，我们为了保证控件有一个好的UI效果展示，一般指控件的宽度和高度保持一个比例，我们重写其<font color="red">onMeasure</font>方法，添加如下代码：<br><br>    @Override<br>        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {<br>            super.onMeasure(widthMeasureSpec, heightMeasureSpec);<br><br>            //测量宽度和高度<br>            width = MeasureSpec.getSize(widthMeasureSpec);<br>            height = MeasureSpec.getSize(heightMeasureSpec);<br><br>            //保持一定的宽高比例<br>            if ((float) height / (float) width &lt; 0.5f) {<br>                height = (int) (width <em> 0.5);<br><br>                heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.getMode(heightMeasureSpec));<br>                widthMeasureSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.getMode(widthMeasureSpec));<br>                super.setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);<br>            }<br><br>            centerX = width </em> 0.5f;<br>            centerY = height <em> 0.5f;<br>            cornerRadius = centerY;<br><br>            innerContentRectF.left = mStrokeWidth;<br>            innerContentRectF.top = mStrokeWidth;<br>            innerContentRectF.right = width - mStrokeWidth;<br>            innerContentRectF.bottom = height - mStrokeWidth;<br><br>            intrinsicInnerWidth = innerContentRectF.width();<br>            intrinsicInnerHeight = innerContentRectF.height();<br><br>            thumbRectF.left = mStrokeWidth;<br>            thumbRectF.top = mStrokeWidth;<br>            thumbRectF.right = width - mStrokeWidth;<br>            thumbRectF.bottom = height - mStrokeWidth;<br><br>            intrinsicThumbWidth = thumbRectF.height();<br><br>            //thumb最大拉伸宽度<br>            thumbMaxExpandWidth = width </em> 0.7f;<br><br>            if (thumbMaxExpandWidth &gt; intrinsicThumbWidth <em> 1.25f) {<br>                thumbMaxExpandWidth = intrinsicThumbWidth </em> 1.25f;<br>            }<br>        }<br><br>测量完后，我们就开始执行最后一步也是最重要的一步：将控件画到画布canvas上，我们重写<font color="red">onDraw</font>方法：<br><br>    @Override<br>    protected void onDraw(Canvas canvas) {<br>        super.onDraw(canvas);<br><br>        float w = intrinsicInnerWidth <em> 0.5f </em> innerContentRate;<br>        float h = intrinsicInnerHeight <em> 0.5f </em> innerContentRate;<br><br>        this.innerContentRectF.left = centerX - w;<br>        this.innerContentRectF.top = centerY - h;<br>        this.innerContentRectF.right = centerX + w;<br>        this.innerContentRectF.bottom = centerY + h;<br><br>        //thumb拉伸宽度变化，其变化值从1-&gt;1.7之间<br>        w = intrinsicThumbWidth + (thumbMaxExpandWidth - intrinsicThumbWidth) <em> thumbExpandRate;<br><br>        boolean left = thumbRectF.left + thumbRectF.width() </em> 0.5f &lt; centerX;<br>        if (left) {<br>            thumbRectF.left = thumbRectF.right - w;<br>        } else {<br>            thumbRectF.right = thumbRectF.left + w;<br>        }<br><br>        float kw = thumbRectF.width();<br>        w = (float) (width - kw - (mStrokeWidth <em> 2)) </em> thumbMoveRate;<br><br>        thumbRectF.left = mStrokeWidth + w;<br>        thumbRectF.right = thumbRectF.left + kw;<br><br>        //颜色值过渡变化，从深灰白色变化到tintColor色<br>        this.colorStep = transformRGBColor(thumbMoveRate, backgroundColor, mTintColor);<br><br>        //画TintColor颜色的圆角矩形<br>        mPaint.setColor(colorStep);<br>        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);<br>        drawRoundRect(0, 0, width, height, cornerRadius, canvas, mPaint);<br><br>        mPaint.setColor(foregroundColor);<br>        //画灰白色圆角矩形<br>        canvas.drawRoundRect(innerContentRectF, innerContentRectF.height() <em> 0.5f, innerContentRectF.height() </em> 0.5f, mPaint);<br><br>        //画thumb<br>        mPaint.setColor(mThumbTintColor);<br>        canvas.drawRoundRect(thumbRectF, cornerRadius, cornerRadius, mPaint);<br><br>        mPaint.setColor(0xFFCCCCCC);<br>        mPaint.setStyle(Paint.Style.STROKE);<br>        mPaint.setStrokeWidth(1);<br>        canvas.drawRoundRect(thumbRectF, cornerRadius, cornerRadius, mPaint);<br>    }<br><br><font color="red">onDraw</font>方法执行了四步绘制：四次绘制圆角矩形，第一次绘制背景tintColor颜色的圆角矩形，第二次绘制灰白色覆盖在上面的圆角矩形，第三次绘制thumb，第四次绘制一个空心的圆角矩形，这个是为了加深thumb和周围的颜色区分。<br><br>其中，里面有个方法<font color="red"> transformRGBColor </font>
+
+<pre><code><span class="comment">/**
+     * RGB颜色过渡变化
+     *
+     * @param progress
+     * @param fromColor
+     * @param toColor
+     * @return
+     */</span>
+    <span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">transformRGBColor</span><span class="params">(<span class="keyword">float</span> progress, <span class="keyword">int</span> fromColor, <span class="keyword">int</span> toColor)</span> </span>{
+        <span class="keyword">int</span> fr = (fromColor &gt;&gt; <span class="number">16</span>) &amp; <span class="number">0xFF</span>;
+        <span class="keyword">int</span> fg = (fromColor &gt;&gt; <span class="number">8</span>) &amp; <span class="number">0xFF</span>;
+        <span class="keyword">int</span> fb = fromColor &amp; <span class="number">0xFF</span>;
+
+        <span class="keyword">int</span> tr = (toColor &gt;&gt; <span class="number">16</span>) &amp; <span class="number">0xFF</span>;
+        <span class="keyword">int</span> tg = (toColor &gt;&gt; <span class="number">8</span>) &amp; <span class="number">0xFF</span>;
+        <span class="keyword">int</span> tb = toColor &amp; <span class="number">0xFF</span>;
+
+        <span class="keyword">int</span> rGap = (<span class="keyword">int</span>) ((<span class="keyword">float</span>) (tr - fr) * progress);
+        <span class="keyword">int</span> gGap = (<span class="keyword">int</span>) ((<span class="keyword">float</span>) (tg - fg) * progress);
+        <span class="keyword">int</span> bGap = (<span class="keyword">int</span>) ((<span class="keyword">float</span>) (tb - fb) * progress);
+
+        <span class="keyword">return</span> <span class="number">0xFF000000</span> | ((fr + rGap) &lt;&lt; <span class="number">16</span>) | ((fg + gGap) &lt;&lt; <span class="number">8</span>) | (fb + bGap);
+    }
+</code></pre><p>为了将状态变化值传递给页面，一般指的是Activity、Fragment、View，我们需要定义一个接口：</p>
+<pre><code>/<span class="keyword">*</span><span class="keyword">*</span>
+ <span class="keyword">*</span> SwitchView状态切换
+ <span class="keyword">*</span>/
+public static interface OnSwitchStateChangeListener {
+    /<span class="keyword">*</span><span class="keyword">*</span>
+     <span class="keyword">*</span> 是否选中
+     <span class="keyword">*</span>
+     <span class="keyword">*</span> <span class="comment">@param isOn</span>
+     <span class="keyword">*</span>/
+    public void onStateSwitched(boolean isOn);
+}
+</code></pre><p>里面的一些细节这里就不讲了，最后怎么使用呢？分两步：</p>
+<p>第一步：布局xml</p>
+<pre><code>&lt;<span class="tag">com</span><span class="class">.hhl</span><span class="class">.library</span><span class="class">.IOSSwitchView</span>
+            <span class="rule"><span class="attribute">android</span>:<span class="value">id=<span class="string">"@+id/switch_view"</span>
+            android:layout_width=<span class="string">"55dp"</span>
+            android:layout_height=<span class="string">"35dp"</span>
+            android:layout_gravity=<span class="string">"center"</span>
+            app:thumbTintColor=<span class="string">"#fff"</span>
+            app:tintColor=<span class="string">"#00ff00"</span> /&gt;</span></span>
+</code></pre><p>第二步：代码</p>
+<pre><code>mSwitchView = (IOSSwitchView) findViewById(R.id.switch_view);
+        mStatusTv = (TextView) findViewById(R.id.tv_status);
+
+        mSwitchView.setOnSwitchStateChangeListener(<span class="keyword">new</span> IOSSwitchView.OnSwitchStateChangeListener() {
+            <span class="annotation">@Override</span>
+            <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onStateSwitched</span><span class="params">(<span class="keyword">boolean</span> isOn)</span> </span>{
+                <span class="keyword">if</span> (isOn) {
+                    mStatusTv.setText(<span class="string">"状态：开"</span>);
+                } <span class="keyword">else</span> {
+                    mStatusTv.setText(<span class="string">"状态：关"</span>);
+                }
+            }
+        });
+</code></pre><p>最后，附上源码：<a href="https://github.com/hanhailong/IOSSwitchView" target="_blank" rel="external">github-IOSSwitchView</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>在这一章节，我们将开始在Android上做一个IOS风格的UISwitch控件。这篇文章主要涉及如下知识点：</p>
+<ol>
+<li>Android属性动画Animator</li>
+<li>自定义手势GestureDetector</li>
+<li>自定义View属性attrs</li>
+</ol>
+<p>首先，让我们来看一下效果图：</p>
+<p><img src="https://github.com/hanhailong/IOSStudyResource/blob/master/screenshot/uiswitch.gif?raw=true" alt="uiswitch"></p>]]>
+    
+    </summary>
+    
+      <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[RxBus—通过RxJava来替换EventBus]]></title>
