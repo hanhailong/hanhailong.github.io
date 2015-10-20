@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2015-10-19T03:14:48.000Z</updated>
+  <updated>2015-10-20T13:44:35.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -13,6 +13,629 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Android-教你自作一个简单而又实用的流式Tag标签布局]]></title>
+    <link href="http://hanhailong.com/2015/10/20/Android-%E6%95%99%E4%BD%A0%E8%87%AA%E4%BD%9C%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E8%80%8C%E5%8F%88%E5%AE%9E%E7%94%A8%E7%9A%84%E6%B5%81%E5%BC%8FTag%E6%A0%87%E7%AD%BE%E5%B8%83%E5%B1%80/"/>
+    <id>http://hanhailong.com/2015/10/20/Android-教你自作一个简单而又实用的流式Tag标签布局/</id>
+    <published>2015-10-20T10:26:19.000Z</published>
+    <updated>2015-10-20T13:44:35.000Z</updated>
+    <content type="html"><![CDATA[<p>在这一章节，我们继续学习Android自定义控件。这里要自定义的是Android里面的一个常用控件-Android流式Tag布局，这里我们命名为：<a href="https://github.com/hanhailong/FlowTag/blob/master/library/src/main/java/com/hhl/library/FlowTagLayout.java" target="_blank" rel="external">FlowTagLayout</a>，我们要实现的流式布局，有如下特色：</p>
+<ul>
+<li>填充数据和ListView、GridView用法一样使用Adapter，更新数据直接通过adapter.notifyDataChanged来更新</li>
+<li>支持点击、单选、多选三种模式：FLOW_TAG_CHECKED_NONE、FLOW_TAG_CHECKED_SINGLE、FLOW_TAG_CHECKED_MULTI</li>
+</ul>
+<h3>正式讲解之前先看下我们实现后的效果图：</h3>
+
+<p> <img src="https://github.com/hanhailong/AndroidStudyResources/raw/master/screenshot/flow_tag.gif?raw=true" alt="image"></p>
+<a id="more"></a>
+<p>目前网上有很多的教程来写流式布局实现，我看到的版本大体上有两种，一种是继承<font color="red">ViewGroup</font>，然后重写其<font color="red">onMeasure</font>和<font color="red">onLayout</font>方法，另一种则是继承自<font color="red">RelativeLayout</font>，例如这个<a href="https://github.com/kaedea/Android-Cloud-TagView-Plus/blob/master/library/src/main/java/me/kaede/tagview/TagView.java" target="_blank" rel="external">TagView</a></p>
+<p>而我们这里采用的是第一种方法，因为我感觉第一种方法简单、清晰、明了！！</p>
+<p>因为我们直接继承的<em>ViewGroup</em>，所以要指定它的<em>LayoutParams</em>，这里因为只需要margin，所以我们直接返回<em>MarginLayoutParams</em>就可以了，代码如下：</p>
+<pre><code><span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="function">LayoutParams <span class="title">generateLayoutParams</span><span class="params">(AttributeSet attrs)</span> </span>{
+        <span class="keyword">return</span> <span class="keyword">new</span> MarginLayoutParams(getContext(), attrs);
+    }
+</code></pre><h3>onMeasure测量</h3>
+
+<pre><code>@<span class="function">Override
+    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>{
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        <span class="comment">//获取Padding</span>
+        <span class="comment">// 获得它的父容器为它设置的测量模式和大小</span>
+        <span class="keyword">int</span> sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
+        <span class="keyword">int</span> sizeHeight = MeasureSpec.getSize(heightMeasureSpec);
+        <span class="keyword">int</span> modeWidth = MeasureSpec.getMode(widthMeasureSpec);
+        <span class="keyword">int</span> modeHeight = MeasureSpec.getMode(heightMeasureSpec);
+
+        <span class="comment">//FlowLayout最终的宽度和高度值</span>
+        <span class="keyword">int</span> resultWidth = <span class="number">0</span>;
+        <span class="keyword">int</span> resultHeight = <span class="number">0</span>;
+
+        <span class="comment">//测量时每一行的宽度</span>
+        <span class="keyword">int</span> lineWidth = <span class="number">0</span>;
+        <span class="comment">//测量时每一行的高度，加起来就是FlowLayout的高度</span>
+        <span class="keyword">int</span> lineHeight = <span class="number">0</span>;
+
+        <span class="comment">//遍历每个子元素</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, childCount = getChildCount(); i &lt; childCount; i++) {
+            View childView = getChildAt(i);
+            <span class="comment">//测量每一个子view的宽和高</span>
+            measureChild(childView, widthMeasureSpec, heightMeasureSpec);
+
+            <span class="comment">//获取到测量的宽和高</span>
+            <span class="keyword">int</span> childWidth = childView.getMeasuredWidth();
+            <span class="keyword">int</span> childHeight = childView.getMeasuredHeight();
+
+            <span class="comment">//因为子View可能设置margin，这里要加上margin的距离</span>
+            MarginLayoutParams mlp = (MarginLayoutParams) childView.getLayoutParams();
+            <span class="keyword">int</span> realChildWidth = childWidth + mlp.leftMargin + mlp.rightMargin;
+            <span class="keyword">int</span> realChildHeight = childHeight + mlp.topMargin + mlp.bottomMargin;
+
+            <span class="comment">//如果当前一行的宽度加上要加入的子view的宽度大于父容器给的宽度，就换行</span>
+            <span class="keyword">if</span> ((lineWidth + realChildWidth) &gt; sizeWidth) {
+                <span class="comment">//换行</span>
+                resultWidth = Math.max(lineWidth, realChildWidth);
+                resultHeight += realChildHeight;
+                <span class="comment">//换行了，lineWidth和lineHeight重新算</span>
+                lineWidth = realChildWidth;
+                lineHeight = realChildHeight;
+            } <span class="keyword">else</span> {
+                <span class="comment">//不换行，直接相加</span>
+                lineWidth += realChildWidth;
+                <span class="comment">//每一行的高度取二者最大值</span>
+                lineHeight = Math.max(lineHeight, realChildHeight);
+            }
+
+            <span class="comment">//遍历到最后一个的时候，肯定走的是不换行</span>
+            <span class="keyword">if</span> (i == childCount - <span class="number">1</span>) {
+                resultWidth = Math.max(lineWidth, resultWidth);
+                resultHeight += lineHeight;
+            }
+
+            setMeasuredDimension(modeWidth == MeasureSpec.EXACTLY ? sizeWidth : resultWidth,
+                    modeHeight == MeasureSpec.EXACTLY ? sizeHeight : resultHeight);
+
+        }
+
+    }
+</code></pre><p>代码注释的很详细，首先得到其父容器传入的测量模式和宽高的计算值，然后遍历所有的childView，使用measureChild方法对所有的childView进行测量。然后根据所有childView的测量得出的宽和高得到该ViewGroup如果设置为wrap_content时的宽和高</p>
+<h3>onLayout</h3>
+
+<pre><code>@<span class="function">Override
+<span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onLayout</span><span class="params">(boolean changed, <span class="keyword">int</span> l, <span class="keyword">int</span> t, <span class="keyword">int</span> r, <span class="keyword">int</span> b)</span> </span>{
+
+    <span class="keyword">int</span> flowWidth = getWidth();
+
+    <span class="keyword">int</span> childLeft = <span class="number">0</span>;
+    <span class="keyword">int</span> childTop = <span class="number">0</span>;
+
+    <span class="comment">//遍历子控件，记录每个子view的位置</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, childCount = getChildCount(); i &lt; childCount; i++) {
+        View childView = getChildAt(i);
+
+        <span class="comment">//跳过View.GONE的子View</span>
+        <span class="keyword">if</span> (childView.getVisibility() == View.GONE) {
+            <span class="keyword">continue</span>;
+        }
+
+        <span class="comment">//获取到测量的宽和高</span>
+        <span class="keyword">int</span> childWidth = childView.getMeasuredWidth();
+        <span class="keyword">int</span> childHeight = childView.getMeasuredHeight();
+
+        <span class="comment">//因为子View可能设置margin，这里要加上margin的距离</span>
+        MarginLayoutParams mlp = (MarginLayoutParams) childView.getLayoutParams();
+
+        <span class="keyword">if</span> (childLeft + mlp.leftMargin + childWidth + mlp.rightMargin &gt; flowWidth) {
+            <span class="comment">//换行处理</span>
+            childTop += (mlp.topMargin + childHeight + mlp.bottomMargin);
+            childLeft = <span class="number">0</span>;
+        }
+        <span class="comment">//布局</span>
+        <span class="keyword">int</span> left = childLeft + mlp.leftMargin;
+        <span class="keyword">int</span> top = childTop + mlp.topMargin;
+        <span class="keyword">int</span> right = childLeft + mlp.leftMargin + childWidth;
+        <span class="keyword">int</span> bottom = childTop + mlp.topMargin + childHeight;
+        childView.layout(left, top, right, bottom);
+
+        childLeft += (mlp.leftMargin + childWidth + mlp.rightMargin);
+    }
+}
+</code></pre><p>onLayout方法就是将子View摆放到FlowTagLayout中，核心就是childView.layout(l,t,r,b)方法。</p>
+<p>测量完了，布局也完了，下面就是填充数据了，我们这里采用的是Adapter模式，用法基本上和我们常用的ListView、GridView一样，用户只要写一个适配器Adapter，然后调用xxx.setAdapter方法，就把数据源绑到控件上了，而且这种做法还有个好处：子View可以是任意类型的控件</p>
+<h3>填充数据和ListView、GridView用法一样使用Adapter，更新数据直接通过adapter.notifyDataChanged来更新</h3>
+
+<p>我研究了下ListView和GridView的adapter.notifyDataChanged实现，一句话：观察者模式！首先，我们要在<em>FlowTagLayout</em>里面注册一个观察者，当我们调用adapter.notifyDataChanged的时候能通知这个观察者来刷新页面。</p>
+<pre><code><span class="comment">/**
+     * 像ListView、GridView一样使用FlowLayout
+     *
+     * <span class="doctag">@param</span> adapter
+     */</span>
+    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">setAdapter</span><span class="params">(ListAdapter adapter)</span> </span>{
+        <span class="keyword">if</span> (mAdapter != <span class="keyword">null</span> &amp;&amp; mDataSetObserver != <span class="keyword">null</span>) {
+            mAdapter.unregisterDataSetObserver(mDataSetObserver);
+        }
+
+        <span class="comment">//清除现有的数据</span>
+        removeAllViews();
+        mAdapter = adapter;
+
+        <span class="keyword">if</span> (mAdapter != <span class="keyword">null</span>) {
+            mDataSetObserver = <span class="keyword">new</span> AdapterDataSetObserver();
+            mAdapter.registerDataSetObserver(mDataSetObserver);
+        }
+    }
+</code></pre><p> 方法                mAdapter.registerDataSetObserver(mDataSetObserver);<br>就注册了观察者，我们继续看：</p>
+<pre><code><span class="class"><span class="keyword">class</span> <span class="title">AdapterDataSetObserver</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">DataSetObserver</span> {</span>
+        <span class="annotation">@Override</span>
+        public void onChanged() {
+            <span class="keyword">super</span>.onChanged();
+            reloadData();
+        }
+
+        <span class="annotation">@Override</span>
+        public void onInvalidated() {
+            <span class="keyword">super</span>.onInvalidated();
+        }
+    }
+</code></pre><p>当我们调用adapter.notifyDataChanged方法的时候，就会执行<em>onChanged</em>这个方法，我加了一个<em>reloadData</em>方法：</p>
+<pre><code><span class="comment">/**
+     * 重新加载刷新数据
+     */</span>
+    <span class="keyword">private</span> <span class="keyword">void</span> reloadData() {
+        removeAllViews();
+
+        <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; mAdapter.getCount(); i++) {
+            <span class="keyword">final</span> <span class="built_in">int</span> j = i;
+            mCheckedTagArray.put(i, <span class="keyword">false</span>);
+            <span class="keyword">final</span> View childView = mAdapter.getView(i, <span class="keyword">null</span>, <span class="keyword">this</span>);
+            addView(childView, <span class="keyword">new</span> MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+            <span class="keyword">final</span> <span class="built_in">int</span> finalI = i;
+            childView.setOnClickListener(<span class="keyword">new</span> OnClickListener() {
+                @Override
+                <span class="keyword">public</span> <span class="keyword">void</span> onClick(View v) {
+                    <span class="keyword">if</span> (mTagCheckMode == FLOW_TAG_CHECKED_NONE) {
+                        <span class="keyword">if</span> (mOnTagClickListener != <span class="keyword">null</span>) {
+                            mOnTagClickListener.onItemClick(FlowTagLayout.<span class="keyword">this</span>, childView, j);
+                        }
+                    } <span class="keyword">else</span> <span class="keyword">if</span> (mTagCheckMode == FLOW_TAG_CHECKED_SINGLE) {
+                        <span class="comment">//判断状态</span>
+                        <span class="keyword">if</span> (mCheckedTagArray.<span class="built_in">get</span>(j)) {
+                            mCheckedTagArray.put(j, <span class="keyword">false</span>);
+                            childView.setSelected(<span class="keyword">false</span>);
+                            <span class="keyword">if</span> (mOnTagSelectListener != <span class="keyword">null</span>) {
+                                mOnTagSelectListener.onItemSelect(FlowTagLayout.<span class="keyword">this</span>, <span class="keyword">new</span> ArrayList&lt;Integer&gt;());
+                            }
+                            <span class="keyword">return</span>;
+                        }
+
+                        <span class="keyword">for</span> (<span class="built_in">int</span> k = <span class="number">0</span>; k &lt; mAdapter.getCount(); k++) {
+                            mCheckedTagArray.put(k, <span class="keyword">false</span>);
+                            getChildAt(k).setSelected(<span class="keyword">false</span>);
+                        }
+                        mCheckedTagArray.put(j, <span class="keyword">true</span>);
+                        childView.setSelected(<span class="keyword">true</span>);
+
+                        <span class="keyword">if</span> (mOnTagSelectListener != <span class="keyword">null</span>) {
+                            mOnTagSelectListener.onItemSelect(FlowTagLayout.<span class="keyword">this</span>, Arrays.asList(j));
+                        }
+                    } <span class="keyword">else</span> <span class="keyword">if</span> (mTagCheckMode == FLOW_TAG_CHECKED_MULTI) {
+                        <span class="keyword">if</span> (mCheckedTagArray.<span class="built_in">get</span>(j)) {
+                            mCheckedTagArray.put(j, <span class="keyword">false</span>);
+                            childView.setSelected(<span class="keyword">false</span>);
+                        } <span class="keyword">else</span> {
+                            mCheckedTagArray.put(j, <span class="keyword">true</span>);
+                            childView.setSelected(<span class="keyword">true</span>);
+                        }
+                        <span class="comment">//回调</span>
+                        <span class="keyword">if</span> (mOnTagSelectListener != <span class="keyword">null</span>) {
+                            List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();
+                            <span class="keyword">for</span> (<span class="built_in">int</span> k = <span class="number">0</span>; k &lt; mAdapter.getCount(); k++) {
+                                <span class="keyword">if</span> (mCheckedTagArray.<span class="built_in">get</span>(k)) {
+                                    list.<span class="built_in">add</span>(k);
+                                }
+                            }
+                            mOnTagSelectListener.onItemSelect(FlowTagLayout.<span class="keyword">this</span>, list);
+                        }
+                    }
+                }
+            });
+        }
+    }
+</code></pre><p>这个方法的作用就是重新加载子View，先是移除所有的子View，然后从<em>Adapter</em>中获取子View，addView到FlowTagLayout中，在这个过程中，我们给每个子View添加了点击事件，点击事件里面的逻辑很简单，就是根据<em>FlowTagLayout</em>的三种模式分别处理单击、单选、多选逻辑，三种模式分别为：</p>
+<pre><code><span class="comment">/**
+     * FlowLayout not support checked
+     */</span>
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLOW_TAG_CHECKED_NONE = <span class="number">0</span>;
+    <span class="comment">/**
+     * FlowLayout support single-select
+     */</span>
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLOW_TAG_CHECKED_SINGLE = <span class="number">1</span>;
+    <span class="comment">/**
+     * FlowLayout support multi-select
+     */</span>
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLOW_TAG_CHECKED_MULTI = <span class="number">2</span>;
+</code></pre><p>为了使单击、单选、多选事件通知到Activity、Fragment，我们加入了两个监听方法：</p>
+<pre><code><span class="comment">/**
+ * Created by HanHailong on 15/10/20.
+ */</span>
+<span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">OnTagClickListener</span> {
+    <span class="function"><span class="keyword">void</span> <span class="title">onItemClick</span>(<span class="params">FlowTagLayout parent, View view, <span class="keyword">int</span> position</span>)</span>;
+}
+</code></pre><p>和</p>
+<pre><code><span class="comment">/**
+ * Created by HanHailong on 15/10/20.
+ */</span>
+<span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">OnTagSelectListener</span> {
+    <span class="function"><span class="keyword">void</span> <span class="title">onItemSelect</span>(<span class="params">FlowTagLayout parent, List&lt;Integer&gt; selectedList</span>)</span>;
+}
+</code></pre><p>改写的都写了，我们怎么使用呢？请继续往下看</p>
+<h3>用法</h3>
+
+<p>首先，我们先写一个适配器<em>TagAdapter</em>，写法完全和写ListView的适配器一样：</p>
+<pre><code><span class="comment">/**
+ * Created by HanHailong on 15/10/19.
+ */</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TagAdapter</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">BaseAdapter</span> </span>{
+
+    <span class="keyword">private</span> <span class="keyword">final</span> Context mContext;
+    <span class="keyword">private</span> <span class="keyword">final</span> List&lt;T&gt; mDataList;
+
+    <span class="function"><span class="keyword">public</span> <span class="title">TagAdapter</span><span class="params">(Context context)</span> </span>{
+        <span class="keyword">this</span>.mContext = context;
+        mDataList = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="function"><span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>{
+        <span class="function"><span class="keyword">return</span> mDataList.<span class="title">size</span><span class="params">()</span></span>;
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="function">Object <span class="title">getItem</span><span class="params">(<span class="keyword">int</span> position)</span> </span>{
+        <span class="function"><span class="keyword">return</span> mDataList.<span class="title">get</span><span class="params">(position)</span></span>;
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="function"><span class="keyword">long</span> <span class="title">getItemId</span><span class="params">(<span class="keyword">int</span> position)</span> </span>{
+        <span class="keyword">return</span> position;
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="function">View <span class="title">getView</span><span class="params">(<span class="keyword">int</span> position, View convertView, ViewGroup parent)</span> </span>{
+
+        View view = LayoutInflater.from(mContext).inflate(R.layout.tag_item, <span class="keyword">null</span>);
+
+        TextView textView = (TextView) view.findViewById(R.id.tv_tag);
+        T t = mDataList.get(position);
+
+        <span class="keyword">if</span> (t <span class="keyword">instanceof</span> String) {
+            textView.setText((String) t);
+        }
+        <span class="keyword">return</span> view;
+    }
+
+    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onlyAddAll</span><span class="params">(List&lt;T&gt; datas)</span> </span>{
+        mDataList.addAll(datas);
+        notifyDataSetChanged();
+    }
+
+    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">clearAndAddAll</span><span class="params">(List&lt;T&gt; datas)</span> </span>{
+        mDataList.clear();
+        onlyAddAll(datas);
+    }
+}
+</code></pre><h4>布局tag_item.xml</h4>
+
+<pre><code><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="tag">&lt;<span class="title">LinearLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span>
+    <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span>
+    <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span>&gt;</span>
+
+    <span class="tag">&lt;<span class="title">TextView</span>
+        <span class="attribute">android:id</span>=<span class="value">"@+id/tv_tag"</span>
+        <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span>
+        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span>
+        <span class="attribute">android:layout_marginLeft</span>=<span class="value">"10dp"</span>
+        <span class="attribute">android:layout_marginTop</span>=<span class="value">"10dp"</span>
+        <span class="attribute">android:background</span>=<span class="value">"@drawable/round_rectangle_bg"</span>
+        <span class="attribute">android:paddingBottom</span>=<span class="value">"5dp"</span>
+        <span class="attribute">android:paddingLeft</span>=<span class="value">"10dp"</span>
+        <span class="attribute">android:paddingRight</span>=<span class="value">"10dp"</span>
+        <span class="attribute">android:paddingTop</span>=<span class="value">"5dp"</span>
+        <span class="attribute">android:text</span>=<span class="value">"TAG标签"</span>
+        <span class="attribute">android:textColor</span>=<span class="value">"@color/normal_text_color"</span> /&gt;</span>
+
+<span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span>
+</code></pre><p>再看我们引用<em>FlowTagLayout</em>的主布局代码：</p>
+<pre><code><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="tag">&lt;<span class="title">ScrollView</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span>
+    <span class="attribute">xmlns:app</span>=<span class="value">"http://schemas.android.com/apk/res-auto"</span>
+    <span class="attribute">xmlns:tools</span>=<span class="value">"http://schemas.android.com/tools"</span>
+    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span>
+    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span>
+    <span class="attribute">android:fillViewport</span>=<span class="value">"true"</span>
+    <span class="attribute">app:layout_behavior</span>=<span class="value">"@string/appbar_scrolling_view_behavior"</span>
+    <span class="attribute">tools:context</span>=<span class="value">".MainActivity"</span>
+    <span class="attribute">tools:showIn</span>=<span class="value">"@layout/activity_main"</span>&gt;</span>
+
+    <span class="tag">&lt;<span class="title">LinearLayout</span>
+        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span>
+        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span>
+        <span class="attribute">android:orientation</span>=<span class="value">"vertical"</span>
+        <span class="attribute">android:paddingBottom</span>=<span class="value">"30dp"</span>&gt;</span>
+
+        <span class="tag">&lt;<span class="title">LinearLayout</span>
+            <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span>
+            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span>
+            <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span>
+
+            <span class="tag">&lt;<span class="title">TextView</span>
+                <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span>
+                <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span>
+                <span class="attribute">android:layout_margin</span>=<span class="value">"10dp"</span>
+                <span class="attribute">android:text</span>=<span class="value">"颜色\n(点击)"</span> /&gt;</span>
+
+            <span class="tag">&lt;<span class="title">com.hhl.library.FlowTagLayout</span>
+                <span class="attribute">android:id</span>=<span class="value">"@+id/color_flow_layout"</span>
+                <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span>
+                <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span> /&gt;</span>
+        <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span>
+
+        <span class="tag">&lt;<span class="title">LinearLayout</span>
+            <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span>
+            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span>
+            <span class="attribute">android:layout_marginTop</span>=<span class="value">"10dp"</span>
+            <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span>
+
+            <span class="tag">&lt;<span class="title">TextView</span>
+                <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span>
+                <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span>
+                <span class="attribute">android:layout_margin</span>=<span class="value">"10dp"</span>
+                <span class="attribute">android:text</span>=<span class="value">"尺寸\n(单选)"</span> /&gt;</span>
+
+            <span class="tag">&lt;<span class="title">com.hhl.library.FlowTagLayout</span>
+                <span class="attribute">android:id</span>=<span class="value">"@+id/size_flow_layout"</span>
+                <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span>
+                <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span> /&gt;</span>
+        <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span>
+
+        <span class="tag">&lt;<span class="title">LinearLayout</span>
+            <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span>
+            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span>
+            <span class="attribute">android:layout_marginTop</span>=<span class="value">"10dp"</span>
+            <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span>
+
+            <span class="tag">&lt;<span class="title">TextView</span>
+                <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span>
+                <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span>
+                <span class="attribute">android:layout_margin</span>=<span class="value">"10dp"</span>
+                <span class="attribute">android:text</span>=<span class="value">"移动\n(多选)"</span> /&gt;</span>
+
+            <span class="tag">&lt;<span class="title">com.hhl.library.FlowTagLayout</span>
+                <span class="attribute">android:id</span>=<span class="value">"@+id/mobile_flow_layout"</span>
+                <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span>
+                <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span> /&gt;</span>
+        <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span>
+
+    <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span>
+
+<span class="tag">&lt;/<span class="title">ScrollView</span>&gt;</span>
+</code></pre><p>最后，我们看Activity里面是怎么使用的：</p>
+<pre><code><span class="keyword">package</span> com.hhl.flowlayoutdemo;
+
+<span class="keyword">import</span> android.os.Bundle;
+<span class="keyword">import</span> android.support.design.widget.FloatingActionButton;
+<span class="keyword">import</span> android.support.design.widget.Snackbar;
+<span class="keyword">import</span> android.support.v7.app.AppCompatActivity;
+<span class="keyword">import</span> android.support.v7.widget.Toolbar;
+<span class="keyword">import</span> android.view.Menu;
+<span class="keyword">import</span> android.view.MenuItem;
+<span class="keyword">import</span> android.view.View;
+
+<span class="keyword">import</span> com.hhl.library.FlowTagLayout;
+<span class="keyword">import</span> com.hhl.library.OnTagClickListener;
+<span class="keyword">import</span> com.hhl.library.OnTagSelectListener;
+
+<span class="keyword">import</span> java.util.ArrayList;
+<span class="keyword">import</span> java.util.List;
+
+<span class="keyword">public</span> class MainActivity extends AppCompatActivity {
+
+    <span class="keyword">private</span> FlowTagLayout mColorFlowTagLayout;
+    <span class="keyword">private</span> FlowTagLayout mSizeFlowTagLayout;
+    <span class="keyword">private</span> FlowTagLayout mMobileFlowTagLayout;
+    <span class="keyword">private</span> TagAdapter&lt;<span class="keyword">String</span>&gt; mSizeTagAdapter;
+    <span class="keyword">private</span> TagAdapter&lt;<span class="keyword">String</span>&gt; mColorTagAdapter;
+    <span class="keyword">private</span> TagAdapter&lt;<span class="keyword">String</span>&gt; mMobileTagAdapter;
+
+    @Override
+    <span class="keyword">protected</span> <span class="keyword">void</span> onCreate(Bundle savedInstanceState) {
+        <span class="keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() {
+            @Override
+            <span class="keyword">public</span> <span class="keyword">void</span> onClick(View view) {
+                Snackbar.make(view, <span class="string">"Replace with your own action"</span>, Snackbar.LENGTH_LONG)
+                        .setAction(<span class="string">"Action"</span>, <span class="keyword">null</span>).show();
+            }
+        });
+
+        mColorFlowTagLayout = (FlowTagLayout) findViewById(R.id.color_flow_layout);
+        mSizeFlowTagLayout = (FlowTagLayout) findViewById(R.id.size_flow_layout);
+        mMobileFlowTagLayout = (FlowTagLayout) findViewById(R.id.mobile_flow_layout);
+
+        <span class="comment">//颜色</span>
+        mColorTagAdapter = <span class="keyword">new</span> TagAdapter&lt;&gt;(<span class="keyword">this</span>);
+        mColorFlowTagLayout.setAdapter(mColorTagAdapter);
+        mColorFlowTagLayout.setOnTagClickListener(<span class="keyword">new</span> OnTagClickListener() {
+            @Override
+            <span class="keyword">public</span> <span class="keyword">void</span> onItemClick(FlowTagLayout parent, View view, <span class="built_in">int</span> position) {
+                Snackbar.make(view, <span class="string">"颜色:"</span> + parent.getAdapter().getItem(position), Snackbar.LENGTH_LONG)
+                        .setAction(<span class="string">"Action"</span>, <span class="keyword">null</span>).show();
+            }
+        });
+
+        <span class="comment">//尺寸</span>
+        mSizeTagAdapter = <span class="keyword">new</span> TagAdapter&lt;&gt;(<span class="keyword">this</span>);
+        mSizeFlowTagLayout.setTagCheckedMode(FlowTagLayout.FLOW_TAG_CHECKED_SINGLE);
+        mSizeFlowTagLayout.setAdapter(mSizeTagAdapter);
+        mSizeFlowTagLayout.setOnTagSelectListener(<span class="keyword">new</span> OnTagSelectListener() {
+            @Override
+            <span class="keyword">public</span> <span class="keyword">void</span> onItemSelect(FlowTagLayout parent, List&lt;Integer&gt; selectedList) {
+                <span class="keyword">if</span> (selectedList != <span class="keyword">null</span> &amp;&amp; selectedList.<span class="built_in">size</span>() &gt; <span class="number">0</span>) {
+                    StringBuilder sb = <span class="keyword">new</span> StringBuilder();
+                    <span class="keyword">for</span> (<span class="built_in">int</span> i : selectedList) {
+                        sb.<span class="built_in">append</span>(parent.getAdapter().getItem(i));
+                        sb.<span class="built_in">append</span>(<span class="string">":"</span>);
+                    }
+                    Snackbar.make(parent, <span class="string">"移动研发:"</span> + sb.toString(), Snackbar.LENGTH_LONG)
+                            .setAction(<span class="string">"Action"</span>, <span class="keyword">null</span>).show();
+                }<span class="keyword">else</span>{
+                    Snackbar.make(parent, <span class="string">"没有选择标签"</span>, Snackbar.LENGTH_LONG)
+                            .setAction(<span class="string">"Action"</span>, <span class="keyword">null</span>).show();
+                }
+            }
+        });
+
+        <span class="comment">//移动研发标签</span>
+        mMobileTagAdapter = <span class="keyword">new</span> TagAdapter&lt;&gt;(<span class="keyword">this</span>);
+        mMobileFlowTagLayout.setTagCheckedMode(FlowTagLayout.FLOW_TAG_CHECKED_MULTI);
+        mMobileFlowTagLayout.setAdapter(mMobileTagAdapter);
+        mMobileFlowTagLayout.setOnTagSelectListener(<span class="keyword">new</span> OnTagSelectListener() {
+            @Override
+            <span class="keyword">public</span> <span class="keyword">void</span> onItemSelect(FlowTagLayout parent, List&lt;Integer&gt; selectedList) {
+                <span class="keyword">if</span> (selectedList != <span class="keyword">null</span> &amp;&amp; selectedList.<span class="built_in">size</span>() &gt; <span class="number">0</span>) {
+                    StringBuilder sb = <span class="keyword">new</span> StringBuilder();
+
+                    <span class="keyword">for</span> (<span class="built_in">int</span> i : selectedList) {
+                        sb.<span class="built_in">append</span>(parent.getAdapter().getItem(i));
+                        sb.<span class="built_in">append</span>(<span class="string">":"</span>);
+                    }
+                    Snackbar.make(parent, <span class="string">"移动研发:"</span> + sb.toString(), Snackbar.LENGTH_LONG)
+                            .setAction(<span class="string">"Action"</span>, <span class="keyword">null</span>).show();
+                }<span class="keyword">else</span>{
+                    Snackbar.make(parent, <span class="string">"没有选择标签"</span>, Snackbar.LENGTH_LONG)
+                            .setAction(<span class="string">"Action"</span>, <span class="keyword">null</span>).show();
+                }
+            }
+        });
+
+        initColorData();
+
+        initSizeData();
+
+        initMobileData();
+    }
+
+    <span class="keyword">private</span> <span class="keyword">void</span> initMobileData() {
+        List&lt;<span class="keyword">String</span>&gt; dataSource = <span class="keyword">new</span> ArrayList&lt;&gt;();
+        dataSource.<span class="built_in">add</span>(<span class="string">"android"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"安卓"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"SDK源码"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"IOS"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"iPhone"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"游戏"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"fragment"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"viewcontroller"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"cocoachina"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"移动研发工程师"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"移动互联网"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"高薪+期权"</span>);
+        mMobileTagAdapter.onlyAddAll(dataSource);
+    }
+
+    <span class="keyword">private</span> <span class="keyword">void</span> initColorData() {
+        List&lt;<span class="keyword">String</span>&gt; dataSource = <span class="keyword">new</span> ArrayList&lt;&gt;();
+        dataSource.<span class="built_in">add</span>(<span class="string">"红色"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"黑色"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"花边色"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"深蓝色"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"白色"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"玫瑰红色"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"紫黑紫兰色"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"葡萄红色"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"屎黄色"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"绿色"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"彩虹色"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"牡丹色"</span>);
+        mColorTagAdapter.onlyAddAll(dataSource);
+    }
+
+    <span class="comment">/**
+     * 初始化数据
+     */</span>
+    <span class="keyword">private</span> <span class="keyword">void</span> initSizeData() {
+        List&lt;<span class="keyword">String</span>&gt; dataSource = <span class="keyword">new</span> ArrayList&lt;&gt;();
+        dataSource.<span class="built_in">add</span>(<span class="string">"28 (2.1尺)"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"29 (2.2尺)"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"30 (2.3尺)"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"31 (2.4尺)"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"32 (2.5尺)........"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"33 (2.6尺)"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"34 (2.7尺)"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"35 (2.8尺)"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"36 (2.9尺)"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"37 (3.0尺)"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"38 (3.1尺)"</span>);
+        dataSource.<span class="built_in">add</span>(<span class="string">"39 (3.2尺)........"</span>);
+        mSizeTagAdapter.onlyAddAll(dataSource);
+    }
+
+    @Override
+    <span class="keyword">public</span> <span class="built_in">boolean</span> onCreateOptionsMenu(Menu menu) {
+        <span class="comment">// Inflate the menu; this adds items to the action bar if it is present.</span>
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        <span class="keyword">return</span> <span class="keyword">true</span>;
+    }
+
+    @Override
+    <span class="keyword">public</span> <span class="built_in">boolean</span> onOptionsItemSelected(MenuItem item) {
+        <span class="comment">// Handle action bar item clicks here. The action bar will</span>
+        <span class="comment">// automatically handle clicks on the Home/Up button, so long</span>
+        <span class="comment">// as you specify a parent activity in AndroidManifest.xml.</span>
+        <span class="built_in">int</span> id = item.getItemId();
+
+        <span class="comment">//noinspection SimplifiableIfStatement</span>
+        <span class="keyword">if</span> (id == R.id.action_settings) {
+            <span class="keyword">return</span> <span class="keyword">true</span>;
+        }
+
+        <span class="keyword">return</span> <span class="keyword">super</span>.onOptionsItemSelected(item);
+    }
+}
+</code></pre><p>好了，一个简单而实用的流式标签就轻松搞定了！！</p>
+<h3>TODO</h3>
+
+<ul>
+<li>添加初始化选中标签</li>
+<li>添加tag样式支持（颜色、图标等等）</li>
+<li>像ListView、GridView一样复用子View</li>
+<li>其他…</li>
+</ul>
+<p>如果你觉得本篇博客对你有用，那么就留个言或者顶一个~~</p>
+<p>最后，附上github源码<a href="https://github.com/hanhailong/FlowTag" target="_blank" rel="external">FlowTagLayout</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>在这一章节，我们继续学习Android自定义控件。这里要自定义的是Android里面的一个常用控件-Android流式Tag布局，这里我们命名为：<a href="https://github.com/hanhailong/FlowTag/blob/master/library/src/main/java/com/hhl/library/FlowTagLayout.java">FlowTagLayout</a>，我们要实现的流式布局，有如下特色：</p>
+<ul>
+<li>填充数据和ListView、GridView用法一样使用Adapter，更新数据直接通过adapter.notifyDataChanged来更新</li>
+<li>支持点击、单选、多选三种模式：FLOW_TAG_CHECKED_NONE、FLOW_TAG_CHECKED_SINGLE、FLOW_TAG_CHECKED_MULTI</li>
+</ul>
+<h3>正式讲解之前先看下我们实现后的效果图：</h3>
+
+<p> <img src="https://github.com/hanhailong/AndroidStudyResources/raw/master/screenshot/flow_tag.gif?raw=true" alt="image"></p>]]>
+    
+    </summary>
+    
+      <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Android Support Library 23.1 now available]]></title>
@@ -1454,23 +2077,6 @@ public int <span class="function">getAge</span>(){}
     </summary>
     
       <category term="Hexo主题" scheme="http://hanhailong.com/tags/Hexo%E4%B8%BB%E9%A2%98/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[欢迎来到极客学院！]]></title>
-    <link href="http://hanhailong.com/2015/09/16/%E6%AC%A2%E8%BF%8E%E6%9D%A5%E5%88%B0%E6%9E%81%E5%AE%A2%E5%AD%A6%E9%99%A2%EF%BC%81/"/>
-    <id>http://hanhailong.com/2015/09/16/欢迎来到极客学院！/</id>
-    <published>2015-09-16T06:16:26.000Z</published>
-    <updated>2015-09-28T03:44:47.000Z</updated>
-    <content type="html"><![CDATA[<p>2015年加入<a href="http://www.jikexueyuan.com/" target="_blank" rel="external">极客学院</a>，开始新的移动研发里程！！！</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>2015年加入<a href="http://www.jikexueyuan.com/" target="_blank" rel="external">极客学院</a>，开始新的移动研发里程！！！</p>
-]]>
-    </summary>
-    
-      <category term="随笔" scheme="http://hanhailong.com/tags/%E9%9A%8F%E7%AC%94/"/>
     
   </entry>
   
