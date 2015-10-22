@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2015-10-20T13:44:35.000Z</updated>
+  <updated>2015-10-22T06:17:49.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -13,6 +13,44 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[cocoapods安装失败-bad response Not Found 404 (http://ruby.taobao.org/latest_specs.4.8.gz]]></title>
+    <link href="http://hanhailong.com/2015/10/22/cocoapods%E5%AE%89%E8%A3%85%E5%A4%B1%E8%B4%A5-bad-response-Not-Found-404-http-ruby-taobao-org-latest-specs-4-8-gz/"/>
+    <id>http://hanhailong.com/2015/10/22/cocoapods安装失败-bad-response-Not-Found-404-http-ruby-taobao-org-latest-specs-4-8-gz/</id>
+    <published>2015-10-22T05:37:34.000Z</published>
+    <updated>2015-10-22T06:17:49.000Z</updated>
+    <content type="html"><![CDATA[<p>最近把MAC系统升级到了最新版本-10.11（OS X EI Capitan），发现之前装的<a href="https://github.com/CocoaPods/CocoaPods" target="_blank" rel="external">CocoaPods</a>不能用了，只好重新装了。执行如下命令：</p>
+<pre><code>sudo gem <span class="keyword">install</span> cocoapods
+</code></pre><p>发现报如下错误：<br><img src="https://github.com/hanhailong/IOSStudyResource/blob/master/screenshot/cocoapods/pod_error.png?raw=true" alt="image"></p>
+<a id="more"></a>
+<p>我之前就是用的淘宝的镜像<a href="http://ruby.taobao.org/" target="_blank" rel="external">http://ruby.taobao.org/</a>，我们在浏览器上输入：<a href="http://ruby.taobao.org/" target="_blank" rel="external">http://ruby.taobao.org/</a>，链接自动重定向到了<a href="https://ruby.taobao.org/" target="_blank" rel="external">https://ruby.taobao.org/</a>，淘宝镜像也给了提示：</p>
+<p><img src="https://github.com/hanhailong/IOSStudyResource/blob/master/screenshot/cocoapods/taobao_tips.png?raw=true" alt="image"></p>
+<p>好吧，那我们只能删掉http的，改成https的，执行命令：</p>
+<pre><code>gem sources --remove <span class="string">http:</span><span class="comment">//ruby.taobao.org/</span>
+gem sources -a <span class="string">https:</span><span class="comment">//ruby.taobao.org/</span>
+</code></pre><p>改掉之后我们继续使用命令查看我们改之后的ruby镜像：</p>
+<pre><code>gem sources <span class="operator">-l</span>
+</code></pre><p><img src="https://github.com/hanhailong/IOSStudyResource/blob/master/screenshot/cocoapods/pod_new.png?raw=true" alt="image"></p>
+<p>我们继续安装cocoapods，执行命令：</p>
+<pre><code>sudo gem <span class="keyword">install</span> cocoapods
+</code></pre><p>这时候会让你输入密码，输入密码完了之后就开始真正的安装cocoapods了</p>
+<p><img src="https://github.com/hanhailong/IOSStudyResource/blob/master/screenshot/cocoapods/pod_install.png?raw=true" alt="image"></p>
+<p>安装完之后，执行命令：</p>
+<pre><code>pod <span class="comment">--version</span>
+</code></pre><p><img src="https://github.com/hanhailong/IOSStudyResource/blob/master/screenshot/cocoapods/pod_version.png?raw=true" alt="image"></p>
+<p>出现版本0.39.0之后，就说明安装成功了！！！！</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>最近把MAC系统升级到了最新版本-10.11（OS X EI Capitan），发现之前装的<a href="https://github.com/CocoaPods/CocoaPods">CocoaPods</a>不能用了，只好重新装了。执行如下命令：</p>
+<pre><code>sudo gem <span class="keyword">install</span> cocoapods
+</code></pre><p>发现报如下错误：<br><img src="https://github.com/hanhailong/IOSStudyResource/blob/master/screenshot/cocoapods/pod_error.png?raw=true" alt="image"></p>]]>
+    
+    </summary>
+    
+      <category term="IOS" scheme="http://hanhailong.com/tags/IOS/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Android-教你自作一个简单而又实用的流式Tag标签布局]]></title>
@@ -2052,27 +2090,6 @@ public int <span class="function">getAge</span>(){}
 ]]></content>
     <summary type="html">
     <![CDATA[<p>群里有同学问我博客左上角的Fork me on Github是怎么实现的，我这里简单介绍一下，其实实现原理很简单，因为我这里用的yilia主题，你只要改下themes/yilia/layout/_partial/left-col.ejs文件下的<code>&lt;div class=&quot;overlay&quot;&gt;&lt;/div&gt;</code>，在这个<div>标签里面添加下面的代码，具体代码请看详情：</p>]]>
-    
-    </summary>
-    
-      <category term="Hexo主题" scheme="http://hanhailong.com/tags/Hexo%E4%B8%BB%E9%A2%98/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Hexo主题-yilia和next]]></title>
-    <link href="http://hanhailong.com/2015/09/17/Hexo%E4%B8%BB%E9%A2%98-yilia%E5%92%8Cnext/"/>
-    <id>http://hanhailong.com/2015/09/17/Hexo主题-yilia和next/</id>
-    <published>2015-09-17T03:04:05.000Z</published>
-    <updated>2015-09-17T03:21:34.000Z</updated>
-    <content type="html"><![CDATA[<p>最近在看Hexo主题相关的东西，我现在正在使用的是<a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="external">yilia</a>主题，效果非常赞哦！另外再介绍一个star数量也比较高的主题<a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">next</a>，效果也是很不错的！两个主题的具体内容看详情…</p>
-<a id="more"></a>
-<p>yilia主题的效果图为：<br><img src="https://camo.githubusercontent.com/1a7175617e4d866305b091857c7517ae542df65d/687474703a2f2f6c697474656e646f6d6f2e73696e616170702e636f6d2f79696c69612f79696c69612d7063312e706e67" alt="image"></p>
-<hr>
-<p>最近又看到了<a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">next</a>，效果也挺不错，看效果图：<br><img src="https://camo.githubusercontent.com/2e2c5c6d351ebe899fcebed0f56a5b72b2660b06/687474703a2f2f696973736e616e2e636f6d2f6e657875732f6e6578742f6e6578742d736368656d65732e6a7067" alt="image"><br>    最重要的是，里面有个非常详细的wiki，详细讲解了怎么设置头像、关于我、创建分类、侧边栏等等，链接wiki地址在<a href="https://github.com/iissnan/hexo-theme-next/wiki" target="_blank" rel="external">next-wiki</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>最近在看Hexo主题相关的东西，我现在正在使用的是<a href="https://github.com/litten/hexo-theme-yilia">yilia</a>主题，效果非常赞哦！另外再介绍一个star数量也比较高的主题<a href="https://github.com/iissnan/hexo-theme-next">next</a>，效果也是很不错的！两个主题的具体内容看详情…</p>]]>
     
     </summary>
     
