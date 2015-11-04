@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2015-10-27T15:06:38.000Z</updated>
+  <updated>2015-11-04T15:56:08.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -13,6 +13,65 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Android-部分作品鉴赏]]></title>
+    <link href="http://hanhailong.com/2015/11/04/Android-%E9%83%A8%E5%88%86%E4%BD%9C%E5%93%81%E9%89%B4%E8%B5%8F/"/>
+    <id>http://hanhailong.com/2015/11/04/Android-部分作品鉴赏/</id>
+    <published>2015-11-04T15:32:50.000Z</published>
+    <updated>2015-11-04T15:56:08.000Z</updated>
+    <content type="html"><![CDATA[<p>时间过得真快，马上快毕业四年了，这里整理了下我做过的部分App，当然还有一些其他的App，不是外包就是没有纪念意义，这里就不列举了！</p>
+<a id="more"></a>
+<h3>51拉勾</h3>
+
+<p><a href="http://www.wandoujia.com/apps/com.ydcy.lago.app" target="_blank" rel="external">51拉钩</a>是我做过的第二个商业Android客户端App，承载了我很多记忆，现在还记得当初和小伙伴们加班到晚上11点、12点甚至凌晨两三点的情景（岁月不饶人啊~~~）！！！</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/lagou-1.png?raw=true" alt="家庭首页"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/lagou-2.png?raw=true" alt="家庭首页"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/lagou-3.png?raw=true" alt="家庭首页"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/lagou-4.png?raw=true" alt="家庭首页"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/lagou-5.png?raw=true" alt="家庭首页"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/lagou-6.png?raw=true" alt="家庭首页"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/lagou-7.png?raw=true" alt="家庭首页"></p>
+<h3>51听听</h3>
+
+<p><a href="http://www.wandoujia.com/apps/com.ydcy.ting.app" target="_blank" rel="external">51听听</a>是继51拉钩之后的又一个商业App，这个App比较有意思，里面包括大量童话、唐诗三百首等儿童教育方面的故事！！！</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ting-1.png?raw=true" alt="51听"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ting-2.png?raw=true" alt="51听"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ting-3.png?raw=true" alt="51听"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ting-4.png?raw=true" alt="51听"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ting-5.png?raw=true" alt="51听"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ting-6.png?raw=true" alt="51听"></p>
+<h3>发镖</h3>
+
+<p><a href="http://www.wandoujia.com/apps/com.cubead.appclient" target="_blank" rel="external">发镖</a>这是我加入北京博雅立方做过的唯一的一款App，包括IOS版本，这个App以前叫营销掌中宝，是国内首家最专业的营销推广平台，服务类目包括微信营销、百度营销、建站推广等多产品类目。</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-1.png?raw=true" alt="发镖"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-2.png?raw=true" alt="发镖"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-3.png?raw=true" alt="发镖"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-4.png?raw=true" alt="发镖"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-5.png?raw=true" alt="发镖"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-6.png?raw=true" alt="发镖"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-7.png?raw=true" alt="发镖"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-8.png?raw=true" alt="发镖"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-9.png?raw=true" alt="发镖"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-10.png?raw=true" alt="发镖"></p>
+<h3>极客学院</h3>
+
+<p><a href="http://www.jikexueyuan.com/app/" target="_blank" rel="external">极客学院</a>，中国最大的IT职业在线教育平台！！</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/jike-1.png?raw=true" alt="jike"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/jike-2.png?raw=true" alt="jike"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/jike-3.png?raw=true" alt="jike"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/jike-4.png?raw=true" alt="jike"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/jike-5.png?raw=true" alt="jike"></p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/jike-6.png?raw=true" alt="jike"></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>时间过得真快，马上快毕业四年了，这里整理了下我做过的部分App，当然还有一些其他的App，不是外包就是没有纪念意义，这里就不列举了！</p>]]>
+    
+    </summary>
+    
+      <category term="随笔" scheme="http://hanhailong.com/tags/%E9%9A%8F%E7%AC%94/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Android版本-编译VLC]]></title>
@@ -2073,63 +2132,6 @@ explosionField.explode(view)<span class="comment">;</span>
 ]]></content>
     <summary type="html">
     <![CDATA[<p>之前看了很多关于Android事件Touch传递机制的文章，感觉还是老外讲的最清楚。原版PDF地址：<a href="http://wugengxin.cn/download/pdf/android/PRE_andevcon_mastering-the-android-touch-system.pdf">Mastering the Android Touch System</a>，github的demo地址：<a href="https://github.com/devunwired/custom-touch-examples">demo</a></p>]]>
-    
-    </summary>
-    
-      <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Android-通过@Keep注解来防止类、构造函数、方法、变量等混淆]]></title>
-    <link href="http://hanhailong.com/2015/09/20/Android-%E9%80%9A%E8%BF%87-Keep%E6%B3%A8%E8%A7%A3%E6%9D%A5%E9%98%B2%E6%AD%A2%E7%B1%BB%E3%80%81%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E3%80%81%E6%96%B9%E6%B3%95%E3%80%81%E5%8F%98%E9%87%8F%E7%AD%89%E6%B7%B7%E6%B7%86/"/>
-    <id>http://hanhailong.com/2015/09/20/Android-通过-Keep注解来防止类、构造函数、方法、变量等混淆/</id>
-    <published>2015-09-20T13:01:28.000Z</published>
-    <updated>2015-09-23T22:37:22.000Z</updated>
-    <content type="html"><![CDATA[<p>我们在开发Android应用的时候，经常遇到这样一种问题：那就是防止proguard混淆我们特定的变量、方法等等。</p>
-<a id="more"></a>
-<hr>
-<p>举个例子，我们定义了一个类，这个类实现了Serializable接口；当然这个类不能混淆，否则反序列化会出错。通常这种情况下，我们会在proguard-rules.pro配置文件中加入以下代码：</p>
-<pre><code>-keepnames <span class="class"><span class="keyword">class</span> * <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span>
- -<span class="title">keepclassmembers</span> <span class="title">class</span> * <span class="keyword">implements</span>     <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>{
-<span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID;
-<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> java.io.ObjectStreamField[]     serialPersistentFields;
-!<span class="keyword">static</span> !<span class="keyword">transient</span> &lt;fields&gt;;
-<span class="function"><span class="keyword">private</span> <span class="keyword">void</span>         <span class="title">writeObject</span><span class="params">(java.io.ObjectOutputStream)</span></span>;
-<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readObject</span><span class="params">(java.io.ObjectInputStream)</span></span>;
-java.lang.<span class="function">Object <span class="title">writeReplace</span><span class="params">()</span></span>;
-java.lang.<span class="function">Object <span class="title">readResolve</span><span class="params">()</span></span>;
-}
-</code></pre><p>但是这个是混淆的实现Serializable的类，有时候我们需要混淆没有共同特征的类、方法和属性时，这种写法就非常蛋疼了。</p>
-<p>这里介绍一种比较新颖、轻快的方法，通过@Keep注解来灵活的防止混淆，用起来非常的灵活、快捷、方便，怎样用呢？像普通的注解一样，如下：</p>
-<pre><code><span class="comment">//防止混淆类</span>
-<span class="variable">@Keep</span>
-public class Person {}
-
-<span class="comment">//防止混淆变量</span>
-<span class="variable">@Keep</span>
-public String name;
-
-<span class="comment">//防止混淆方法</span>
-<span class="variable">@Keep</span>
-public int <span class="function">getAge</span>(){}
-</code></pre><p>但是当你加上上面的注解后，发现@Keep并没有起作用，该混淆的还是混淆了，这是为什么呢？</p>
-<p>原因目前Gradle还不支持@Keep混淆，Google只是定义好了一个这种注解，并没有实现它，也就是说@Keep目前只是一个空壳。这里我们来手动开启它，让它支持防止混淆，在你的progurad-rules.pro配置文件里面加入以下代码：</p>
-<pre><code>#手动启用support keep注解
-#http://tools.android.com/tech-docs/support-    annotations
--<span class="ruby">dontskipnonpubliclibraryclassmembers
-</span>-<span class="ruby">printconfiguration
-</span>-<span class="ruby">keep,allowobfuscation <span class="variable">@interface</span>         android.support.annotation.<span class="constant">Keep</span>
-</span>
--<span class="ruby">keep <span class="variable">@android</span>.support.annotation.<span class="constant">Keep</span> <span class="class"><span class="keyword">class</span> *</span>
-</span>-<span class="ruby">keepclassmembers <span class="class"><span class="keyword">class</span> * {</span>
-</span>    @android.support.annotation.Keep *;
-}
-</code></pre><p>加入后如下：<br><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/android_keep.png?raw=true" alt="image"></p>
-<p>这样就开启了，重新打Realease包发现程序可以正常运行了！</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>我们在开发Android应用的时候，经常遇到这样一种问题：那就是防止proguard混淆我们特定的变量、方法等等。</p>]]>
     
     </summary>
     
