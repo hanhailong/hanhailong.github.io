@@ -20,7 +20,7 @@
 <meta property="og:image" content="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/vlc_1.png?raw=true">
 <meta property="og:image" content="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/vlc_2.png?raw=true">
 <meta property="og:image" content="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/vlc_3.png?raw=true">
-<meta property="og:updated_time" content="2015-10-27T15:06:38.000Z">
+<meta property="og:updated_time" content="2015-11-05T16:06:59.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android版本-编译VLC">
 <meta name="twitter:description" content="简述
@@ -235,7 +235,13 @@ var _hmt = _hmt || [];
 <p>总体来说是比较顺利的，按照官方的wiki文档一步一步走下来，基本上没有遇到大问题，遇到唯一的问题是<a href="http://download.csdn.net/detail/hanhailong726188/9218615" target="_blank" rel="external">xz-5.0.3.tar.bz2</a>和<a href="http://download.csdn.net/detail/hanhailong726188/9218631" target="_blank" rel="external">protobuf-2.6.1.tar.gz</a>这两个库文件没有下载些来（因为被墙了），我单独下载安装的，这里我把这两个文件放到CSDN上了，有需要的自行下载！！</p>
 <h2>编译过程</h2>
 
-<p>因为我这里用的MAC OSX系统，所以省掉了很多麻烦。</p>
+<p>编译的第一步肯定是需要下载一些必要的工具，如果你的系统是Linux，你可以通过api-get来安装：</p>
+<pre><code><span class="label">sudo</span> apt-<span class="preprocessor">get</span> install automake ant autopoint cmake <span class="keyword">build-essential </span>libtool \
+     patch pkg-config protobuf-compiler ragel <span class="keyword">subversion </span>unzip git
+</code></pre><p>我这里用的是Mac Ox，所以采用<a href="http://brew.sh/" target="_blank" rel="external">HomeBrew</a>来安装，首先需要执行命令：</p>
+<pre><code><span class="keyword">brew </span>install automake ant autopoint cmake <span class="keyword">build-essential </span>libtool \
+     patch pkg-config protobuf-compiler ragel <span class="keyword">subversion </span>unzip git
+</code></pre><p>然后等待上面的工具安装完成，安装完成后开始执行下一步</p>
 <p>这里假设你已经装好<a href="http://developer.android.com/sdk/index.html" target="_blank" rel="external">Android SDK</a>和<a href="http://developer.android.com/tools/sdk/ndk/index.html" target="_blank" rel="external">Android NDK</a></p>
 <h4>配置环境变量</h4>
 
@@ -285,6 +291,7 @@ make install
 <p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/vlc_1.png?raw=true" alt="image1"><br><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/vlc_2.png?raw=true" alt="image2"><br><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/vlc_3.png?raw=true" alt="image3"></p>
 <p>VLC很强大，支持字幕，支持锁定屏幕，支持跳转到某个具体时间，支持0.25-4倍的慢放、快放、支持亮度调节、支持音量调节、支持快进、支持直播等特性，是做在线视频播放的绝佳选择之一！！！！</p>
 <p>上面两个<a href="http://download.csdn.net/detail/hanhailong726188/9218615" target="_blank" rel="external">xz-5.0.3.tar.bz2</a>和<a href="http://download.csdn.net/detail/hanhailong726188/9218631" target="_blank" rel="external">protobuf-2.6.1.tar.gz</a>可以在这里下载！</p>
+<p>最后，附上我编译好的项目<a href="https://github.com/hanhailong/VCL-Android" target="_blank" rel="external">VLC-Android</a>，这里我只编译了四种so包（armeabi-v7a、armeabi、x86、mips），有需要的朋友自行下载。</p>
 
       
     </div>

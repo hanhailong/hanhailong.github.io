@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2015-11-04T15:56:08.000Z</updated>
+  <updated>2015-11-04T15:56:09.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://hanhailong.com/2015/11/04/Android-%E9%83%A8%E5%88%86%E4%BD%9C%E5%93%81%E9%89%B4%E8%B5%8F/"/>
     <id>http://hanhailong.com/2015/11/04/Android-部分作品鉴赏/</id>
     <published>2015-11-04T15:32:50.000Z</published>
-    <updated>2015-11-04T15:56:08.000Z</updated>
+    <updated>2015-11-04T15:56:09.000Z</updated>
     <content type="html"><![CDATA[<p>时间过得真快，马上快毕业四年了，这里整理了下我做过的部分App，当然还有一些其他的App，不是外包就是没有纪念意义，这里就不列举了！</p>
 <a id="more"></a>
 <h3>51拉勾</h3>
@@ -78,7 +78,7 @@
     <link href="http://hanhailong.com/2015/10/27/Android%E7%89%88%E6%9C%AC-%E7%BC%96%E8%AF%91VLC/"/>
     <id>http://hanhailong.com/2015/10/27/Android版本-编译VLC/</id>
     <published>2015-10-27T13:54:31.000Z</published>
-    <updated>2015-10-27T15:06:38.000Z</updated>
+    <updated>2015-11-05T16:06:59.000Z</updated>
     <content type="html"><![CDATA[<h2>简述</h2>
 
 <p>最近公司项目<a href="http://www.jikexueyuan.com/app/" target="_blank" rel="external">极客学院</a>在线播放器要加一个需求：支持播放倍数加速、支持字幕；之前用的是一个第三方的开源库<a href="https://github.com/Bilibili/ijkplayer" target="_blank" rel="external">ijkplayer</a>，这个库也非常的给力，它对ffmpeg做了很好的封装，不过不支持加速减速播放，所以弃用改成<a href="https://wiki.videolan.org/AndroidCompile" target="_blank" rel="external">VLC-Android</a>，IOS的在这<a href="https://wiki.videolan.org/IOSCompile" target="_blank" rel="external">VLC-IOS</a>.</p>
@@ -87,7 +87,13 @@
 <p>总体来说是比较顺利的，按照官方的wiki文档一步一步走下来，基本上没有遇到大问题，遇到唯一的问题是<a href="http://download.csdn.net/detail/hanhailong726188/9218615" target="_blank" rel="external">xz-5.0.3.tar.bz2</a>和<a href="http://download.csdn.net/detail/hanhailong726188/9218631" target="_blank" rel="external">protobuf-2.6.1.tar.gz</a>这两个库文件没有下载些来（因为被墙了），我单独下载安装的，这里我把这两个文件放到CSDN上了，有需要的自行下载！！</p>
 <h2>编译过程</h2>
 
-<p>因为我这里用的MAC OSX系统，所以省掉了很多麻烦。</p>
+<p>编译的第一步肯定是需要下载一些必要的工具，如果你的系统是Linux，你可以通过api-get来安装：</p>
+<pre><code><span class="label">sudo</span> apt-<span class="preprocessor">get</span> install automake ant autopoint cmake <span class="keyword">build-essential </span>libtool \
+     patch pkg-config protobuf-compiler ragel <span class="keyword">subversion </span>unzip git
+</code></pre><p>我这里用的是Mac Ox，所以采用<a href="http://brew.sh/" target="_blank" rel="external">HomeBrew</a>来安装，首先需要执行命令：</p>
+<pre><code><span class="keyword">brew </span>install automake ant autopoint cmake <span class="keyword">build-essential </span>libtool \
+     patch pkg-config protobuf-compiler ragel <span class="keyword">subversion </span>unzip git
+</code></pre><p>然后等待上面的工具安装完成，安装完成后开始执行下一步</p>
 <p>这里假设你已经装好<a href="http://developer.android.com/sdk/index.html" target="_blank" rel="external">Android SDK</a>和<a href="http://developer.android.com/tools/sdk/ndk/index.html" target="_blank" rel="external">Android NDK</a></p>
 <h4>配置环境变量</h4>
 
@@ -137,6 +143,7 @@ make install
 <p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/vlc_1.png?raw=true" alt="image1"><br><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/vlc_2.png?raw=true" alt="image2"><br><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/vlc_3.png?raw=true" alt="image3"></p>
 <p>VLC很强大，支持字幕，支持锁定屏幕，支持跳转到某个具体时间，支持0.25-4倍的慢放、快放、支持亮度调节、支持音量调节、支持快进、支持直播等特性，是做在线视频播放的绝佳选择之一！！！！</p>
 <p>上面两个<a href="http://download.csdn.net/detail/hanhailong726188/9218615" target="_blank" rel="external">xz-5.0.3.tar.bz2</a>和<a href="http://download.csdn.net/detail/hanhailong726188/9218631" target="_blank" rel="external">protobuf-2.6.1.tar.gz</a>可以在这里下载！</p>
+<p>最后，附上我编译好的项目<a href="https://github.com/hanhailong/VCL-Android" target="_blank" rel="external">VLC-Android</a>，这里我只编译了四种so包（armeabi-v7a、armeabi、x86、mips），有需要的朋友自行下载。</p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h2>简述</h2>
