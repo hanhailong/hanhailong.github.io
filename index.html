@@ -180,6 +180,94 @@ var _hmt = _hmt || [];
 </nav>
       <div class="body-wrap">
   
+    <article id="post-Android-小米桌面图标显示角标数" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/11/23/Android-小米桌面图标显示角标数/" class="article-date">
+  	<time datetime="2015-11-23T07:07:11.000Z" itemprop="datePublished">2015-11-23</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/23/Android-小米桌面图标显示角标数/">Android-小米桌面图标显示角标数</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3>基本介绍</h3>
+
+<p>最近有群里问：怎样在小米手机桌面的图标上显示角标数，我看了下我的红米note手机，果然有的第三方app图标上显示角标数，尤其是微信和QQ。这让我立马想到了：小米是不是对通知栏做了手脚。立马我查了相关文档并做了相关的测试，发现果然如我猜测的：MIUI系统对通知栏做了手脚。它目前有两种情况：</p>
+<ol>
+<li>默认情况<br> 当第三方app向通知栏发送一条通知（一般不带进度条并且用户可以删除的通知），那么此时app icon的角标数就会显示1。<br> 这个时候app显示的角标数和通知栏里app发送的通知数是对应的，即向通知栏发多少条通知就会显示多少角标数。</li>
+<li><p>定义角标数量<br> 如果想让app在通知栏里只显示一条通知，但角标数是多个怎么办呢？</p>
+<p> 原理是通过反射拿到<em>Notification</em>的私有属性<em>extraNotification</em>，重点就是这个<em>extraNotification</em>,MIUI系统对这个重定义了，这个类在MIUI系统里是<em>android.app.MiuiNotification</em>这个类，这个类里面有个私有属性<em>messageCount</em>,我们只要改变这个<em>messageCount</em>值就能显示的改变app icon的角标数了。如下图所示：</p>
+</li>
+</ol>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/miui_notification.png?raw=true" alt="miuinotification">    </p>
+<p>这里给出代码示例：</p>
+<pre><code><span class="type">NotificationCompat</span>.<span class="type">Builder</span> builder = new <span class="type">NotificationCompat</span>.<span class="type">Builder</span>(this)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle(<span class="string">"小米角标"</span>)
+            .setContentText(<span class="string">"miui桌面角标消息"</span>);
+
+    <span class="type">NotificationManagerCompat</span> managerCompat = <span class="type">NotificationManagerCompat</span>.<span class="keyword">from</span>(this);
+
+    <span class="type">Notification</span> notification = builder.build();
+    <span class="keyword">try</span> {
+        <span class="type">Field</span> field = notification.getClass().getDeclaredField(<span class="string">"extraNotification"</span>);
+
+        <span class="type">Object</span> extraNotification = field.get(notification);
+
+        <span class="type">Method</span> <span class="keyword">method</span> = extraNotification.getClass().getDeclaredMethod(<span class="string">"setMessageCount"</span>, <span class="type">int</span>.class);
+
+        <span class="keyword">method</span>.invoke(extraNotification, <span class="number">10</span>);
+    } catch (<span class="type">Exception</span> e) {
+          e.printStackTrace();
+    }
+
+    managerCompat.notify(<span class="number">0</span>, notification);
+</code></pre><p>上面的数字10就是要显示的角标数，我们看下结果：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/miui_app_icon_count.png?raw=true" alt="app-icon"></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
     <article id="post-Android-部分作品鉴赏" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -725,66 +813,6 @@ var _hmt = _hmt || [];
 
       
 
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-Hexo—正确添加RSS订阅" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/10/08/Hexo—正确添加RSS订阅/" class="article-date">
-  	<time datetime="2015-10-08T13:07:13.000Z" itemprop="datePublished">2015-10-08</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/08/Hexo—正确添加RSS订阅/">Hexo—正确添加RSS订阅</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>看到别人的博客都有RSS订阅功能，就想着给自己的博客也添加RSS订阅功能。</p>
-<p>看网上的教程，写的不是很详细，都是很简单的一句话。而我按照网上的教程愣是没整出来。真是验证了一句古话：<font color='red'>尽信书不如无书</font></p>
-<p>最后，终于让我整出来了，特此把完整的过程记录一下：</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo主题/">Hexo主题</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/10/08/Hexo—正确添加RSS订阅/#more">more >></a>
-        </p>
       
       <div class="clearfix"></div>
     </div>
