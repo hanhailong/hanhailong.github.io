@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2015-11-23T09:59:56.000Z</updated>
+  <updated>2015-11-23T10:02:09.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -19,15 +19,15 @@
     <link href="http://hanhailong.com/2015/11/23/Android-%E5%B0%8F%E7%B1%B3%E6%A1%8C%E9%9D%A2%E5%9B%BE%E6%A0%87%E6%98%BE%E7%A4%BA%E8%A7%92%E6%A0%87%E6%95%B0/"/>
     <id>http://hanhailong.com/2015/11/23/Android-小米桌面图标显示角标数/</id>
     <published>2015-11-23T07:07:11.000Z</published>
-    <updated>2015-11-23T09:59:56.000Z</updated>
+    <updated>2015-11-23T10:02:09.000Z</updated>
     <content type="html"><![CDATA[<h3>基本介绍</h3>
 
 <p>最近有群里问：怎样在小米手机桌面的图标上显示角标数，我看了下我的红米note手机，果然有的第三方app图标上显示角标数，尤其是微信和QQ。这让我立马想到了：小米是不是对通知栏做了手脚。立马我查了相关文档并做了相关的测试，发现果然如我猜测的：MIUI系统对通知栏做了手脚。它目前有两种情况：</p>
 <ol>
 <li>默认情况<br> 当第三方app向通知栏发送一条通知（一般不带进度条并且用户可以删除的通知），那么此时app icon的角标数就会显示1。<br> 这个时候app显示的角标数和通知栏里app发送的通知数是对应的，即向通知栏发多少条通知就会显示多少角标数。</li>
 </ol>
-<pre><code><span class="comment">&lt;!-- more --&gt;</span>
-</code></pre><ol>
+<a id="more"></a>
+<ol>
 <li><p>定义角标数量<br> 如果想让app在通知栏里只显示一条通知，但角标数是多个怎么办呢？</p>
 <p> 原理是通过反射拿到<em>Notification</em>的私有属性<em>extraNotification</em>，重点就是这个<em>extraNotification</em>,MIUI系统对这个重定义了，这个类在MIUI系统里是<em>android.app.MiuiNotification</em>这个类，这个类里面有个私有属性<em>messageCount</em>,我们只要改变这个<em>messageCount</em>值就能显示的改变app icon的角标数了。如下图所示：</p>
 </li>
@@ -61,7 +61,11 @@
     <summary type="html">
     <![CDATA[<h3>基本介绍</h3>
 
-<p>最近有群里问：怎样在小米手机桌面的图标上显示角标数，我看了下我的红米note手机，果然有的第三方app图标上显示角标数，尤其是微信和QQ。这让我立马想到了：小米是不是对通知栏做了手脚。立马我查了相关文档并做了相关的测试，发现果然如我猜测的：MI]]>
+<p>最近有群里问：怎样在小米手机桌面的图标上显示角标数，我看了下我的红米note手机，果然有的第三方app图标上显示角标数，尤其是微信和QQ。这让我立马想到了：小米是不是对通知栏做了手脚。立马我查了相关文档并做了相关的测试，发现果然如我猜测的：MIUI系统对通知栏做了手脚。它目前有两种情况：</p>
+<ol>
+<li>默认情况<br> 当第三方app向通知栏发送一条通知（一般不带进度条并且用户可以删除的通知），那么此时app icon的角标数就会显示1。<br> 这个时候app显示的角标数和通知栏里app发送的通知数是对应的，即向通知栏发多少条通知就会显示多少角标数。</li>
+</ol>]]>
+    
     </summary>
     
       <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
