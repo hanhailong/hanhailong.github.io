@@ -118,7 +118,7 @@ var _hmt = _hmt || [];
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android咨询/" style="font-size: 10px;">Android咨询</a> <a href="/tags/Android工具/" style="font-size: 10px;">Android工具</a> <a href="/tags/Hexo主题/" style="font-size: 17.5px;">Hexo主题</a> <a href="/tags/IOS/" style="font-size: 15px;">IOS</a> <a href="/tags/RxAndroid/" style="font-size: 10px;">RxAndroid</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/技术博客/" style="font-size: 17.5px;">技术博客</a> <a href="/tags/随笔/" style="font-size: 12.5px;">随笔</a>
+						<a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android咨询/" style="font-size: 10px;">Android咨询</a> <a href="/tags/Android工具/" style="font-size: 10px;">Android工具</a> <a href="/tags/Hexo主题/" style="font-size: 17.5px;">Hexo主题</a> <a href="/tags/IOS/" style="font-size: 15px;">IOS</a> <a href="/tags/RxAndroid/" style="font-size: 10px;">RxAndroid</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Sublime-Text/" style="font-size: 10px;">Sublime Text</a> <a href="/tags/技术博客/" style="font-size: 17.5px;">技术博客</a> <a href="/tags/随笔/" style="font-size: 12.5px;">随笔</a>
 					</div>
 				</section>
 				
@@ -179,6 +179,78 @@ var _hmt = _hmt || [];
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-Hexo—添加百度统计代码" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/10/08/Hexo—添加百度统计代码/" class="article-date">
+  	<time datetime="2015-10-08T15:31:31.000Z" itemprop="datePublished">2015-10-08</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/08/Hexo—添加百度统计代码/">Hexo—添加百度统计代码</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本博客采用的是<a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="external">Yilia</a>主题，这里就以Yilia讲解为例，首先你要去<a href="http://tongji.baidu.com/" target="_blank" rel="external">百度统计</a>注册账号，并获取到相关的百度统计代码：</p>
+<ol>
+<li><p>编辑文件<font color="blue"><strong>themes/yilia/_config.yml</strong></font>，添加一行配置代码：</p>
+<pre><code><span class="string">baidu_tongji:</span> <span class="literal">true</span>
+</code></pre></li>
+<li><p>新建文件<font color="blue"><strong>themes/yilia/layout/_partial/baidu_tongji.ejs</strong></font>，内容如下：</p>
+<pre><code><span class="xml"></span>&lt;%<span class="ruby"> <span class="keyword">if</span> (theme.baidu_tongji) { </span>%&gt;<span class="xml">
+<span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="undefined">
+#申请的百度统计代码
+</span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+</span>&lt;%<span class="ruby"> } </span>%&gt;<span class="xml"></span>
+</code></pre></li>
+<li><p>编辑<font color="blue">themes/yilia/layout/_partial/head.ejs</font>文件，在<font color="red">&lt;/head&gt;</font>之前添加代码：</p>
+<pre><code>&lt;<span class="preprocessor">%</span>- partial<span class="comment">("baidu_tongji")</span> <span class="preprocessor">%</span>&gt;
+</code></pre></li>
+<li><p>重新部署发布，搞定睡觉！！！</p>
+</li>
+</ol>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo主题/">Hexo主题</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-Hexo—正确添加RSS订阅" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -685,62 +757,6 @@ var _hmt = _hmt || [];
         <p class="article-more-link">
           <a  href="/2015/09/27/Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果/#more">more >></a>
         </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-Android：第一个App用户量突破十万大关，正迈向二十万" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/09/24/Android：第一个App用户量突破十万大关，正迈向二十万/" class="article-date">
-  	<time datetime="2015-09-24T02:48:11.000Z" itemprop="datePublished">2015-09-24</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/24/Android：第一个App用户量突破十万大关，正迈向二十万/">Android：第一个App用户量突破十万大关，正迈向二十万...</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>做了N个app了，这是第一个app用户量突破十万的，极客学院Android客户端用户量已经达到13万了，每天活跃用户量三四千，每天新增用户不到1千。</p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/jike_user_num.png?raw=true" alt="极客"></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
-	</div>
-
-      
-
       
       <div class="clearfix"></div>
     </div>

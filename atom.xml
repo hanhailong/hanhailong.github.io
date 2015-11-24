@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2015-11-23T10:02:09.000Z</updated>
+  <updated>2015-11-24T10:22:38.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -13,6 +13,46 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Sublime Text自动开启换行Word Wrap]]></title>
+    <link href="http://hanhailong.com/2015/11/24/Sublime-Text%E8%87%AA%E5%8A%A8%E5%BC%80%E5%90%AF%E6%8D%A2%E8%A1%8CWord-Wrap/"/>
+    <id>http://hanhailong.com/2015/11/24/Sublime-Text自动开启换行Word-Wrap/</id>
+    <published>2015-11-24T10:02:27.000Z</published>
+    <updated>2015-11-24T10:22:38.000Z</updated>
+    <content type="html"><![CDATA[<p>Sublime Text，绝对是神器中的神器，之前在windows电脑上一直都是用nodepad++。mac上也没找到太好的编辑工具，之前曾用过破解版的<em>UltraEdit</em>，但是自从第一次用了Sublime Text后，就彻底的把它打入冷宫了！！</p>
+<p>下面讲讲如何开启Sublime Text的自动换行功能，默认情况下是不开启的。当然你也可以点击导航栏上View-&gt;Word Wrap开启，不过对我们程序猿来说，还是太麻烦了。这里从根本上解决自动换行的问题。</p>
+<p>解决方案：<br>    我这里用的是mac版本的，windows同理</p>
+<pre><code>Preferences-&gt;Setting - <span class="built_ins">User</span>
+</code></pre><p>在打开的<em>Preferences.sublime-settings</em>文件里面，你将会看到类似下面的内容：</p>
+<pre><code>{
+    "<span class="attribute">ignored_packages</span>":
+    <span class="value">[
+        <span class="string">"Markdown"</span>,
+        <span class="string">"Vintage"</span>
+    ]
+</span>}
+</code></pre><p>很明显，这是一个json格式的配置文件，在后面直接追加</p>
+<pre><code>{ "<span class="attribute">word_wrap</span>" : <span class="value"><span class="literal">true</span> </span>}
+</code></pre><p>修改之后的文件内容为：</p>
+<pre><code>{
+    "<span class="attribute">ignored_packages</span>":
+    <span class="value">[
+        <span class="string">"Markdown"</span>,
+        <span class="string">"Vintage"</span>
+    ]</span>,
+    "<span class="attribute">word_wrap</span>":<span class="value"><span class="literal">true</span>
+</span>}
+</code></pre><p>重启Sublime Text后，你将会发现文字、代码超过一行后会自动换行！！！</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>Sublime Text，绝对是神器中的神器，之前在windows电脑上一直都是用nodepad++。mac上也没找到太好的编辑工具，之前曾用过破解版的<em>UltraEdit</em>，但是自从第一次用了Sublime Text后，就彻底的把它打入冷宫了！！</p>
+<]]>
+    </summary>
+    
+      <category term="Sublime Text" scheme="http://hanhailong.com/tags/Sublime-Text/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Android-小米桌面图标显示角标数]]></title>
@@ -2141,24 +2181,6 @@ explosionField.explode(view)<span class="comment">;</span>
     <summary type="html">
     <![CDATA[<p>最近看到有同事在用土巴兔这个app，看了里面的一些效果非常的不错，就试着模仿了一下，首先模仿的是土巴兔里面一个选择装修风格的效果，先看原版效果图如下：<br><img src="http://img.blog.csdn.net/20150928093046209" alt="image"></p>]]>
     
-    </summary>
-    
-      <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Android：第一个App用户量突破十万大关，正迈向二十万...]]></title>
-    <link href="http://hanhailong.com/2015/09/24/Android%EF%BC%9A%E7%AC%AC%E4%B8%80%E4%B8%AAApp%E7%94%A8%E6%88%B7%E9%87%8F%E7%AA%81%E7%A0%B4%E5%8D%81%E4%B8%87%E5%A4%A7%E5%85%B3%EF%BC%8C%E6%AD%A3%E8%BF%88%E5%90%91%E4%BA%8C%E5%8D%81%E4%B8%87/"/>
-    <id>http://hanhailong.com/2015/09/24/Android：第一个App用户量突破十万大关，正迈向二十万/</id>
-    <published>2015-09-24T02:48:11.000Z</published>
-    <updated>2015-09-24T02:55:00.000Z</updated>
-    <content type="html"><![CDATA[<p>做了N个app了，这是第一个app用户量突破十万的，极客学院Android客户端用户量已经达到13万了，每天活跃用户量三四千，每天新增用户不到1千。</p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/jike_user_num.png?raw=true" alt="极客"></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>做了N个app了，这是第一个app用户量突破十万的，极客学院Android客户端用户量已经达到13万了，每天活跃用户量三四千，每天新增用户不到1千。</p>
-<p><img src="https://github.com/hanhailong/AndroidStudyRes]]>
     </summary>
     
       <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
