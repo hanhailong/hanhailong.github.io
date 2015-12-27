@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2015-12-27T12:26:39.000Z</updated>
+  <updated>2015-12-27T13:04:19.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://hanhailong.com/2015/12/27/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8DOverdraw/"/>
     <id>http://hanhailong.com/2015/12/27/Android性能优化之如何避免Overdraw/</id>
     <published>2015-12-27T12:14:37.000Z</published>
-    <updated>2015-12-27T12:26:39.000Z</updated>
+    <updated>2015-12-27T13:04:19.000Z</updated>
     <content type="html"><![CDATA[<h2>什么是Overdraw？</h2>
 
 <p>Overdraw就是过度绘制，是指在一帧的时间内（16.67ms）像素被绘制了多次，理论上一个像素每次只绘制一次是最优的，但是由于重叠的布局导致一些像素会被多次绘制，而每次绘制都会对应到CPU的一组绘图命令和GPU的一些操作，当这个操作耗时超过16.67ms时，就会出现掉帧现象，也就是我们所说的卡顿，所以对重叠不可见元素的重复绘制会产生额外的开销，需要尽量减少Overdraw的发生。</p>
@@ -31,6 +31,7 @@
 <p>暗红： 意味着overdraw 4倍。像素绘制了五次或者更多。这是错误的，要修复它们。</p>
 <p><img src="http://jbcdn2.b0.upaiyun.com/2015/12/1f79c3f75b4b42bd4b2140ff7d14ee73.jpg" alt=""></p>
 <p>那么我们怎么来消灭overdraw呢？总的原则就是：尽量避免重叠不可见元素的绘制，基于这个原则，我们大概可以想出以下几招： </p>
+<a id="more"></a>
 <h2>第一招：合理选择控件容器</h2>
 
 <p>既然overdraw是因为重复绘制了同一片区域的像素点，那我们首先想到的是解决布局问题。Android提供的Layout控件主要包括LinearLayout、TableLayout、FrameLayout、RelativeLayout。俗话说条条大路通罗马，同一个界面我们可以使用不同的容器控件来表达，但是各个容器控件描述界面的复杂度是不一样的。一般来说LinearLayout最易，RelativeLayout较复杂。但是尺有所短，寸有所长，LinearLayout只能用来描述一个方向上连续排列的控件，而RelativeLayout几乎可以用于描述任意复杂度的界面。但是我又要说但是了，表达能力越强的容器控件，性能往往略低一些，因为系统需要将更多的时间花在计算子控件的位置上。综上所述：LinearLayout易用，效率高，表达能力有限。RelativeLayout复杂，表达能力强，效率稍逊。</p>
@@ -104,7 +105,16 @@ view.setLayerType(LAYER_TYPE_NONE)<span class="comment">;</span>
     <summary type="html">
     <![CDATA[<h2>什么是Overdraw？</h2>
 
-<p>Overdraw就是过度绘制，是指在一帧的时间内（16.67ms）像素被绘制了多次，理论上一个像素每次只绘制一次是最优的，但是由于重叠的布局导致一些像素会被多次绘制，而每次绘制都会对应到CPU的一组绘图命令和GPU的一些操作，当]]>
+<p>Overdraw就是过度绘制，是指在一帧的时间内（16.67ms）像素被绘制了多次，理论上一个像素每次只绘制一次是最优的，但是由于重叠的布局导致一些像素会被多次绘制，而每次绘制都会对应到CPU的一组绘图命令和GPU的一些操作，当这个操作耗时超过16.67ms时，就会出现掉帧现象，也就是我们所说的卡顿，所以对重叠不可见元素的重复绘制会产生额外的开销，需要尽量减少Overdraw的发生。</p>
+<p>Android提供了测量Overdraw的选项，在开发者选项－调试GPU过度绘制（Show GPU Overdraw），打开选项就可以看到当前页面Overdraw的状态，就可以观察屏幕的绘制状态。该工具会使用三种不同的颜色绘制屏幕，来指示overdraw发生在哪里以及程度如何，其中：</p>
+<p>没有颜色： 意味着没有overdraw。像素只画了一次。</p>
+<p>蓝色： 意味着overdraw 1倍。像素绘制了两次。大片的蓝色还是可以接受的（若整个窗口是蓝色的，可以摆脱一层）。</p>
+<p>绿色： 意味着overdraw 2倍。像素绘制了三次。中等大小的绿色区域是可以接受的但你应该尝试优化、减少它们。</p>
+<p>浅红： 意味着overdraw 3倍。像素绘制了四次，小范围可以接受。</p>
+<p>暗红： 意味着overdraw 4倍。像素绘制了五次或者更多。这是错误的，要修复它们。</p>
+<p><img src="http://jbcdn2.b0.upaiyun.com/2015/12/1f79c3f75b4b42bd4b2140ff7d14ee73.jpg" alt=""></p>
+<p>那么我们怎么来消灭overdraw呢？总的原则就是：尽量避免重叠不可见元素的绘制，基于这个原则，我们大概可以想出以下几招： </p>]]>
+    
     </summary>
     
       <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
