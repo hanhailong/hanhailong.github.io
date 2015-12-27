@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2015-11-24T10:22:38.000Z</updated>
+  <updated>2015-12-27T05:41:37.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -13,6 +13,259 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Android性能优化之常见的内存泄漏]]></title>
+    <link href="http://hanhailong.com/2015/12/27/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%B8%B8%E8%A7%81%E7%9A%84%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F/"/>
+    <id>http://hanhailong.com/2015/12/27/Android性能优化之常见的内存泄漏/</id>
+    <published>2015-12-27T05:12:02.000Z</published>
+    <updated>2015-12-27T05:41:37.000Z</updated>
+    <content type="html"><![CDATA[<h2>前言</h2>
+
+<p>对于内存泄漏，我想大家在开发中肯定都遇到过，只不过内存泄漏对我们来说并不是可见的，因为它是在堆中活动，而要想检测程序中是否有内存泄漏的产生，通常我们可以借助LeakCanary、MAT等工具来检测应用程序是否存在内存泄漏，MAT是一款强大的内存分析工具，功能繁多而复杂，而LeakCanary则是由Square开源的一款轻量第三方内存泄漏检测工具，当它检测到程序中有内存泄漏的产生时，它将以最直观的方式告诉我们该内存泄漏是由谁产生的和该内存泄漏导致谁泄漏了而不能回收，供我们复查。</p>
+<p>最近腾讯bugly也推出了三篇关于Android内存泄漏调优的文章：</p>
+<ol>
+<li><a href="http://bugly.qq.com/blog/?p=832" target="_blank" rel="external">内存泄露从入门到精通三部曲之基础知识篇</a></li>
+<li><a href="http://bugly.qq.com/blog/?p=872" target="_blank" rel="external">内存泄露从入门到精通三部曲之排查方法篇</a></li>
+<li><a href="http://bugly.qq.com/blog/?p=884" target="_blank" rel="external">内存泄露从入门到精通三部曲之常见原因与用户实践</a></li>
+</ol>
+<p>Realm同样给出了性能优化文章：</p>
+<p><a href="https://realm.io/cn/news/droidcon-farber-improving-android-app-performance/" target="_blank" rel="external">10条提升Android性能的建议</a></p>
+<a id="more"></a>
+<h2>内存泄漏</h2>
+
+<h4>为什么会产生内存泄漏？</h4>
+
+<p>当一个对象已经不需要再使用了，本该被回收时，而有另外一个正在使用的对象持有它的引用从而导致它不能被回收，这导致本该被回收的对象不能被回收而停留在堆内存中，这就产生了内存泄漏。</p>
+<h4>内存泄漏对程序的影响？</h4>
+
+<p>内存泄漏是造成应用程序OOM的主要原因之一！我们知道Android系统为每个应用程序分配的内存有限，而当一个应用中产生的内存泄漏比较多时，这就难免会导致应用所需要的内存超过这个系统分配的内存限额，这就造成了内存溢出而导致应用Crash。</p>
+<h2>Android中常见的内存泄漏汇总</h2>
+
+<h4>单例造成的内存泄漏</h4>
+
+<p>单例模式非常受开发者的喜爱，不过使用的不恰当的话也会造成内存泄漏，由于单例的静态特性使得单例的生命周期和应用的生命周期一样长，这就说明了如果一个对象已经不需要使用了，而单例对象还持有该对象的引用，那么这个对象将不能被正常回收，这就导致了内存泄漏。</p>
+<p>如下这个典例：</p>
+<pre><code>public class AppManager {
+   <span class="keyword"> private</span><span class="keyword"> static</span> AppManager instance;
+   <span class="keyword"> private</span> Context context;
+   <span class="keyword"> private</span><span class="function"> AppManager(</span>Context context<span class="function">)</span> {
+        this.context = context;
+    }
+   <span class="keyword"> public</span><span class="keyword"> static</span> AppManager<span class="function"> getInstance(</span>Context             context<span class="function">)</span> {
+       <span class="instruction"> if </span>(instance != null<span class="function">)</span> {
+           <span class="instruction"> instance </span>=<span class="instruction"> new </span>AppManager(context<span class="function">)</span>;
+        }
+       <span class="instruction"> return </span>instance;
+    }
+}
+</code></pre><p>这是一个普通的单例模式，当创建这个单例的时候，由于需要传入一个Context，所以这个Context的生命周期的长短至关重要： </p>
+<ol>
+<li>传入的是Application的Context：这将没有任何问题，因为单例的生命周期和Application的一样长</li>
+<li>传入的是Activity的Context：当这个Context所对应的Activity退出时，由于该Context和Activity的生命周期一样长（Activity间接继承于Context），所以当前Activity退出时它的内存并不会被回收，因为单例对象持有该Activity的引用。</li>
+</ol>
+<p>所以正确的单例应该修改为下面这种方式：</p>
+<pre><code>public class AppManager {
+   <span class="keyword"> private</span><span class="keyword"> static</span> AppManager instance;
+   <span class="keyword"> private</span> Context context;
+   <span class="keyword"> private</span><span class="function"> AppManager(</span>Context context<span class="function">)</span> {
+        this.context =<span class="function"> context.getApplicationContext(</span><span class="function">)</span>;
+    }
+   <span class="keyword"> public</span><span class="keyword"> static</span> AppManager<span class="function"> getInstance(</span>Context context<span class="function">)</span> {
+       <span class="instruction"> if </span>(instance != null<span class="function">)</span> {
+           <span class="instruction"> instance </span>=<span class="instruction"> new </span>AppManager(context<span class="function">)</span>;
+        }
+       <span class="instruction"> return </span>instance;
+    }
+}
+</code></pre><p>这样不管传入什么Context最终将使用Application的Context，而单例的生命周期和应用的一样长，这样就防止了内存泄漏</p>
+<h4>非静态内部类创建静态实例造成的内存泄漏</h4>
+
+<p>有的时候我们可能会在启动频繁的Activity中，为了避免重复创建相同的数据资源，可能会出现这种写法：</p>
+<pre><code>public <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">AppCompatActivity</span> {</span>
+    <span class="keyword">private</span> static <span class="type">TestResource</span> mResource = <span class="literal">null</span>;
+    <span class="annotation">@Override</span>
+    <span class="keyword">protected</span> void onCreate(<span class="type">Bundle</span> savedInstanceState) {
+        <span class="keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(<span class="type">R</span>.layout.activity_main);
+        <span class="keyword">if</span>(mResource == <span class="literal">null</span>){
+            mResource = <span class="keyword">new</span> <span class="type">TestResource</span>();
+        }
+        <span class="comment">//...</span>
+    }
+    <span class="class"><span class="keyword">class</span> <span class="title">TestResource</span> {</span>
+    <span class="comment">//...</span>
+    }
+}
+</code></pre><p>这样就在Activity内部创建了一个非静态内部类的单例，每次启动Activity时都会使用该单例的数据，这样虽然避免了资源的重复创建，不过这种写法却会造成内存泄漏，因为非静态内部类默认会持有外部类的引用，而又使用了该非静态内部类创建了一个静态的实例，该实例的生命周期和应用的一样长，这就导致了该静态实例一直会持有该Activity的引用，导致Activity的内存资源不能正常回收。正确的做法为：<br>将该内部类设为静态内部类或将该内部类抽取出来封装成一个单例，如果需要使用Context，请使用ApplicationContext</p>
+<h4>Handler造成的内存泄漏</h4>
+
+<p>Handler的使用造成的内存泄漏问题应该说最为常见了，平时在处理网络任务或者封装一些请求回调等api都应该会借助Handler来处理，对于Handler的使用代码编写一不规范即有可能造成内存泄漏，如下示例：</p>
+<pre><code>public <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">AppCompatActivity</span> {</span>
+<span class="keyword">private</span> <span class="type">Handler</span> mHandler = <span class="keyword">new</span> <span class="type">Handler</span>() {
+    <span class="annotation">@Override</span>
+    public void handleMessage(<span class="type">Message</span> msg) {
+    <span class="comment">//...</span>
+    }
+};
+    <span class="annotation">@Override</span>
+    <span class="keyword">protected</span> void onCreate(<span class="type">Bundle</span> savedInstanceState) {
+        <span class="keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(<span class="type">R</span>.layout.activity_main);
+        loadData();
+    }
+    <span class="keyword">private</span> void loadData(){
+        <span class="comment">//...request</span>
+        <span class="type">Message</span> message = <span class="type">Message</span>.obtain();
+        mHandler.sendMessage(message);
+    }
+}
+</code></pre><p>这种创建Handler的方式会造成内存泄漏，由于mHandler是Handler的非静态匿名内部类的实例，所以它持有外部类Activity的引用，我们知道消息队列是在一个Looper线程中不断轮询处理消息，那么当这个Activity退出时消息队列中还有未处理的消息或者正在处理消息，而消息队列中的Message持有mHandler实例的引用，mHandler又持有Activity的引用，所以导致该Activity的内存资源无法及时回收，引发内存泄漏，所以另外一种做法为：</p>
+<pre><code>public <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">AppCompatActivity</span> {</span>
+    <span class="keyword">private</span> <span class="type">MyHandler</span> mHandler = <span class="keyword">new</span> <span class="type">MyHandler</span>(<span class="keyword">this</span>);
+    <span class="keyword">private</span> <span class="type">TextView</span> mTextView ;
+    <span class="keyword">private</span> static <span class="class"><span class="keyword">class</span> <span class="title">MyHandler</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">Handler</span> {</span>
+        <span class="keyword">private</span> <span class="type">WeakReference</span>&lt;<span class="type">Context</span>&gt; reference;
+        public <span class="type">MyHandler</span>(<span class="type">Context</span> context) {
+        reference = <span class="keyword">new</span> <span class="type">WeakReference</span>&lt;&gt;(context);
+        }
+        <span class="annotation">@Override</span>
+        public void handleMessage(<span class="type">Message</span> msg) {
+            <span class="type">MainActivity</span> activity = (<span class="type">MainActivity</span>) reference.get();
+            <span class="keyword">if</span>(activity != <span class="literal">null</span>){
+            activity.mTextView.setText(<span class="string">""</span>);
+            }
+        }
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">protected</span> void onCreate(<span class="type">Bundle</span> savedInstanceState) {
+        <span class="keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(<span class="type">R</span>.layout.activity_main);
+        mTextView = (<span class="type">TextView</span>)findViewById(<span class="type">R</span>.id.textview);
+        loadData();
+    }
+
+    <span class="keyword">private</span> void loadData() {
+        <span class="comment">//...request</span>
+        <span class="type">Message</span> message = <span class="type">Message</span>.obtain();
+        mHandler.sendMessage(message);
+    }
+}
+</code></pre><p>创建一个静态Handler内部类，然后对Handler持有的对象使用弱引用，这样在回收时也可以回收Handler持有的对象，这样虽然避免了Activity泄漏，不过Looper线程的消息队列中还是可能会有待处理的消息，所以我们在Activity的Destroy时或者Stop时应该移除消息队列中的消息，更准确的做法如下：</p>
+<pre><code>public <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">AppCompatActivity</span> {</span>
+    <span class="keyword">private</span> <span class="type">MyHandler</span> mHandler = <span class="keyword">new</span> <span class="type">MyHandler</span>(<span class="keyword">this</span>);
+    <span class="keyword">private</span> <span class="type">TextView</span> mTextView ;
+    <span class="keyword">private</span> static <span class="class"><span class="keyword">class</span> <span class="title">MyHandler</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">Handler</span> {</span>
+        <span class="keyword">private</span> <span class="type">WeakReference</span>&lt;<span class="type">Context</span>&gt; reference;
+        public <span class="type">MyHandler</span>(<span class="type">Context</span> context) {
+        reference = <span class="keyword">new</span> <span class="type">WeakReference</span>&lt;&gt;(context);
+        }
+        <span class="annotation">@Override</span>
+        public void handleMessage(<span class="type">Message</span> msg) {
+            <span class="type">MainActivity</span> activity = (<span class="type">MainActivity</span>) reference.get();
+            <span class="keyword">if</span>(activity != <span class="literal">null</span>){
+            activity.mTextView.setText(<span class="string">""</span>);
+            }
+        }
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">protected</span> void onCreate(<span class="type">Bundle</span> savedInstanceState) {
+        <span class="keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(<span class="type">R</span>.layout.activity_main);
+        mTextView = (<span class="type">TextView</span>)findViewById(<span class="type">R</span>.id.textview);
+        loadData();
+    }
+
+    <span class="keyword">private</span> void loadData() {
+        <span class="comment">//...request</span>
+        <span class="type">Message</span> message = <span class="type">Message</span>.obtain();
+        mHandler.sendMessage(message);
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">protected</span> void onDestroy() {
+        <span class="keyword">super</span>.onDestroy();
+        mHandler.removeCallbacksAndMessages(<span class="literal">null</span>);
+    }
+}
+</code></pre><p>使用mHandler.removeCallbacksAndMessages(null);是移除消息队列中所有消息和所有的Runnable。当然也可以使用mHandler.removeCallbacks();或mHandler.removeMessages();来移除指定的Runnable和Message。</p>
+<h4>线程造成的内存泄漏</h4>
+
+<p>对于线程造成的内存泄漏，也是平时比较常见的，异步任务和Runnable都是一个匿名内部类，因此它们对当前Activity都有一个隐式引用。如果Activity在销毁之前，任务还未完成，<br>那么将导致Activity的内存资源无法回收，造成内存泄漏。正确的做法还是使用静态内部类的方式，如下：</p>
+<pre><code><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyAsyncTask</span> <span class="keyword">extends</span> <span class="title">AsyncTask</span>&lt;<span class="title">Void</span>, <span class="title">Void</span>, <span class="title">Void</span>&gt; </span>{
+    <span class="keyword">private</span> WeakReference&lt;Context&gt; weakReference;
+
+    <span class="function"><span class="keyword">public</span> <span class="title">MyAsyncTask</span><span class="params">(Context context)</span> </span>{
+        weakReference = <span class="keyword">new</span> WeakReference&lt;&gt;(context);
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="function"><span class="keyword">protected</span> Void <span class="title">doInBackground</span><span class="params">(Void... params)</span> </span>{
+        SystemClock.sleep(<span class="number">10000</span>);
+        <span class="keyword">return</span> <span class="keyword">null</span>;
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPostExecute</span><span class="params">(Void aVoid)</span> </span>{
+        <span class="keyword">super</span>.onPostExecute(aVoid);
+        MainActivity activity = (MainActivity) weakReference.get();
+        <span class="keyword">if</span> (activity != <span class="keyword">null</span>) {
+        <span class="comment">//...</span>
+        }
+    }
+}
+<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyRunnable</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>{
+    <span class="annotation">@Override</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{
+        SystemClock.sleep(<span class="number">10000</span>);
+    }
+}
+<span class="comment">//——————</span>
+<span class="keyword">new</span> Thread(<span class="keyword">new</span> MyRunnable()).start();
+<span class="keyword">new</span> MyAsyncTask(<span class="keyword">this</span>).execute();
+</code></pre><p>这样就避免了Activity的内存资源泄漏，当然在Activity销毁时候也应该取消相应的任务AsyncTask::cancel()，避免任务在后台执行浪费资源。</p>
+<h4>资源未关闭造成的内存泄漏</h4>
+
+<p>对于使用了BraodcastReceiver，ContentObserver，File，Cursor，Stream，Bitmap等资源的使用，应该在Activity销毁时及时关闭或者注销，否则这些资源将不会被回收，造成内存泄漏。</p>
+<h4>一些建议</h4>
+
+<ol>
+<li>对于生命周期比Activity长的对象如果需要应该使用ApplicationContext</li>
+<li>对于需要在静态内部类中使用非静态外部成员变量（如：Context、View )，可以在静态内部类中使用弱引用来引用外部类的变量来避免内存泄漏</li>
+<li>对于不再需要使用的对象，显示的将其赋值为null，比如使用完Bitmap后先调用recycle()，再赋为null</li>
+<li>保持对对象生命周期的敏感，特别注意单例、静态对象、全局性集合等的生命周期</li>
+<li><p>对于生命周期比Activity长的内部类对象，并且内部类中使用了外部类的成员变量，可以这样做避免内存泄漏：</p>
+<ol>
+<li>将内部类改为静态内部类</li>
+<li>静态内部类中使用弱引用来引用外部类的成员变量</li>
+</ol>
+</li>
+<li><p>在涉及到Context时先考虑ApplicationContext，当然它并不是万能的，对于有些地方则必须使用Activity的Context，对于Application，Service，Activity三者的Context的应用场景如下：</p>
+</li>
+</ol>
+<p><img src="http://img.blog.csdn.net/20151123144226349" alt=""></p>
+<p><strong>其中：</strong>NO1表示Application和Service可以启动一个Activity，不过需要创建一个新的task任务队列。而对于Dialog而言，只有在Activity中才能创建</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2>前言</h2>
+
+<p>对于内存泄漏，我想大家在开发中肯定都遇到过，只不过内存泄漏对我们来说并不是可见的，因为它是在堆中活动，而要想检测程序中是否有内存泄漏的产生，通常我们可以借助LeakCanary、MAT等工具来检测应用程序是否存在内存泄漏，MAT是一款强大的内存分析工具，功能繁多而复杂，而LeakCanary则是由Square开源的一款轻量第三方内存泄漏检测工具，当它检测到程序中有内存泄漏的产生时，它将以最直观的方式告诉我们该内存泄漏是由谁产生的和该内存泄漏导致谁泄漏了而不能回收，供我们复查。</p>
+<p>最近腾讯bugly也推出了三篇关于Android内存泄漏调优的文章：</p>
+<ol>
+<li><a href="http://bugly.qq.com/blog/?p=832">内存泄露从入门到精通三部曲之基础知识篇</a></li>
+<li><a href="http://bugly.qq.com/blog/?p=872">内存泄露从入门到精通三部曲之排查方法篇</a></li>
+<li><a href="http://bugly.qq.com/blog/?p=884">内存泄露从入门到精通三部曲之常见原因与用户实践</a></li>
+</ol>
+<p>Realm同样给出了性能优化文章：</p>
+<p><a href="https://realm.io/cn/news/droidcon-farber-improving-android-app-performance/">10条提升Android性能的建议</a></p>]]>
+    
+    </summary>
+    
+      <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Sublime Text自动开启换行Word Wrap]]></title>
@@ -1931,259 +2184,6 @@ explosionField.explode(view)<span class="comment">;</span>
     </summary>
     
       <category term="IOS" scheme="http://hanhailong.com/tags/IOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果]]></title>
-    <link href="http://hanhailong.com/2015/09/27/Android-%E9%80%9A%E8%BF%87%E8%87%AA%E5%AE%9A%E4%B9%89ViewPager%E6%9D%A5%E9%AB%98%E4%BB%BF%E5%9C%9F%E5%B7%B4%E5%85%94%E9%80%89%E6%8B%A9%E8%A3%85%E4%BF%AE%E9%A3%8E%E6%A0%BC%E6%95%88%E6%9E%9C/"/>
-    <id>http://hanhailong.com/2015/09/27/Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果/</id>
-    <published>2015-09-27T08:30:20.000Z</published>
-    <updated>2015-09-28T01:38:47.000Z</updated>
-    <content type="html"><![CDATA[<p>最近看到有同事在用土巴兔这个app，看了里面的一些效果非常的不错，就试着模仿了一下，首先模仿的是土巴兔里面一个选择装修风格的效果，先看原版效果图如下：<br><img src="http://img.blog.csdn.net/20150928093046209" alt="image"></p>
-<a id="more"></a>
-<p>这种效果实现的方式很多，比如HorizonalScrollView、Recyclerview(水平)、ViewPager等等，这里我使用ViewPager来高仿，为啥通过ViewPager来高仿呢，一是ViewPager提供了PageTransformer，很容易的实现切换动画效果，二是ViewPager很容易控制滑动选中的一项居中，这里先看下高仿后的效果图，效果还是很不错的：<br><img src="http://img.blog.csdn.net/20150928093108444" alt="image"></p>
-<hr>
-<p>要实现这种效果，核心知识点有如下几个：</p>
-<ol>
-<li>android:clipChildren设置为false，意味着不限制子View在其范围内，也就是说子view可以超出父view的范围</li>
-<li>通过PageTransformer来实现缩放动画</li>
-<li>拦截点击事件的位置来实现点击切换viewpager，这个为什么要实现，后面再说</li>
-</ol>
-<hr>
-<p>下面我们一步一步讲解来实现这个布局效果</p>
-<p><strong>定义布局xml</strong></p>
-<pre><code>    <span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
-    <span class="tag">&lt;<span class="title">RelativeLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span>
-    <span class="attribute">xmlns:app</span>=<span class="value">"http://schemas.android.com/apk/res-auto"</span>
-    <span class="attribute">xmlns:tools</span>=<span class="value">"http://schemas.android.com/tools"</span>
-    <span class="attribute">android:id</span>=<span class="value">"@+id/page_container"</span>
-    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span>
-    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span>
-    <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span>
-    <span class="attribute">android:clipChildren</span>=<span class="value">"false"</span>
-    <span class="attribute">app:layout_behavior</span>=<span class="value">"@string/appbar_scrolling_view_behavior"</span>
-    <span class="attribute">tools:context</span>=<span class="value">".MainActivity"</span>
-    <span class="attribute">tools:showIn</span>=<span class="value">"@layout/activity_main"</span>&gt;</span>
-
-    <span class="tag">&lt;<span class="title">com.hhl.tubatu.ClipViewPager</span>
-        <span class="attribute">android:id</span>=<span class="value">"@+id/viewpager"</span>
-        <span class="attribute">android:layout_width</span>=<span class="value">"200dp"</span>
-        <span class="attribute">android:layout_height</span>=<span class="value">"200dp"</span>
-        <span class="attribute">android:layout_centerInParent</span>=<span class="value">"true"</span>
-        <span class="attribute">android:clipChildren</span>=<span class="value">"false"</span>
-        <span class="attribute">android:overScrollMode</span>=<span class="value">"never"</span> /&gt;</span>
-
-<span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span>
-</code></pre><p>上面的RelativeLayout和自定义的ClipViewPager都各自添加了一个属性<strong>android:clipChildren=”false”</strong>，clipChildren的意思是是否限制子View在其范围内，这个默认是true，也就是默认是限制子view在其范围的</p>
-<p><strong>给ViewPager设置缩放动画，这里通过PageTransformer来实现</strong></p>
-<pre><code>mViewPager = (ClipViewPager) findViewById(R.id.viewpager);
-    mViewPager.setPageTransformer(<span class="literal">true</span>, <span class="keyword">new</span> ScalePageTransformer());
-</code></pre><p><strong>再来看ScalePageTransformer的实现，核心就是实现transformPage(View page, float position)这个方法</strong></p>
-<pre><code><span class="comment">/**
- * Created by HanHailong on 15/9/27.
- */</span>
-<span class="keyword">public</span> <span class="keyword">class</span> ScalePageTransformer implements ViewPager.PageTransformer {
-
-    <span class="keyword">public</span> <span class="keyword">static</span> final <span class="keyword">float</span> MAX_SCALE = <span class="number">1.2f</span>;
-    <span class="keyword">public</span> <span class="keyword">static</span> final <span class="keyword">float</span> MIN_SCALE = <span class="number">0.6f</span>;
-
-    @<span class="function">Override
-    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transformPage</span><span class="params">(View page, <span class="keyword">float</span> position)</span> </span>{
-
-        <span class="keyword">if</span> (position &lt; -<span class="number">1</span>) {
-            position = -<span class="number">1</span>;
-        } <span class="keyword">else</span> <span class="keyword">if</span> (position &gt; <span class="number">1</span>) {
-            position = <span class="number">1</span>;
-        }
-
-        <span class="keyword">float</span> tempScale = position &lt; <span class="number">0</span> ? <span class="number">1</span> + position : <span class="number">1</span> - position;
-
-        <span class="keyword">float</span> slope = (MAX_SCALE - MIN_SCALE) / <span class="number">1</span>;
-        <span class="comment">//一个公式</span>
-        <span class="keyword">float</span> scaleValue = MIN_SCALE + tempScale * slope;
-        page.setScaleX(scaleValue);
-        page.setScaleY(scaleValue);
-    }
-}
-</code></pre><p>其实核心代码就是这个动画实现部分，这里设置了一个最大缩放和最小缩放比例，当处于最中间的view忘左边滑动时，它的position值是小于0的，并且是越来越小,它右边的view的position是从1逐渐减小到0的。</p>
-<p><strong>下面我们看下在Activity的完整实现代码</strong></p>
-<pre><code><span class="preprocessor"><span class="keyword">import</span> android.content.Context;</span>
-<span class="preprocessor"><span class="keyword">import</span> android.os.Bundle;</span>
-<span class="preprocessor"><span class="keyword">import</span> android.support.design.widget.FloatingActionButton;</span>
-<span class="preprocessor"><span class="keyword">import</span> android.support.design.widget.Snackbar;</span>
-<span class="preprocessor"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity;</span>
-<span class="preprocessor"><span class="keyword">import</span> android.support.v7.widget.Toolbar;</span>
-<span class="preprocessor"><span class="keyword">import</span> android.view.Menu;</span>
-<span class="preprocessor"><span class="keyword">import</span> android.view.MenuItem;</span>
-<span class="preprocessor"><span class="keyword">import</span> android.view.MotionEvent;</span>
-<span class="preprocessor"><span class="keyword">import</span> android.view.View;</span>
-<span class="preprocessor"><span class="keyword">import</span> android.view.ViewGroup;</span>
-<span class="preprocessor"><span class="keyword">import</span> android.widget.ImageView;</span>
-
-<span class="preprocessor"><span class="keyword">import</span> com.hhl.tubatu.adapter.RecyclingPagerAdapter;</span>
-
-<span class="preprocessor"><span class="keyword">import</span> java.util.ArrayList;</span>
-<span class="preprocessor"><span class="keyword">import</span> java.util.List;</span>
-
-<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>{
-
-    <span class="keyword">private</span> ClipViewPager mViewPager;
-    <span class="keyword">private</span> TubatuAdapter mPagerAdapter;
-
-    @Override
-    <span class="keyword">protected</span> <span class="keyword">void</span> onCreate(Bundle savedInstanceState) {
-        <span class="keyword">super</span>.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() {
-            @Override
-            <span class="keyword">public</span> <span class="keyword">void</span> onClick(View view) {
-                Snackbar.make(view, <span class="string">"Replace with your own action"</span>, Snackbar.LENGTH_LONG)
-                        .setAction(<span class="string">"Action"</span>, <span class="literal">null</span>).show();
-            }
-        });
-
-        mViewPager = (ClipViewPager) findViewById(R.id.viewpager);
-        mViewPager.setPageTransformer(<span class="literal">true</span>, <span class="keyword">new</span> ScalePageTransformer());
-
-        findViewById(R.id.page_container).setOnTouchListener(<span class="keyword">new</span> View.OnTouchListener() {
-            @Override
-            <span class="keyword">public</span> boolean onTouch(View v, MotionEvent event) {
-                <span class="keyword">return</span> mViewPager.dispatchTouchEvent(event);
-            }
-        });
-
-        mPagerAdapter = <span class="keyword">new</span> TubatuAdapter(<span class="keyword">this</span>);
-        mViewPager.setAdapter(mPagerAdapter);
-
-        initData();
-    }
-
-    <span class="keyword">private</span> <span class="keyword">void</span> initData() {
-        List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();
-        list.add(R.drawable.style_xiandai);
-        list.add(R.drawable.style_jianyue);
-        list.add(R.drawable.style_oushi);
-        list.add(R.drawable.style_zhongshi);
-        list.add(R.drawable.style_meishi);
-        list.add(R.drawable.style_dzh);
-        list.add(R.drawable.style_dny);
-        list.add(R.drawable.style_rishi);
-
-        <span class="comment">//设置OffscreenPageLimit</span>
-        mViewPager.setOffscreenPageLimit(list.size());
-        mPagerAdapter.addAll(list);
-    }
-
-    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TubatuAdapter</span> <span class="keyword">extends</span> <span class="title">RecyclingPagerAdapter</span> </span>{
-
-        <span class="keyword">private</span> <span class="keyword">final</span> List&lt;Integer&gt; mList;
-        <span class="keyword">private</span> <span class="keyword">final</span> Context mContext;
-
-        <span class="keyword">public</span> TubatuAdapter(Context context) {
-            mList = <span class="keyword">new</span> ArrayList&lt;&gt;();
-            mContext = context;
-        }
-
-        <span class="keyword">public</span> <span class="keyword">void</span> addAll(List&lt;Integer&gt; list) {
-            mList.addAll(list);
-            notifyDataSetChanged();
-        }
-
-        @Override
-        <span class="keyword">public</span> View getView(int position, View convertView, ViewGroup container) {
-            ImageView imageView = <span class="literal">null</span>;
-            <span class="keyword">if</span> (convertView == <span class="literal">null</span>) {
-                imageView = <span class="keyword">new</span> ImageView(mContext);
-            } <span class="keyword">else</span> {
-                imageView = (ImageView) convertView;
-            }
-            imageView.setTag(position);
-            imageView.setImageResource(mList.<span class="keyword">get</span>(position));
-            <span class="keyword">return</span> imageView;
-        }
-
-        @Override
-        <span class="keyword">public</span> int getCount() {
-            <span class="keyword">return</span> mList.size();
-        }
-    }
-}
-</code></pre><p>这里需要注意几点，一是            mViewPager.setOffscreenPageLimit(list.size());<br>这里需要将setOffscreenPageLimit的值设置成数据源的总个数，如果不加这句话，会导致左右切换异常；二是需要将整个页面的事件分发给ViewPager，不然的话只有ViewPager中间的view能滑动，其他的都不能滑动，这是肯定的，因为ViewPager总体布局就是中间那一块大小，其他的子布局都跑到ViewPager外面来了。三是你发现ViewPager加了setOnTouchListener方法后，滑动是可以了，但是点击左右两边不能切换，这里需要重写ViewPager的<strong>dispatchTouchEvent</strong>方法，下面看ClipViewPager代码：</p>
-<pre><code><span class="keyword">package</span> com.hhl.tubatu;
-
-<span class="keyword">import</span> android.content.Context;
-<span class="keyword">import</span> android.support.v4.view.ViewPager;
-<span class="keyword">import</span> android.util.AttributeSet;
-<span class="keyword">import</span> android.view.MotionEvent;
-<span class="keyword">import</span> android.view.View;
-
-<span class="comment">/**
- * Created by HanHailong on 15/9/27.
- */</span>
-<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClipViewPager</span> <span class="keyword">extends</span> <span class="title">ViewPager</span> </span>{
-
-    <span class="function"><span class="keyword">public</span> <span class="title">ClipViewPager</span><span class="params">(Context context)</span> </span>{
-        <span class="keyword">super</span>(context);
-    }
-
-    <span class="function"><span class="keyword">public</span> <span class="title">ClipViewPager</span><span class="params">(Context context, AttributeSet attrs)</span> </span>{
-        <span class="keyword">super</span>(context, attrs);
-    }
-
-    <span class="annotation">@Override</span>
-    <span class="keyword">public</span> <span class="function"><span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>{
-
-        <span class="keyword">if</span> (ev.getAction() == MotionEvent.ACTION_UP) {
-            View view = viewOfClickOnScreen(ev);
-            <span class="keyword">if</span> (view != <span class="keyword">null</span>) {
-                setCurrentItem(indexOfChild(view));
-            }
-        }
-
-        <span class="function"><span class="keyword">return</span> <span class="keyword">super</span>.<span class="title">dispatchTouchEvent</span><span class="params">(ev)</span></span>;
-    }
-
-    <span class="comment">/**
-     * <span class="doctag">@param</span> ev
-     * <span class="doctag">@return</span>
-     */</span>
-    <span class="keyword">private</span> <span class="function">View <span class="title">viewOfClickOnScreen</span><span class="params">(MotionEvent ev)</span> </span>{
-        <span class="keyword">int</span> childCount = getChildCount();
-        <span class="keyword">int</span>[] location = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];
-        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; childCount; i++) {
-            View v = getChildAt(i);
-            v.getLocationOnScreen(location);
-            <span class="keyword">int</span> minX = location[<span class="number">0</span>];
-            <span class="keyword">int</span> minY = getTop();
-
-            <span class="keyword">int</span> maxX = location[<span class="number">0</span>] + v.getWidth();
-            <span class="keyword">int</span> maxY = getBottom();
-
-            <span class="keyword">float</span> x = ev.getX();
-            <span class="keyword">float</span> y = ev.getY();
-
-            <span class="keyword">if</span> ((x &gt; minX &amp;&amp; x &lt; maxX) &amp;&amp; (y &gt; minY &amp;&amp; y &lt; maxY)) {
-                <span class="keyword">return</span> v;
-            }
-        }
-        <span class="keyword">return</span> <span class="keyword">null</span>;
-    }
-}
-</code></pre><p>实现原理就是手指点击屏幕，如果点击的位置恰好落在ViewPager某个子View范围内，就让ViewPager切换到哪个子View！<strong>viewOfClickOnScreen</strong>方法是获取手指点击ViewPager中的哪个子View，最后调用setCurrentItem切换到相应的子View，经过以上设置就大功告成了！</p>
-<p>补充一下，<a href="https://github.com/JakeWharton/salvage/blob/e065bf9b775f372967b8ae0f49204dafc5dd91fc/salvage/src/main/java/com/jakewharton/salvage/RecyclingPagerAdapter.java" target="_blank" rel="external">RecyclingPagerAdapter</a>是<a href="https://github.com/JakeWharton" target="_blank" rel="external">Jake Wharton</a>Android大神封装的可用于复用的PagerAdapter。</p>
-<p>最后附上源码<a href="https://github.com/hanhailong/tubatu-viewpager" target="_blank" rel="external">github</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>最近看到有同事在用土巴兔这个app，看了里面的一些效果非常的不错，就试着模仿了一下，首先模仿的是土巴兔里面一个选择装修风格的效果，先看原版效果图如下：<br><img src="http://img.blog.csdn.net/20150928093046209" alt="image"></p>]]>
-    
-    </summary>
-    
-      <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
     
   </entry>
   
