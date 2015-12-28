@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Android进阶之ProGuard代码混淆 | 韩海龙的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="简介
+
+Proguard工具通过移除无用的代码以及使用语义隐晦的名称来重命名类、字段和方法，从而达到压缩、优化和混淆代码的目的。最终您将获得一个较小的 .apk 文件，此文件更难于进行反向工程。由于 ProGuard 会使应用更难于进行反向工程，因此当应用使用对安全性要求极高的功能时（例如，当您向应用授予许可时），您必须使用此工具。
+ProGuard 已集成到 Android 构建系统，所以您无需">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android进阶之ProGuard代码混淆">
+<meta property="og:url" content="http://hanhailong.com/2015/12/28/Android进阶之ProGuard代码混淆/index.html">
+<meta property="og:site_name" content="韩海龙的博客">
+<meta property="og:description" content="简介
+
+Proguard工具通过移除无用的代码以及使用语义隐晦的名称来重命名类、字段和方法，从而达到压缩、优化和混淆代码的目的。最终您将获得一个较小的 .apk 文件，此文件更难于进行反向工程。由于 ProGuard 会使应用更难于进行反向工程，因此当应用使用对安全性要求极高的功能时（例如，当您向应用授予许可时），您必须使用此工具。
+ProGuard 已集成到 Android 构建系统，所以您无需">
+<meta property="og:updated_time" content="2015-12-28T14:32:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android进阶之ProGuard代码混淆">
+<meta name="twitter:description" content="简介
+
+Proguard工具通过移除无用的代码以及使用语义隐晦的名称来重命名类、字段和方法，从而达到压缩、优化和混淆代码的目的。最终您将获得一个较小的 .apk 文件，此文件更难于进行反向工程。由于 ProGuard 会使应用更难于进行反向工程，因此当应用使用对安全性要求极高的功能时（例如，当您向应用授予许可时），您必须使用此工具。
+ProGuard 已集成到 Android 构建系统，所以您无需">
+  
+    <link rel="alternative" href="/atom.xml" title="韩海龙的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+<script type="text/javascript">
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?1a0ff1f7e5512b17801970593ac2f9cb";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="overlay">
+	<a href="https://github.com/hanhailong" target="_Blank"><img style="position: absolute; top: 0; left: 0; border: 0;" src="http://img01.taobaocdn.com/imgextra/i1/102975691/TB2YWCacpXXXXaCXXXXXXXXXXXX-102975691.png" alt="Fork me on GitHub" data-canonical-src="http://img01.taobaocdn.com/imgextra/i1/102975691/TB2YWCacpXXXXaCXXXXXXXXXXXX-102975691.png"></a>
+</div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars2.githubusercontent.com/u/4241807?v=3&amp;s=460" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">韩海龙</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">学习总结 思考感悟 知识管理 代码分享</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/tags/随笔">随笔</a></li>
+				        
+							<li><a href="/aboutme">关于我</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/hanhailong" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/u/2824905385" title="weibo">weibo</a>
+					        
+								<a class="twitter" target="_blank" href="http://blog.csdn.net/hanhailong726188" title="twitter">twitter</a>
+					        
+								<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android咨询/" style="font-size: 10px;">Android咨询</a> <a href="/tags/Android工具/" style="font-size: 10px;">Android工具</a> <a href="/tags/Hexo主题/" style="font-size: 17.5px;">Hexo主题</a> <a href="/tags/IOS/" style="font-size: 15px;">IOS</a> <a href="/tags/RxAndroid/" style="font-size: 10px;">RxAndroid</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Sublime-Text/" style="font-size: 10px;">Sublime Text</a> <a href="/tags/技术博客/" style="font-size: 17.5px;">技术博客</a> <a href="/tags/随笔/" style="font-size: 12.5px;">随笔</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">韩海龙</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="https://avatars2.githubusercontent.com/u/4241807?v=3&amp;s=460" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">韩海龙</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">学习总结 思考感悟 知识管理 代码分享</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/tags/随笔">随笔</a></li>
+		        
+					<li><a href="/aboutme">关于我</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/hanhailong" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/u/2824905385" title="weibo">weibo</a>
+			        
+						<a class="twitter" target="_blank" href="http://blog.csdn.net/hanhailong726188" title="twitter">twitter</a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-Android进阶之ProGuard代码混淆" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/28/Android进阶之ProGuard代码混淆/" class="article-date">
+  	<time datetime="2015-12-28T13:35:41.000Z" itemprop="datePublished">2015-12-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android进阶之ProGuard代码混淆
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2>简介</h2>
+
+<p><a href="http://developer.android.com/intl/zh-cn/tools/help/proguard.html" target="_blank" rel="external">Proguard</a>工具通过移除无用的代码以及使用语义隐晦的名称来重命名类、字段和方法，从而达到压缩、优化和混淆代码的目的。最终您将获得一个较小的 .apk 文件，此文件更难于进行反向工程。由于 ProGuard 会使应用更难于进行反向工程，因此当应用使用对安全性要求极高的功能时（例如，当您向应用授予许可时），您必须使用此工具。</p>
+<p>ProGuard 已集成到 Android 构建系统，所以您无需手动调用此工具。只有当您在发布模式下构建应用时，ProGuard 才会运行，因此当您在调试模式下构建应用时，就无需处理混淆后的代码。是否运行 ProGuard 完全由您决定，但我们强烈建议您运行该工具。</p>
+<p>本文介绍如何启用和配置 ProGuard，以及如何使用 retrace 工具解码混淆后的堆栈跟踪信息。</p>
+<a id="more"></a>
+<h2>开启Proguard</h2>
+
+<ol>
+<li><p>Ant、Eclipse构建</p>
+<pre><code>&lt;project_root&gt;/project<span class="class">.properties</span> 文件中设置 proguard<span class="class">.config</span> 属性。该路径可以是绝对路径，也可以是项目根目录的相对路径。
+
+proguard.config=proguard.cfg
+</code></pre></li>
+<li><p>AndroidStudio-Gradle构建</p>
+<pre><code><span class="title">android</span> {
+    <span class="title">buildTypes</span> {
+        <span class="title">release</span> {
+            <span class="title">minifyEnabled</span> <span class="built_in">true</span>
+            proguardFile getDefaultProguardFile(<span class="string">'proguard-android.txt'</span>)
+        }
+    }
+
+    productFlavors {
+        <span class="title">flavor1</span> {
+        }
+        <span class="title">flavor2</span> {
+            <span class="title">proguardFile</span> <span class="string">'some-other-rules.txt'</span>
+        }
+    }
+}
+</code></pre></li>
+</ol>
+<p>提示:</p>
+<p>getDefaultProguardFile()可以返回这两个文件的绝对路径。<br>proguardFile 可以配置多个混淆文件</p>
+<h2>配置Proguard</h2>
+
+<p>在某些情况下，<em>proguard.cfg或proguard-android.txt</em> 文件中的默认配置足以满足您的需求。不过，在很多情况下，ProGuard 很难做出正确分析，因此可能会移除它认为无用而实际上您的应用却需要的代码。部分示例如下：</p>
+<ul>
+<li>一个只在 AndroidManifest.xml 文件中引用的类</li>
+<li>一个通过 JNI 调用的方法</li>
+<li>动态引用的字段和方法</li>
+</ul>
+<p>默认的 <em>proguard.cfg或proguard-android.txt</em> 文件旨在涵盖一般的使用情形，但您可能会遇到异常情况，例如 ClassNotFoundException（此异常情况会在 ProGuard 删除您的应用调用的整个类时发生）。</p>
+<p>您可以通过在 <em>proguard.cfg或proguard-android.txt</em> 文件中添加一个 <font color="red">-keep</font> 行，来修复因 ProGuard 在删除代码而造成的错误。例如：</p>
+<pre><code>-<span class="ruby">keep public <span class="class"><span class="keyword">class</span> <span class="inheritance">&lt;<span class="parent">MyClass</span></span>&gt;</span></span>
+</code></pre><p>在使用 -keep 选项时，您既有许多选择也有不少需要注意的方面，因此我们强烈建议您阅读 <a href="https://stuff.mit.edu/afs/sipb/project/android/sdk/android-sdk-linux/tools/proguard/docs/index.html#manual/introduction.html" target="_blank" rel="external">ProGuard</a> 手册，详细了解如何自定义您的配置文件。该手册中的“Keep 选项概述”和“示例”部分尤其有用；问题排查部分则概述了在 ProGuard 删除代码后您可能会遇到的其他常见问题。</p>
+<p>下面给出一个常用的默认配置命令：</p>
+<pre><code>-include {fileame}  从给定的文件中读取配置参数
+-libraryjars libs/xxxx.jar 指定库jar包
+-keep <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> * <span class="keyword">extends</span> <span class="title">android</span>.<span class="title">app</span>.<span class="title">Activity</span> 保留类不被删除
+-<span class="title">keep</span> <span class="title">class</span> <span class="title">className</span>$<span class="title">InnerName</span></span>{ 保留内部类的属性和方法
+    <span class="keyword">public</span> &lt;fields&gt;;
+    <span class="keyword">public</span> &lt;methods&gt;;
+}
+-keepclassmembers <span class="class"><span class="keyword">class</span> * <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>{ 保留类的成员
+    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID;
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> java.io.ObjectStreamField[] serialPersistentFields;
+    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">writeObject</span><span class="params">(java.io.ObjectOutputStream)</span></span>;
+    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readObject</span><span class="params">(java.io.ObjectInputStream)</span></span>;
+    java.lang.<span class="function">Object <span class="title">writeReplace</span><span class="params">()</span></span>;
+    java.lang.<span class="function">Object <span class="title">readResolve</span><span class="params">()</span></span>;
+}
+-dontshrink 不压缩输入的类文件
+-dontoptimize 不优化输入的类文件
+-keepattributes *Annotation* 保留Annotation
+-dontwarn xxx.xxx.** 不检查引用
+</code></pre><h2>Proguard产生的文件</h2>
+
+<p>当混淆后的代码输出堆栈跟踪信息时，方法名称会被混淆，即便仍能进行调试，难度也会很大。幸运的是，ProGuard 在每次运行时都会输出以下文件：</p>
+<ol>
+<li><p>dump.txt</p>
+<p> 描述 .apk 文件中所有类文件的内部结构</p>
+</li>
+<li><p>mapping.txt</p>
+<p> 列出原始与混淆后的类、方法和字段名称之间的对应关系。</p>
+<p> Windows 上的 retrace.bat 脚本以及 Linux 或 Mac OS X 上的 retrace.sh 脚本可以将混淆后的堆栈跟踪信息转换成可读文件，此文件位于 <sdk_root>/tools/proguard/ 目录中。执行 retrace 工具的语法如下：</sdk_root></p>
+<pre><code>retrace.bat|retrace.sh [-verbose] mapping.txt <span class="annotation">[&lt;stacktrace_file&gt;]</span>
+</code></pre><p> 例如：</p>
+<pre><code>retrace<span class="class">.bat</span> -verbose mapping<span class="class">.txt</span> obfuscated_trace.txt
+</code></pre><p> 建议发布时应保留mapping.txt文件。</p>
+</li>
+<li><p>seeds.txt</p>
+<p> 列出未混淆的类和成员</p>
+</li>
+<li><p>usage.txt</p>
+<p> 列出从 .apk 删除的代码</p>
+</li>
+</ol>
+<p></p><h2>@Keep注解来防止混淆</h2><p></p>
+<p>写到这，你是不是发现了一个问题：非常的麻烦、一点都不灵活，而且通过-keep的方式防止混淆那种有共同特征的类、属性或方式非常有用，但是没有共同特征的呢？</p>
+<p>这里介绍一种比较新颖、轻快的方法，通过@Keep注解来灵活的防止混淆，用起来非常的灵活、快捷、方便，怎样用呢？像普通的注解一样，如下：</p>
+<pre><code><span class="comment">//防止混淆类</span>
+<span class="variable">@Keep</span>
+public class Person {}
+
+<span class="comment">//防止混淆变量</span>
+<span class="variable">@Keep</span>
+public String name;
+
+<span class="comment">//防止混淆方法</span>
+<span class="variable">@Keep</span>
+public int <span class="function">getAge</span>(){}
+</code></pre><p>但是当你加上上面的注解后，发现@Keep并没有起作用，该混淆的还是混淆了，这是为什么呢？</p>
+<p>原因目前Gradle还不支持@Keep混淆，Google只是定义好了一个这种注解，并没有实现它，也就是说@Keep目前只是一个空壳。这里我们来手动开启它，让它支持防止混淆，在你的<em>proguard.cfg或proguard-android.txt</em>配置文件里面加入以下代码：</p>
+<pre><code>#手动启用support keep注解
+-<span class="ruby">dontskipnonpubliclibraryclassmembers
+</span>-<span class="ruby">printconfiguration
+</span>-<span class="ruby">keep,allowobfuscation <span class="variable">@interface</span> android.support.annotation.<span class="constant">Keep</span>
+</span>-<span class="ruby">keep <span class="variable">@android</span>.support.annotation.<span class="constant">Keep</span> <span class="class"><span class="keyword">class</span> *</span>
+</span>-<span class="ruby">keepclassmembers <span class="class"><span class="keyword">class</span> * {</span>
+</span>    @android.support.annotation.Keep *;
+}
+</code></pre>
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/12/27/Android性能优化之如何避免Overdraw/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Android性能优化之如何避免Overdraw</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="Android进阶之ProGuard代码混淆" data-title="Android进阶之ProGuard代码混淆" data-url="http://hanhailong.com/2015/12/28/Android进阶之ProGuard代码混淆/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"hanhailong"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2015 韩海龙
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
