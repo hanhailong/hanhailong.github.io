@@ -118,7 +118,7 @@ var _hmt = _hmt || [];
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android咨询/" style="font-size: 10px;">Android咨询</a> <a href="/tags/Android工具/" style="font-size: 10px;">Android工具</a> <a href="/tags/Hexo主题/" style="font-size: 17.5px;">Hexo主题</a> <a href="/tags/IOS/" style="font-size: 15px;">IOS</a> <a href="/tags/RxAndroid/" style="font-size: 10px;">RxAndroid</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Sublime-Text/" style="font-size: 10px;">Sublime Text</a> <a href="/tags/技术博客/" style="font-size: 17.5px;">技术博客</a> <a href="/tags/随笔/" style="font-size: 12.5px;">随笔</a>
+						<a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android咨询/" style="font-size: 10px;">Android咨询</a> <a href="/tags/Android工具/" style="font-size: 10px;">Android工具</a> <a href="/tags/Hexo主题/" style="font-size: 16.67px;">Hexo主题</a> <a href="/tags/IOS/" style="font-size: 16.67px;">IOS</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/RxAndroid/" style="font-size: 10px;">RxAndroid</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Sublime-Text/" style="font-size: 10px;">Sublime Text</a> <a href="/tags/技术博客/" style="font-size: 16.67px;">技术博客</a> <a href="/tags/随笔/" style="font-size: 13.33px;">随笔</a>
 					</div>
 				</section>
 				
@@ -179,6 +179,180 @@ var _hmt = _hmt || [];
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-IOS开发小技巧" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/12/IOS开发小技巧/" class="article-date">
+  	<time datetime="2016-01-12T08:05:17.000Z" itemprop="datePublished">2016-01-12</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/12/IOS开发小技巧/">IOS开发小技巧</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2>IOS配置某个圆角大小</h2>
+
+<p>iOS开发中各种圆角也随处可见,最简单给控件添加圆角的方式就是给视图的layer设置corner属性了:</p>
+<pre><code><span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.cornerRadius</span> = <span class="number">5.</span>f;  
+<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.masksToBounds</span> = <span class="literal">YES</span>;  
+</code></pre><p>这种方式无法配置圆角数量(只能添加view的四个角全为圆角),无法配置某个圆角大小.</p>
+<p>这个问题我们可以用<em>UIBezierPath</em>来完美解决，示例代码如下：</p>
+<pre><code><span class="built_in">UIBezierPath</span> *maskPath = [<span class="built_in">UIBezierPath</span> bezierPathWithRoundedRect:<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.bounds</span> byRoundingCorners:<span class="built_in">UIRectCornerTopLeft</span> | <span class="built_in">UIRectCornerBottomLeft</span> cornerRadii:<span class="built_in">CGSizeMake</span>(<span class="number">20</span>, <span class="number">0</span>)];
+
+<span class="built_in">CAShapeLayer</span> *maskLayer = [[<span class="built_in">CAShapeLayer</span> alloc] init];
+
+maskLayer<span class="variable">.frame</span> = <span class="keyword">self</span><span class="variable">.view</span><span class="variable">.bounds</span>;
+
+maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.CGPath</span>;
+
+<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.mask</span> = maskLayer;
+
+<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.cornerRadius</span> = <span class="number">5.</span>f;
+<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.masksToBounds</span> = <span class="literal">YES</span>;
+</code></pre><p>想要配置某个角为圆角的话,只需要指定对应的<em>UIRectCorner</em>即可，<em>UIRectCorner</em>有五个值：</p>
+<pre><code><span class="built_in">UIRectCornerAllCorners</span> 全角
+<span class="built_in">UIRectCornerTopLeft</span>    左上角
+<span class="built_in">UIRectCornerTopRight</span>   右上角
+<span class="built_in">UIRectCornerBottomLeft</span> 左下角
+<span class="built_in">UIRectCornerBottomRight</span> 右下角
+</code></pre><p></p><h3>持续更新中…<h3><p></p>
+</h3></h3>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IOS/">IOS</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-Java小知识总结" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/11/Java小知识总结/" class="article-date">
+  	<time datetime="2016-01-11T09:41:10.000Z" itemprop="datePublished">2016-01-11</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/11/Java小知识总结/">Java小知识总结</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2>编译时、运行时</h2>
+
+<p><strong>编译时</strong>顾名思义就是正在编译的时候.那啥叫编译呢?就是编译器帮你把源代码翻译成机器能识别的代码。例如：Java编译器把写的java文件编译成jvm能识别的class字节码文件。</p>
+<p>而在编译的时候会涉及到一些比如常量折叠等技术，这个以后细讲！</p>
+<p><strong>运行时</strong>就是代码跑起来了.被装载到内存中去了.(你的代码保存在磁盘上没装入内存之前是个死家伙.只有跑到内存中才变成活的).而运行时类型检查就与前面讲的编译时类型检查(或者静态类型检查)不一样.不是简单的扫描代码.而是在内存中做些操作,做些判断.</p>
+<h2>下面的代码片段中，行A和行B所标识的代码有什么区别呢？</h2>
+
+<pre><code><span class="keyword">public</span> <span class="keyword">class</span> ConstantFolding {
+
+    <span class="keyword">static</span> final  <span class="keyword">int</span> number1 = <span class="number">5</span>;
+
+    <span class="keyword">static</span> final  <span class="keyword">int</span> number2 = <span class="number">6</span>;
+
+    <span class="keyword">static</span> <span class="keyword">int</span> number3 = <span class="number">5</span>;
+
+    <span class="keyword">static</span> <span class="keyword">int</span> number4= <span class="number">6</span>;
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[ ] args)</span> </span>{
+
+          <span class="keyword">int</span> product1 = number1 * number2;         <span class="comment">//line A</span>
+
+          <span class="keyword">int</span> product2 = number3 * number4;         <span class="comment">//line B</span>
+
+    }
+}
+</code></pre><p>在行A的代码中，product的值是在编译期计算的，行B则是在运行时计算的。如果你使用Java反编译器（例如，jd-gui）来反编译ConstantFolding.class文件的话，那么你就会从下面的结果里得到答案。</p>
+<pre><code><span class="keyword">public</span> <span class="keyword">class</span> ConstantFolding
+{
+  <span class="keyword">static</span> final <span class="keyword">int</span> number1 = <span class="number">5</span>;
+  <span class="keyword">static</span> final <span class="keyword">int</span> number2 = <span class="number">6</span>;
+  <span class="keyword">static</span> <span class="keyword">int</span> number3 = <span class="number">5</span>;
+  <span class="keyword">static</span> <span class="keyword">int</span> number4 = <span class="number">6</span>;
+
+  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[ ] args)</span>
+  </span>{
+      <span class="keyword">int</span> product1 = <span class="number">30</span>;
+      <span class="keyword">int</span> product2 = number3 * number4;
+  }
+}
+</code></pre><p>常量折叠是一种Java编译器使用的优化技术。由于final变量的值不会改变，因此就可以对它们优化。Java反编译器和javap命令都是查看编译后的代码（例如，字节码）的利器。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-Android进阶之ProGuard代码混淆" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -714,122 +888,6 @@ var _hmt = _hmt || [];
 
 
   
-    <article id="post-不错的IOS学习博客网站-IOS122" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/10/22/不错的IOS学习博客网站-IOS122/" class="article-date">
-  	<time datetime="2015-10-22T08:58:51.000Z" itemprop="datePublished">2015-10-22</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/22/不错的IOS学习博客网站-IOS122/">不错的IOS学习博客网站-IOS122</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这是<a href="http://hanhailong.com/tags/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/">不错的学习技术博客系列</a>第四篇，只不过<a href="http://www.ios122.com/" target="_blank" rel="external">IOS122</a>只讲解IOS技术。</p>
-<p>当我第一次打开这个博客的时候，我被里面的第三库资源震惊了，没想到作者整理了这么多的第三库资源。最重要的是，里面的博文质量非常高，绝对是IOS学习技术的最佳去处！！！</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/技术博客/">技术博客</a></li></ul>
-	</div>
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-cocoapods安装失败-bad-response-Not-Found-404-http-ruby-taobao-org-latest-specs-4-8-gz" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/10/22/cocoapods安装失败-bad-response-Not-Found-404-http-ruby-taobao-org-latest-specs-4-8-gz/" class="article-date">
-  	<time datetime="2015-10-22T05:37:34.000Z" itemprop="datePublished">2015-10-22</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/22/cocoapods安装失败-bad-response-Not-Found-404-http-ruby-taobao-org-latest-specs-4-8-gz/">cocoapods安装失败-bad response Not Found 404 (http://ruby.taobao.org/latest_specs.4.8.gz</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近把MAC系统升级到了最新版本-10.11（OS X EI Capitan），发现之前装的<a href="https://github.com/CocoaPods/CocoaPods">CocoaPods</a>不能用了，只好重新装了。执行如下命令：</p>
-<pre><code>sudo gem <span class="keyword">install</span> cocoapods
-</code></pre><p>发现报如下错误：<br><img src="https://github.com/hanhailong/IOSStudyResource/blob/master/screenshot/cocoapods/pod_error.png?raw=true" alt="image"></p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IOS/">IOS</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/10/22/cocoapods安装失败-bad-response-Not-Found-404-http-ruby-taobao-org-latest-specs-4-8-gz/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -840,7 +898,7 @@ var _hmt = _hmt || [];
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2015 韩海龙
+    		&copy; 2016 韩海龙
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten

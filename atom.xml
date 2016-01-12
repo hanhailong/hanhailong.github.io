@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2015-12-28T14:32:50.000Z</updated>
+  <updated>2016-01-12T08:14:09.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -13,6 +13,110 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[IOS开发小技巧]]></title>
+    <link href="http://hanhailong.com/2016/01/12/IOS%E5%BC%80%E5%8F%91%E5%B0%8F%E6%8A%80%E5%B7%A7/"/>
+    <id>http://hanhailong.com/2016/01/12/IOS开发小技巧/</id>
+    <published>2016-01-12T08:05:17.000Z</published>
+    <updated>2016-01-12T08:14:09.000Z</updated>
+    <content type="html"><![CDATA[<h2>IOS配置某个圆角大小</h2>
+
+<p>iOS开发中各种圆角也随处可见,最简单给控件添加圆角的方式就是给视图的layer设置corner属性了:</p>
+<pre><code><span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.cornerRadius</span> = <span class="number">5.</span>f;  
+<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.masksToBounds</span> = <span class="literal">YES</span>;  
+</code></pre><p>这种方式无法配置圆角数量(只能添加view的四个角全为圆角),无法配置某个圆角大小.</p>
+<p>这个问题我们可以用<em>UIBezierPath</em>来完美解决，示例代码如下：</p>
+<pre><code><span class="built_in">UIBezierPath</span> *maskPath = [<span class="built_in">UIBezierPath</span> bezierPathWithRoundedRect:<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.bounds</span> byRoundingCorners:<span class="built_in">UIRectCornerTopLeft</span> | <span class="built_in">UIRectCornerBottomLeft</span> cornerRadii:<span class="built_in">CGSizeMake</span>(<span class="number">20</span>, <span class="number">0</span>)];
+
+<span class="built_in">CAShapeLayer</span> *maskLayer = [[<span class="built_in">CAShapeLayer</span> alloc] init];
+
+maskLayer<span class="variable">.frame</span> = <span class="keyword">self</span><span class="variable">.view</span><span class="variable">.bounds</span>;
+
+maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.CGPath</span>;
+
+<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.mask</span> = maskLayer;
+
+<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.cornerRadius</span> = <span class="number">5.</span>f;
+<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.masksToBounds</span> = <span class="literal">YES</span>;
+</code></pre><p>想要配置某个角为圆角的话,只需要指定对应的<em>UIRectCorner</em>即可，<em>UIRectCorner</em>有五个值：</p>
+<pre><code><span class="built_in">UIRectCornerAllCorners</span> 全角
+<span class="built_in">UIRectCornerTopLeft</span>    左上角
+<span class="built_in">UIRectCornerTopRight</span>   右上角
+<span class="built_in">UIRectCornerBottomLeft</span> 左下角
+<span class="built_in">UIRectCornerBottomRight</span> 右下角
+</code></pre><p></p><h3>持续更新中…<h3><p></p>
+</h3></h3>]]></content>
+    <summary type="html">
+    <![CDATA[<h2>IOS配置某个圆角大小</h2>
+
+<p>iOS开发中各种圆角也随处可见,最简单给控件添加圆角的方式就是给视图的layer设置corner属性了:</p>
+<pre><code><span class="keyword">self</span><span class="v]]>
+    </summary>
+    
+      <category term="IOS" scheme="http://hanhailong.com/tags/IOS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Java小知识总结]]></title>
+    <link href="http://hanhailong.com/2016/01/11/Java%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/"/>
+    <id>http://hanhailong.com/2016/01/11/Java小知识总结/</id>
+    <published>2016-01-11T09:41:10.000Z</published>
+    <updated>2016-01-11T10:07:01.000Z</updated>
+    <content type="html"><![CDATA[<h2>编译时、运行时</h2>
+
+<p><strong>编译时</strong>顾名思义就是正在编译的时候.那啥叫编译呢?就是编译器帮你把源代码翻译成机器能识别的代码。例如：Java编译器把写的java文件编译成jvm能识别的class字节码文件。</p>
+<p>而在编译的时候会涉及到一些比如常量折叠等技术，这个以后细讲！</p>
+<p><strong>运行时</strong>就是代码跑起来了.被装载到内存中去了.(你的代码保存在磁盘上没装入内存之前是个死家伙.只有跑到内存中才变成活的).而运行时类型检查就与前面讲的编译时类型检查(或者静态类型检查)不一样.不是简单的扫描代码.而是在内存中做些操作,做些判断.</p>
+<h2>下面的代码片段中，行A和行B所标识的代码有什么区别呢？</h2>
+
+<pre><code><span class="keyword">public</span> <span class="keyword">class</span> ConstantFolding {
+
+    <span class="keyword">static</span> final  <span class="keyword">int</span> number1 = <span class="number">5</span>;
+
+    <span class="keyword">static</span> final  <span class="keyword">int</span> number2 = <span class="number">6</span>;
+
+    <span class="keyword">static</span> <span class="keyword">int</span> number3 = <span class="number">5</span>;
+
+    <span class="keyword">static</span> <span class="keyword">int</span> number4= <span class="number">6</span>;
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[ ] args)</span> </span>{
+
+          <span class="keyword">int</span> product1 = number1 * number2;         <span class="comment">//line A</span>
+
+          <span class="keyword">int</span> product2 = number3 * number4;         <span class="comment">//line B</span>
+
+    }
+}
+</code></pre><p>在行A的代码中，product的值是在编译期计算的，行B则是在运行时计算的。如果你使用Java反编译器（例如，jd-gui）来反编译ConstantFolding.class文件的话，那么你就会从下面的结果里得到答案。</p>
+<pre><code><span class="keyword">public</span> <span class="keyword">class</span> ConstantFolding
+{
+  <span class="keyword">static</span> final <span class="keyword">int</span> number1 = <span class="number">5</span>;
+  <span class="keyword">static</span> final <span class="keyword">int</span> number2 = <span class="number">6</span>;
+  <span class="keyword">static</span> <span class="keyword">int</span> number3 = <span class="number">5</span>;
+  <span class="keyword">static</span> <span class="keyword">int</span> number4 = <span class="number">6</span>;
+
+  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[ ] args)</span>
+  </span>{
+      <span class="keyword">int</span> product1 = <span class="number">30</span>;
+      <span class="keyword">int</span> product2 = number3 * number4;
+  }
+}
+</code></pre><p>常量折叠是一种Java编译器使用的优化技术。由于final变量的值不会改变，因此就可以对它们优化。Java反编译器和javap命令都是查看编译后的代码（例如，字节码）的利器。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2>编译时、运行时</h2>
+
+<p><strong>编译时</strong>顾名思义就是正在编译的时候.那啥叫编译呢?就是编译器帮你把源代码翻译成机器能识别的代码。例如：Java编译器把写的java文件编译成jvm能识别的class字节码文件。</p>
+<p>而在编译的时候]]>
+    </summary>
+    
+      <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
+    
+      <category term="Java" scheme="http://hanhailong.com/tags/Java/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Android进阶之ProGuard代码混淆]]></title>
@@ -2602,39 +2706,6 @@ setLayerType(View.LAYER_TYPE_SOFTWARE, <span class="literal">null</span>);
     </summary>
     
       <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[不错的学习技术博客之二————trinea.cn]]></title>
-    <link href="http://hanhailong.com/2015/10/06/%E4%B8%8D%E9%94%99%E7%9A%84%E5%AD%A6%E4%B9%A0%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%E4%B9%8B%E4%BA%8C%E2%80%94%E2%80%94%E2%80%94%E2%80%94trinea-cn/"/>
-    <id>http://hanhailong.com/2015/10/06/不错的学习技术博客之二————trinea-cn/</id>
-    <published>2015-10-06T03:14:05.000Z</published>
-    <updated>2015-10-06T03:28:28.000Z</updated>
-    <content type="html"><![CDATA[<p>这是<a href="http://hanhailong.com/tags/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/">不错的学习技术博客系列</a>第二篇，<a href="http://www.trinea.cn/" target="_blank" rel="external">trinea</a>这个技术博客主要记录Android和Java方面的技术文章，侧重点在于性能调优、开源项目经验分享、新技术调研等等，而作者本身编程功底很深，2010年加入阿里巴巴，目前在<a href="http://codekk.com/jobs/detail/%E6%9D%AD%E5%B7%9E/%E5%BF%AB%E7%9A%84%E6%89%93%E8%BD%A6/Android%20%E5%BC%80%E5%8F%91杭州快的" target="_blank" rel="external">杭州快的</a>担任移动端架构师！</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>这是<a href="http://hanhailong.com/tags/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/">不错的学习技术博客系列</a>第二篇，<a href="http://www.trinea.cn/" target="_]]>
-    </summary>
-    
-      <category term="技术博客" scheme="http://hanhailong.com/tags/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[不错的学习技术博客之一————美团tech.meituan]]></title>
-    <link href="http://hanhailong.com/2015/10/06/%E4%B8%8D%E9%94%99%E7%9A%84%E5%AD%A6%E4%B9%A0%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%E4%B9%8B%E4%B8%80%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E7%BE%8E%E5%9B%A2tech-meituan/"/>
-    <id>http://hanhailong.com/2015/10/06/不错的学习技术博客之一————美团tech-meituan/</id>
-    <published>2015-10-06T03:00:14.000Z</published>
-    <updated>2015-10-06T03:16:58.000Z</updated>
-    <content type="html"><![CDATA[<p>之前看过很多的技术博客，<a href="http://tech.meituan.com/" target="_blank" rel="external">美团</a>的教学技术博客还是蛮不错的，之前看过里面的一篇文章<a href="http://tech.meituan.com/mt-apk-adaptation.html" target="_blank" rel="external">美团Android自动化之旅—适配渠道包</a>，讲的真心不错，如果再配合<a href="http://hugozhu.myalert.info/2014/08/03/50-use-gradle-to-customize-apk-build.html" target="_blank" rel="external">使用Gradle生成一个App的不同版本，且可以同时安装在一个手机上</a>，基本上使用<font color="red">Gradle</font>来构建Android应用就没啥问题了！</p>
-<p>里面的文章讲的透彻清晰！非常值得去学习！</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>之前看过很多的技术博客，<a href="http://tech.meituan.com/" target="_blank" rel="external">美团</a>的教学技术博客还是蛮不错的，之前看过里面的一篇文章<a href="http://tech.meituan]]>
-    </summary>
-    
-      <category term="技术博客" scheme="http://hanhailong.com/tags/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/"/>
     
   </entry>
   
