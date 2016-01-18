@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2016-01-14T15:10:35.000Z</updated>
+  <updated>2016-01-18T03:28:08.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://hanhailong.com/2016/01/14/Android%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/"/>
     <id>http://hanhailong.com/2016/01/14/Android小知识总结/</id>
     <published>2016-01-14T15:00:27.000Z</published>
-    <updated>2016-01-14T15:10:35.000Z</updated>
+    <updated>2016-01-18T03:28:08.000Z</updated>
     <content type="html"><![CDATA[<h2>onCreate中计算View的高度</h2>
 
 <p>可以借助getViewTreeObserver().addOnGlobalLayoutListener()来获得宽度或者高度，示例代码如下：</p>
@@ -38,7 +38,49 @@
 <pre><code><span class="tag">popupWindow</span><span class="class">.getContentView</span>()<span class="class">.measure</span>(0, 0);
 <span class="tag">popupWindow</span><span class="class">.getContentView</span>()<span class="class">.getMeasuredWidth</span>();
 <span class="tag">popupWindow</span><span class="class">.getContentView</span>()<span class="class">.getMeasuredHeight</span>();
-</code></pre>]]></content>
+</code></pre><h2>Theme.NoDisplay</h2>
+
+<p>在Android中想进行一些无界面的处理又不适合使用service时，此时可以在项目的AndroidManifest.xml文件中相应的Activity标签中添加这样一行：</p>
+<pre><code><span class="symbol">android:</span>theme=”<span class="variable">@android</span><span class="symbol">:style/Theme</span>.<span class="constant">NoDisplay</span>
+</code></pre><h2>activity父级activity的重建</h2>
+
+<p>当我们从其他App跳转到我们应用内部时，可能我们跳转到的不是应用的第一层级页面而是深层次的页面，这时候我们需要在关闭应用内部页面时，对高层的页面进行重建。</p>
+<ol>
+<li><p>为activity指定父级activity</p>
+<pre><code><span class="tag">&lt;<span class="title">application</span>&gt;</span> 
+    <span class="comment">&lt;!-- 首层activity --&gt;</span>
+    <span class="tag">&lt;<span class="title">activity</span> <span class="attribute">android:name</span>=<span class="value">"com.example.Mainactivity"</span>/&gt;</span> 
+     <span class="comment">&lt;!-- 第二层级activity --&gt;</span>
+     <span class="tag">&lt;<span class="title">activity</span> <span class="attribute">android:name</span>=<span class="value">"com.example.SecondeActivity"</span> <span class="attribute">android:parentActivityName</span>=<span class="value">"com.example.Mainactivity"</span> &gt;</span> 
+         <span class="comment">&lt;!-- 父activity的meta-data，用来支持4.0以下版本 --&gt;</span>
+         <span class="tag">&lt;<span class="title">meta-data</span> <span class="attribute">android:name</span>=<span class="value">"android.support.PARENT_ACTIVITY"</span> <span class="attribute">android:value</span>=<span class="value">"com.example.Mainactivity"</span> /&gt;</span>
+     <span class="tag">&lt;/<span class="title">activity</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">application</span>&gt;</span>
+</code></pre></li>
+<li><p>二级页面返回时，重建任务栈</p>
+<pre><code><span class="annotation">@Override</span>
+<span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onBackPressed</span><span class="params">()</span> </span>{ 
+    <span class="comment">// 获得指向父级activity的intent，NavUtils在support v4 包中 </span>
+    Intent upIntent = NavUtils.getParentActivityIntent(<span class="keyword">this</span>); 
+    <span class="comment">// 判断是否需要重建任务栈 </span>
+    <span class="keyword">if</span> (NavUtils.shouldUpRecreateTask(<span class="keyword">this</span>, upIntent)) {
+         <span class="comment">// 这个activity不是这个app任务的一部分, 所以当向上导航时创建</span>
+         <span class="comment">// 用合成后退栈(synthesized back stack)创建一个新任务。</span>
+          TaskStackBuilder.create(<span class="keyword">this</span>)
+         <span class="comment">// 添加这个activity的所有父activity到后退栈中</span>
+          .addNextIntentWithParentStack(upIntent)
+           <span class="comment">// 向上导航到最近的一个父activity</span>
+           .startActivities();
+     } <span class="keyword">else</span> {
+         <span class="comment">// 这个activity是这个app任务的一部分, 所以</span>
+         <span class="comment">// 向上导航至逻辑父activity.</span>
+         NavUtils.navigateUpTo(<span class="keyword">this</span>, upIntent);
+     }
+     <span class="keyword">super</span>.onBackPressed();
+}
+</code></pre></li>
+</ol>
+]]></content>
     <summary type="html">
     <![CDATA[<h2>onCreate中计算View的高度</h2>
 
