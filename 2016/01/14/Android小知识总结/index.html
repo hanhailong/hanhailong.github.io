@@ -17,7 +17,7 @@ mWebView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.On
 
 可以借助getViewTreeObserver().addOnGlobalLayoutListener()来获得宽度或者高度，示例代码如下：
 mWebView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {">
-<meta property="og:updated_time" content="2016-01-18T03:28:08.000Z">
+<meta property="og:updated_time" content="2016-01-18T10:35:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android小知识总结">
 <meta name="twitter:description" content="onCreate中计算View的高度
@@ -243,7 +243,8 @@ var _hmt = _hmt || [];
 <pre><code><span class="tag">popupWindow</span><span class="class">.getContentView</span>()<span class="class">.measure</span>(0, 0);
 <span class="tag">popupWindow</span><span class="class">.getContentView</span>()<span class="class">.getMeasuredWidth</span>();
 <span class="tag">popupWindow</span><span class="class">.getContentView</span>()<span class="class">.getMeasuredHeight</span>();
-</code></pre><h2>Theme.NoDisplay</h2>
+</code></pre><a id="more"></a>
+<h2>Theme.NoDisplay</h2>
 
 <p>在Android中想进行一些无界面的处理又不适合使用service时，此时可以在项目的AndroidManifest.xml文件中相应的Activity标签中添加这样一行：</p>
 <pre><code><span class="symbol">android:</span>theme=”<span class="variable">@android</span><span class="symbol">:style/Theme</span>.<span class="constant">NoDisplay</span>
@@ -285,7 +286,10 @@ var _hmt = _hmt || [];
 }
 </code></pre></li>
 </ol>
+<h2>兼容低版本修改图片的tintColor</h2>
 
+<pre><code><span class="tag">drawable</span><span class="class">.setColorFilter</span>(<span class="tag">Color</span><span class="class">.RED</span>,<span class="tag">PorterDuff</span><span class="class">.Mode</span><span class="class">.SRC_IN</span>);
+</code></pre>
       
     </div>
     
