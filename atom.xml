@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2016-01-18T10:35:44.000Z</updated>
+  <updated>2016-01-22T02:22:57.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://hanhailong.com/2016/01/14/Android%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/"/>
     <id>http://hanhailong.com/2016/01/14/Android小知识总结/</id>
     <published>2016-01-14T15:00:27.000Z</published>
-    <updated>2016-01-18T10:35:44.000Z</updated>
+    <updated>2016-01-22T02:22:57.000Z</updated>
     <content type="html"><![CDATA[<h2>onCreate中计算View的高度</h2>
 
 <p>可以借助getViewTreeObserver().addOnGlobalLayoutListener()来获得宽度或者高度，示例代码如下：</p>
@@ -84,7 +84,24 @@
 <h2>兼容低版本修改图片的tintColor</h2>
 
 <pre><code><span class="tag">drawable</span><span class="class">.setColorFilter</span>(<span class="tag">Color</span><span class="class">.RED</span>,<span class="tag">PorterDuff</span><span class="class">.Mode</span><span class="class">.SRC_IN</span>);
-</code></pre>]]></content>
+</code></pre><h2>使用dumpsys命令查看系统信息</h2>
+
+<p>dumpsys命令很强大，可以查看当前系统的信息，用的还比较多，dumpsys常用命令如下：</p>
+<pre><code>dumpsys     <span class="string">[options]</span>
+             meminfo 显示内存信息
+             cpuinfo 显示cpu信息
+             account 显示accounts信息
+             activity 显示所有的activities信息
+             window 显示键盘、窗口信息
+             wifi 显示wifi信息
+</code></pre><p>例如：查看某个程序内部内存信息</p>
+<pre><code>adb <span class="built_in">shell</span> dumpsys meminfo 包名 <span class="operator">or</span> pid    
+</code></pre><p>再或者查看当前打开app的页面信息，这个很有用</p>
+<pre><code>adb <span class="keyword">shell</span> dumpsys <span class="keyword">window</span> windows | grep -<span class="keyword">E</span> 'mCurrentFocus'    
+</code></pre><p>结果类似如下：</p>
+<pre><code>mCurrentFocus=Window{<span class="number">43469</span>d60 u0 <span class="keyword">com</span>.jikexueyuan.geekacademy.debug/<span class="keyword">com</span>.jikexueyuan.geekacademy.ui.activity.ActivityHomeV3}
+</code></pre><h2>待续…</h2>
+]]></content>
     <summary type="html">
     <![CDATA[<h2>onCreate中计算View的高度</h2>
 
