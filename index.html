@@ -307,7 +307,32 @@ maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.C
 <span class="built_in">UIRectCornerTopRight</span>   右上角
 <span class="built_in">UIRectCornerBottomLeft</span> 左下角
 <span class="built_in">UIRectCornerBottomRight</span> 右下角
-</code></pre><p></p><h3>持续更新中…<h3><p></p>
+</code></pre><h2>UITableView分割线顶到头</h2>
+
+<p>我们在使用tableview时会发现分割线的左边会短一些，通常可以使用setSeparatorInset:UIEdgeInsetsZero 来解决。但是升级到XCode6之后，在iOS8里发现没有效果。下面给出解决办法：</p>
+<ol>
+<li><p>第一步</p>
+<p>  if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {</p>
+<pre><code>[<span class="literal">self</span>.<span class="built_in">table</span>View <span class="built_in">set</span>SeparatorInset:UIEdgeInsetsZero];
+</code></pre><p>  }</p>
+<p>  if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {</p>
+<pre><code>[<span class="literal">self</span>.<span class="built_in">table</span>View <span class="built_in">set</span>LayoutMargins:UIEdgeInsetsZero];
+</code></pre><p>  }</p>
+</li>
+</ol>
+<ol>
+<li><p>第二步</p>
+<pre><code><span class="tag">-</span> (void)<span class="tag">tableView</span>:(UITableView *)<span class="tag">tableView</span> <span class="tag">willDisplayCell</span>:(UITableViewCell *)<span class="tag">cell</span> <span class="tag">forRowAtIndexPath</span>:(NSIndexPath *)<span class="tag">indexPath</span>{
+    <span class="tag">if</span> ([cell <span class="attribute">respondsToSelector</span>:<span class="variable">@selector</span>(<span class="attribute">setSeparatorInset</span>:)]) {
+        <span class="attr_selector">[cell setSeparatorInset:UIEdgeInsetsZero]</span>;
+    }
+    <span class="tag">if</span> ([cell <span class="attribute">respondsToSelector</span>:<span class="variable">@selector</span>(<span class="attribute">setLayoutMargins</span>:)]) {
+        <span class="attr_selector">[cell setLayoutMargins:UIEdgeInsetsZero]</span>;
+    }
+}
+</code></pre></li>
+</ol>
+<p></p><h3>持续更新中…<h3><p></p>
 </h3></h3>
       
     </div>
