@@ -17,7 +17,7 @@ mWebView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.On
 
 可以借助getViewTreeObserver().addOnGlobalLayoutListener()来获得宽度或者高度，示例代码如下：
 mWebView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {">
-<meta property="og:updated_time" content="2016-01-22T02:22:57.000Z">
+<meta property="og:updated_time" content="2016-01-25T09:58:06.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android小知识总结">
 <meta name="twitter:description" content="onCreate中计算View的高度
@@ -305,6 +305,15 @@ var _hmt = _hmt || [];
 <pre><code>adb <span class="keyword">shell</span> dumpsys <span class="keyword">window</span> windows | grep -<span class="keyword">E</span> 'mCurrentFocus'    
 </code></pre><p>结果类似如下：</p>
 <pre><code>mCurrentFocus=Window{<span class="number">43469</span>d60 u0 <span class="keyword">com</span>.jikexueyuan.geekacademy.debug/<span class="keyword">com</span>.jikexueyuan.geekacademy.ui.activity.ActivityHomeV3}
+</code></pre><h2>Recyleview的LayoutManager设置成StaggeredGridLayoutManager后获取某个字view的spanIndex（也就是在第几列）</h2>
+
+<pre><code><span class="keyword">private</span> static <span class="class"><span class="keyword">class</span> <span class="title">MyItemDecoration</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">RecyclerView</span>.<span class="title">ItemDecoration</span> {</span>
+    <span class="annotation">@Override</span>
+    public void getItemOffsets(<span class="type">Rect</span> outRect, <span class="type">View</span> view, <span class="type">RecyclerView</span> parent, <span class="type">RecyclerView</span>.<span class="type">State</span> state) {
+        <span class="keyword">super</span>.getItemOffsets(outRect, view, parent, state);
+        int index = ((<span class="type">StaggeredGridLayoutManager</span>.<span class="type">LayoutParams</span>) view.getLayoutParams()).getSpanIndex();
+    }
+}
 </code></pre><h2>待续…</h2>
 
       
