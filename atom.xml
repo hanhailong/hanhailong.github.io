@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2016-01-25T09:58:06.000Z</updated>
+  <updated>2016-01-29T07:24:07.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -15,11 +15,75 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[Swift-？和！的区别]]></title>
+    <link href="http://hanhailong.com/2016/01/28/Swift-%EF%BC%9F%E5%92%8C%EF%BC%81%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
+    <id>http://hanhailong.com/2016/01/28/Swift-？和！的区别/</id>
+    <published>2016-01-28T02:43:42.000Z</published>
+    <updated>2016-01-29T07:24:07.000Z</updated>
+    <content type="html"><![CDATA[<p>Swift 是一种新的编程语言，用于编写iOS，OS X 和 watchOS应用程序。Swift 结合了 C 和 Objective-C 的优点并且不受 C 兼容性的限制。Swift 采用安全的编程模式并添加了很多新特性，这将使编程更简单，更灵活，也更有趣。Swift 是基于成熟而且倍受喜爱的 Cocoa 和 Cocoa Touch 框架，它的降临将重新定义软件开发。</p>
+<p>今天我们的主角是可选类型？和！</p>
+<p>Swift语言使用var定义变量，但和别的语言不同，Swift里不会自动给变量赋初始值，也就是说变量不会有默认值，所以要求使用变量之前必须要对其初始化。如果在使用变量之前不进行初始化就会报错：</p>
+<pre><code><span class="keyword">var</span> <span class="keyword">value</span> : String
+<span class="comment">//error: variable 'stringValue' used before being initialized</span>
+<span class="keyword">let</span> hash = <span class="keyword">value</span>.hashValue
+</code></pre><h2>Optional简介</h2>
+
+<p>讲到这里，我们的主角就要正式登场了——<em>Optional</em>，<em>Optional</em>其实是一个enum枚举值，它有两个值：<em>None</em>和<em>Some</em>。<em>Optional.None</em>其实就是nil，<em>Optional.Some</em>就是非nil，它会通过<em>Some(T)</em>来进行Wrap包装原始值，这也是为啥使用<em>Optional</em>类型的时候要进行拆包unWrap（从enum中读取原始值）了。下面是<em>Optional</em>的定义：</p>
+<pre><code><span class="class"><span class="keyword">enum</span> <span class="title">Optional</span>&lt;<span class="title">T</span>&gt; : <span class="title">LogicValue</span>, <span class="title">Reflectable</span> </span>{
+    <span class="keyword">case</span> <span class="type">None</span>
+    <span class="keyword">case</span> <span class="type">Some</span>(<span class="type">T</span>)
+    <span class="keyword">init</span>()
+    <span class="keyword">init</span>(<span class="number">_</span> some: <span class="type">T</span>)
+
+    <span class="comment">/// Allow use in a Boolean context.</span>
+    <span class="func"><span class="keyword">func</span> <span class="title">getLogicValue</span><span class="params">()</span></span> -&gt; <span class="type">Bool</span>
+
+    <span class="comment">/// Haskell's fmap, which was mis-named</span>
+    <span class="func"><span class="keyword">func</span> <span class="title">map</span><span class="generics">&lt;U&gt;</span><span class="params">(f: <span class="params">(T)</span></span></span> -&gt; <span class="type">U</span>) -&gt; <span class="type">U</span>?
+    <span class="func"><span class="keyword">func</span> <span class="title">getMirror</span><span class="params">()</span></span> -&gt; <span class="type">Mirror</span>
+}
+</code></pre><p>声明为<em>Optional</em>只需要在类型后面紧跟一个?或者！即可，如:</p>
+<pre><code><span class="keyword">var</span> strValue: <span class="built_in">String</span>?   <span class="comment">//?相当于下面这种写法的语法糖</span>
+<span class="keyword">var</span> strValue: Optional&lt;<span class="built_in">String</span>&gt;  
+</code></pre><p>上面的？这个Optional可选项类型声明，意思是我声明了一个Optional类型，而不是声明了一个String类型，它可能包含一个String值，也可能不包含，不包含默认值就为nil。我们可以通过if判断来区分是否为nil：</p>
+<pre><code><span class="keyword">if</span> strValue {
+    //<span class="keyword">do</span> something <span class="keyword">with</span> strValue
+}
+</code></pre><p>那么我们怎么使用Optional可选类型的值呢？直接在后面加上一个？号即可。如果是nil值，也就是Optional.None，会跳过后面的操作不执行，如果有值，也就是Optional.Some，就会进行unWrap拆包操作，比如：</p>
+<pre><code>//正确
+<span class="built_in">let</span> <span class="built_in">hash</span>Value = strValue?.hashValue
+//错误
+<span class="built_in">let</span> <span class="built_in">hash</span>Value = strValue.hashValue
+</code></pre><p>有一种特殊情况，假如我们非常肯定strValue一定是非nil的，我们也可以采用强制拆包处理：使用！</p>
+<pre><code><span class="built_in">let</span> <span class="built_in">hash</span>Value = strValue!.hashValue
+</code></pre><p>!就代表强制拆包，假如strValue是nil，你强制拆包也会报错</p>
+<h2>Optional可选类型？的使用场景</h2><br>1. 声明Optional变量<br><br>        var strValue : String?<br><br>2. 用在对Optional值操作中，用来判断是否能响应后面的操作<br><br>        let hashValue = strValue?.hashValue<br><br>3. 用于安全调用protocol的optional方法<br><br>        @objc protocol Downloadable {<br>            @optional func download(toPath: String) -&gt; Bool;<br>        }<br><br>        @objc class Content: Downloadable {<br>            //download method not be implemented<br>        }<br><br>        var delegate: Downloadable = Downloadable()<br>        delegate.download?(“some path”)<br><br>4. 使用 <em>as?</em> 向下转型<br><br>        if let dataSource = object as? UITableViewDataSource {<br>            let rowsInFirstSection  = dataSource.tableView(tableView, numberOfRowsInSection: 0)<br>        }<br><br><h2>Optional可选类型！的使用场景</h2>
+
+<ol>
+<li><p>强制对可选类型Optional进行拆包</p>
+<pre><code><span class="built_in">let</span> <span class="built_in">hash</span>Value = strValue!.hashValue
+</code></pre></li>
+<li><p>声明隐式拆包，一般用于类中的属性</p>
+<pre><code><span class="keyword">var</span> strValue : <span class="built_in">String</span>!
+</code></pre></li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>Swift 是一种新的编程语言，用于编写iOS，OS X 和 watchOS应用程序。Swift 结合了 C 和 Objective-C 的优点并且不受 C 兼容性的限制。Swift 采用安全的编程模式并添加了很多新特性，这将使编程更简单，更灵活，也更有趣。Swift 是基]]>
+    </summary>
+    
+      <category term="IOS" scheme="http://hanhailong.com/tags/IOS/"/>
+    
+      <category term="Swift" scheme="http://hanhailong.com/tags/Swift/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[Android小知识总结]]></title>
     <link href="http://hanhailong.com/2016/01/14/Android%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/"/>
     <id>http://hanhailong.com/2016/01/14/Android小知识总结/</id>
     <published>2016-01-14T15:00:27.000Z</published>
-    <updated>2016-01-25T09:58:06.000Z</updated>
+    <updated>2016-01-28T09:51:36.000Z</updated>
     <content type="html"><![CDATA[<h2>onCreate中计算View的高度</h2>
 
 <p>可以借助getViewTreeObserver().addOnGlobalLayoutListener()来获得宽度或者高度，示例代码如下：</p>
@@ -109,7 +173,12 @@
         int index = ((<span class="type">StaggeredGridLayoutManager</span>.<span class="type">LayoutParams</span>) view.getLayoutParams()).getSpanIndex();
     }
 }
-</code></pre><h2>待续…</h2>
+</code></pre><h2>如果获取当前手机为每个app分配的堆大小，也就是内存大小</h2>
+
+<pre><code>ActivityManager manager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE)<span class="comment">;  </span>
+int heapSize = manager.getMemoryClass()<span class="comment">;</span>
+</code></pre><p>注意：这里获得heapSize是M为单位返回的 </p>
+<h2>待续…</h2>
 ]]></content>
     <summary type="html">
     <![CDATA[<h2>onCreate中计算View的高度</h2>
@@ -272,12 +341,15 @@ maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.C
     <link href="http://hanhailong.com/2015/12/28/Android%E8%BF%9B%E9%98%B6%E4%B9%8BProGuard%E4%BB%A3%E7%A0%81%E6%B7%B7%E6%B7%86/"/>
     <id>http://hanhailong.com/2015/12/28/Android进阶之ProGuard代码混淆/</id>
     <published>2015-12-28T13:35:41.000Z</published>
-    <updated>2015-12-28T14:32:50.000Z</updated>
+    <updated>2016-01-29T03:47:30.000Z</updated>
     <content type="html"><![CDATA[<h2>简介</h2>
 
 <p><a href="http://developer.android.com/intl/zh-cn/tools/help/proguard.html" target="_blank" rel="external">Proguard</a>工具通过移除无用的代码以及使用语义隐晦的名称来重命名类、字段和方法，从而达到压缩、优化和混淆代码的目的。最终您将获得一个较小的 .apk 文件，此文件更难于进行反向工程。由于 ProGuard 会使应用更难于进行反向工程，因此当应用使用对安全性要求极高的功能时（例如，当您向应用授予许可时），您必须使用此工具。</p>
 <p>ProGuard 已集成到 Android 构建系统，所以您无需手动调用此工具。只有当您在发布模式下构建应用时，ProGuard 才会运行，因此当您在调试模式下构建应用时，就无需处理混淆后的代码。是否运行 ProGuard 完全由您决定，但我们强烈建议您运行该工具。</p>
 <p>本文介绍如何启用和配置 ProGuard，以及如何使用 retrace 工具解码混淆后的堆栈跟踪信息。</p>
+<p>除了基本的Proguard混淆外，还有一些其他的混淆方式和工具。例如：混淆资源</p>
+<p><a href="http://tech.meituan.com/mt-android-resource-obfuscation.html" target="_blank" rel="external">美团资源混淆</a></p>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&amp;mid=208135658&amp;idx=1&amp;sn=ac9bd6b4927e9e82f9fa14e396183a8f&amp;scene=0#rd" target="_blank" rel="external">微信资源混淆</a></p>
 <a id="more"></a>
 <h2>开启Proguard</h2>
 
@@ -386,13 +458,182 @@ public int <span class="function">getAge</span>(){}
 </span>-<span class="ruby">keepclassmembers <span class="class"><span class="keyword">class</span> * {</span>
 </span>    @android.support.annotation.Keep *;
 }
+</code></pre><h2>Proguard相关语法</h2>
+
+<p>后面的文件名，类名，或者包名等可以使用占位符代替<br>“?”表示一个字符 可以匹配多个字符，但是如果是一个类，不会匹配其前面的包名<br>“*”可以匹配多个字符，会匹配前面的包名。</p>
+<ul>
+<li>输入输出选项<ul>
+<li>-include filename<br>从给定的文件中读取配置参数</li>
+<li>-injars class_path<br>输入(即使用的) jar文件路径</li>
+<li>-outjars class_path<br>输出 jar 路径</li>
+<li>-libraryjars class_path<br>指定的jar将不被混淆</li>
+<li>-skipnonpubliclibraryclasses<br>跳过(不混淆) jars中的 非public classes</li>
+<li>-dontskipnonpubliclibraryclasses<br>不跳过(混淆) jars中的 非public classes   默认选项</li>
+<li>-dontskipnonpubliclibraryclassmembers<br>不跳过 jars中的非public classes的members</li>
+<li>-keepdirectories [directory_filter]<br>指定目录 keep 在 out jars中  <ul>
+<li>保持不变的选项（混淆不进行处理的内容）</li>
+</ul>
+</li>
+<li>-keep {Modifier} {class_specification}<br>保护指定的类文件和类的成员</li>
+<li>-keepclassmembers {modifier} {class_specification}<br>保护指定类的成员，如果此类受到保护他们会保护的更好</li>
+<li>-keepclasseswithmembers {class_specification}<br>保护指定的类和类的成员，但条件是所有指定的类和类成员是要存在。</li>
+<li>-keepnames {class_specification}<br>保护指定的类和类的成员的名称（如果他们不会压缩步骤中删除）</li>
+<li>-keepclassmembernames {class_specification}<br>保护指定的类的成员的名称（如果他们不会压缩步骤中删除）</li>
+<li>-keepclasseswithmembernames {class_specification}<br>保护指定的类和类的成员的名称，如果所有指定的类成员出席（在压缩步骤之后）</li>
+<li>-printseeds {filename}<br>列出类和类的成员-keep选项的清单，标准输出到给定的文件<ul>
+<li>压缩选项</li>
+</ul>
+</li>
+<li>-dontshrink<br>不启用 shrink。shrink操作默认启用，主要的作用是将一些无效代码给移除，即没有被显示调用的代码。</li>
+<li>-printusage [filename]<br>打印被移除的代码，在标准输出</li>
+<li>-whyareyoukeeping class_specification<br>打印 在shrink过程中 为什么有些代码被 keep<ul>
+<li>优化选项</li>
+</ul>
+</li>
+<li>-dontoptimize<br>该选项表示 不启用。optimization，默认启用<br>当不使用该选项时，下面的才有效</li>
+<li>-optimizations optimization_filter<br>根据optimization_filter指定要优化的文件</li>
+<li>-optimizationpasses n<br>优化数量 n  </li>
+<li>-assumenosideeffects class_specification<br>优化时允许访问并修改类和类的成员的 访问修饰符，可能作用域会变大。</li>
+<li>-mergeinterfacesaggressively<br>合并接口，即使它们的实现类未实现合并后接口的所有方法。<ul>
+<li>混淆选项</li>
+</ul>
+</li>
+<li>-dontobfuscate<br>不混淆</li>
+<li>-printmapping [filename]<br>打印 映射旧名到新名</li>
+<li>-applymapping filename<br>打印相关</li>
+<li>-obfuscationdictionary filename<br>指定外部模糊字典</li>
+<li>-classobfuscationdictionary filename<br>指定class模糊字典</li>
+<li>-packageobfuscationdictionary filename<br>指定package模糊字典</li>
+<li>-overloadaggressively<br>过度加载，多个属性和方法使用相同的名字，只是参数和返回类型不同 可能各种异常</li>
+<li>-useuniqueclassmembernames<br>类和类成员都使用唯一的名字</li>
+<li>-dontusemixedcaseclassnames<br>不使用大小写混合类名</li>
+<li>-keeppackagenames [package_filter]<br>保持packagename 不混淆</li>
+<li>-flattenpackagehierarchy [package_name]<br>指定重新打包,所有包重命名,这个选项会进一步模糊包名 好东西<br>将包里的类混淆成n个再重新打包到一个个的package中，注：混淆是有用，但是我用的时候安装会崩溃，不知道为什么？</li>
+<li>-repackageclasses [package_name]<br>将包里的类混淆成n个再重新打包到一个统一的package中  会覆盖flattenpackagehierarchy选项</li>
+<li>-keepattributes [attribute_filter]<br>混淆时可能被移除下面这些东西，如果想保留，需要用该选项。“Annotation、Exceptions, Signature, Deprecated, SourceFile, SourceDir, LineNumberTable”<ul>
+<li>预校验选项</li>
+</ul>
+</li>
+<li>-dontpreverify<br>不预校验，默认选项<ul>
+<li>通用选项</li>
+</ul>
+</li>
+<li>-verbose<br>打印日志</li>
+<li>-dontnote [class_filter]<br>不打印某些错误</li>
+<li>-dontwarn [class_filter]<br>不打印警告信息</li>
+<li>-ignorewarnings<br>忽略警告，继续执行</li>
+<li>-printconfiguration [filename]<br>打印配置文件</li>
+<li>-dump [filename]<br>指定打印类结构</li>
+</ul>
+</li>
+</ul>
+<h2> demo示例</h2>
+
+<pre><code>##--- For:android默认 ---
+-<span class="ruby">optimizationpasses <span class="number">5</span>  <span class="comment"># 指定代码的压缩级别</span>
+</span>-<span class="ruby">allowaccessmodification <span class="comment">#优化时允许访问并修改有修饰符的类和类的成员</span>
+</span>-<span class="ruby">dontusemixedcaseclassnames  <span class="comment"># 是否使用大小写混合</span>
+</span>-<span class="ruby">dontskipnonpubliclibraryclasses  <span class="comment"># 是否混淆第三方jar</span>
+</span>-<span class="ruby">dontpreverify  <span class="comment"># 混淆时是否做预校验</span>
+</span>-<span class="ruby">verbose    <span class="comment"># 混淆时是否记录日志</span>
+</span>-<span class="ruby">ignorewarnings  <span class="comment"># 忽略警告，避免打包时某些警告出现</span>
+</span>-<span class="ruby">optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!<span class="class"><span class="keyword">class</span>/<span class="title">merging</span>/*  <span class="comment"># 混淆时所采用的算法</span></span>
+</span>
+-<span class="ruby">keepattributes *<span class="constant">Annotation</span>*
+</span>-<span class="ruby">keep public <span class="class"><span class="keyword">class</span> <span class="title">com</span>.<span class="title">google</span>.<span class="title">vending</span>.<span class="title">licensing</span>.<span class="title">ILicensingService</span></span>
+</span>-<span class="ruby">keep public <span class="class"><span class="keyword">class</span> <span class="title">com</span>.<span class="title">android</span>.<span class="title">vending</span>.<span class="title">licensing</span>.<span class="title">ILicensingService</span></span>
+</span>-<span class="ruby">keepclasseswithmembernames <span class="class"><span class="keyword">class</span> * { <span class="comment"># 保持 native 方法不被混淆</span></span>
+</span>    native &lt;methods&gt;;
+}
+
+-<span class="ruby">keepclassmembers public <span class="class"><span class="keyword">class</span> * <span class="title">extends</span> <span class="title">android</span>.<span class="title">view</span>.<span class="title">View</span> {</span>
+</span>   void set*(***);
+   *** get*();
+}
+
+-<span class="ruby">keepclassmembers <span class="class"><span class="keyword">class</span> * <span class="title">extends</span> <span class="title">android</span>.<span class="title">app</span>.<span class="title">Activity</span> {</span>
+</span>   public void *(android.view.View);
+}
+
+-<span class="ruby">keepclassmembers enum * {  <span class="comment"># 保持枚举 enum 类不被混淆</span>
+</span>    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+-<span class="ruby">keep <span class="class"><span class="keyword">class</span> * <span class="title">implements</span> <span class="title">android</span>.<span class="title">os</span>.<span class="title">Parcelable</span> { <span class="comment"># 保持 Parcelable 不被混淆</span></span>
+</span>  public static final android.os.Parcelable$Creator *;
+}
+
+-<span class="ruby">keepclassmembers <span class="class"><span class="keyword">class</span> **.<span class="title">R</span>$* { <span class="comment">#不混淆R文件</span></span>
+</span>    public static &lt;fields&gt;;
+}
+
+-<span class="ruby">dontwarn android.support.**
+</span>##--- End android默认 ---
+
+##--- For:不能被混淆的 ---
+-<span class="ruby">keep public <span class="class"><span class="keyword">class</span> * <span class="title">extends</span> <span class="title">android</span>.<span class="title">app</span>.<span class="title">Activity</span></span>
+</span>-<span class="ruby">keep public <span class="class"><span class="keyword">class</span> * <span class="title">extends</span> <span class="title">android</span>.<span class="title">app</span>.<span class="title">Fragment</span></span>
+</span>-<span class="ruby">keep public <span class="class"><span class="keyword">class</span> * <span class="title">extends</span> <span class="title">android</span>.<span class="title">app</span>.<span class="title">Application</span></span>
+</span>-<span class="ruby">keep public <span class="class"><span class="keyword">class</span> * <span class="title">extends</span> <span class="title">android</span>.<span class="title">app</span>.<span class="title">Service</span></span>
+</span>-<span class="ruby">keep public <span class="class"><span class="keyword">class</span> * <span class="title">extends</span> <span class="title">android</span>.<span class="title">content</span>.<span class="title">BroadcastReceiver</span></span>
+</span>-<span class="ruby">keep public <span class="class"><span class="keyword">class</span> * <span class="title">extends</span> <span class="title">android</span>.<span class="title">content</span>.<span class="title">ContentProvider</span></span>
+</span>-<span class="ruby">keep public <span class="class"><span class="keyword">class</span> * <span class="title">extends</span> <span class="title">android</span>.<span class="title">app</span>.<span class="title">backup</span>.<span class="title">BackupAgentHelper</span></span>
+</span>-<span class="ruby">keep public <span class="class"><span class="keyword">class</span> * <span class="title">extends</span> <span class="title">android</span>.<span class="title">preference</span>.<span class="title">Preference</span></span>
+</span>
+##--- For:保持自定义控件类不被混淆 ---
+-<span class="ruby">keepclasseswithmembers <span class="class"><span class="keyword">class</span> * {</span>
+</span>    public &lt;init&gt;(android.content.Context, android.util.AttributeSet);
+}
+-<span class="ruby">keepclasseswithmembers <span class="class"><span class="keyword">class</span> * {</span>
+</span>    public &lt;init&gt;(android.content.Context, android.util.AttributeSet, int);
+}
+##--- For:android-support-v4 ---
+-<span class="ruby">dontwarn android.support.v4.**
+</span>-<span class="ruby">keep <span class="class"><span class="keyword">class</span> <span class="title">android</span>.<span class="title">support</span>.<span class="title">v4</span>.** { *;</span> }
+</span>-<span class="ruby">keep interface android.support.v4.app.** { *; }
+</span>-<span class="ruby">keep <span class="class"><span class="keyword">class</span> * <span class="title">extends</span> <span class="title">android</span>.<span class="title">support</span>.<span class="title">v4</span>.** { *;</span> }
+</span>-<span class="ruby">keep public <span class="class"><span class="keyword">class</span> * <span class="title">extends</span> <span class="title">android</span>.<span class="title">support</span>.<span class="title">v4</span>.**</span>
+</span>-<span class="ruby">keep public <span class="class"><span class="keyword">class</span> * <span class="title">extends</span> <span class="title">android</span>.<span class="title">support</span>.<span class="title">v4</span>.<span class="title">widget</span></span>
+</span>-<span class="ruby">keep <span class="class"><span class="keyword">class</span> * <span class="title">extends</span> <span class="title">android</span>.<span class="title">support</span>.<span class="title">v4</span>.<span class="title">app</span>.** {*;</span>}
+</span>-<span class="ruby">keep <span class="class"><span class="keyword">class</span> * <span class="title">extends</span> <span class="title">android</span>.<span class="title">support</span>.<span class="title">v4</span>.<span class="title">view</span>.** {*;</span>}
+</span>
+##--- For:Serializable ---
+-<span class="ruby">keep <span class="class"><span class="keyword">class</span> * <span class="title">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> {*;</span>}
+</span>-<span class="ruby">keepnames <span class="class"><span class="keyword">class</span> * <span class="title">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></span>
+</span>-<span class="ruby">keepclassmembers <span class="class"><span class="keyword">class</span> * <span class="title">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> {*;</span>}
+</span>
+##--- For:Gson ---
+-<span class="ruby">keepattributes *<span class="constant">Annotation</span>*
+</span>-<span class="ruby">keep <span class="class"><span class="keyword">class</span> <span class="title">sun</span>.<span class="title">misc</span>.<span class="title">Unsafe</span> { *;</span> }
+</span>-<span class="ruby">keep <span class="class"><span class="keyword">class</span> <span class="title">com</span>.<span class="title">idea</span>.<span class="title">fifaalarmclock</span>.<span class="title">entity</span>.***</span>
+</span>-<span class="ruby">keep <span class="class"><span class="keyword">class</span> <span class="title">com</span>.<span class="title">google</span>.<span class="title">gson</span>.<span class="title">stream</span>.** { *;</span> }
+</span>
+##--- For:Remove log ---
+-<span class="ruby">assumenosideeffects <span class="class"><span class="keyword">class</span> <span class="title">android</span>.<span class="title">util</span>.<span class="title">Log</span> {</span>
+</span>    public static boolean isLoggable(java.lang.String, int);
+    public static int v(...);
+    public static int i(...);
+    public static int w(...);
+    public static int d(...);
+    public static int e(...);
+}
+
+##--- For:attributes(未启用) ---
+#-keepattributes SourceFile,LineNumberTable # 保持反编译工具能看到代码的行数，以及release包安装后出现异常信息可以知道在哪行代码出现异常，建议不启用
+-<span class="ruby">keepattributes *<span class="constant">Annotation</span>* <span class="comment">#使用注解</span>
+</span>-<span class="ruby">keepattributes <span class="constant">Signature</span> <span class="comment">#过滤泛型  出现类型转换错误时，启用这个</span>
+</span>#-keepattributes *Exceptions*,EnclosingMethod  #没试过，未知效果
 </code></pre>]]></content>
     <summary type="html">
     <![CDATA[<h2>简介</h2>
 
 <p><a href="http://developer.android.com/intl/zh-cn/tools/help/proguard.html">Proguard</a>工具通过移除无用的代码以及使用语义隐晦的名称来重命名类、字段和方法，从而达到压缩、优化和混淆代码的目的。最终您将获得一个较小的 .apk 文件，此文件更难于进行反向工程。由于 ProGuard 会使应用更难于进行反向工程，因此当应用使用对安全性要求极高的功能时（例如，当您向应用授予许可时），您必须使用此工具。</p>
 <p>ProGuard 已集成到 Android 构建系统，所以您无需手动调用此工具。只有当您在发布模式下构建应用时，ProGuard 才会运行，因此当您在调试模式下构建应用时，就无需处理混淆后的代码。是否运行 ProGuard 完全由您决定，但我们强烈建议您运行该工具。</p>
-<p>本文介绍如何启用和配置 ProGuard，以及如何使用 retrace 工具解码混淆后的堆栈跟踪信息。</p>]]>
+<p>本文介绍如何启用和配置 ProGuard，以及如何使用 retrace 工具解码混淆后的堆栈跟踪信息。</p>
+<p>除了基本的Proguard混淆外，还有一些其他的混淆方式和工具。例如：混淆资源</p>
+<p><a href="http://tech.meituan.com/mt-android-resource-obfuscation.html">美团资源混淆</a></p>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&amp;mid=208135658&amp;idx=1&amp;sn=ac9bd6b4927e9e82f9fa14e396183a8f&amp;scene=0#rd">微信资源混淆</a></p>]]>
     
     </summary>
     
@@ -2447,23 +2688,6 @@ public static interface OnSwitchStateChangeListener {
     </summary>
     
       <category term="Hexo主题" scheme="http://hanhailong.com/tags/Hexo%E4%B8%BB%E9%A2%98/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[不错的学习技术博客之三—泡在网上的日子]]></title>
-    <link href="http://hanhailong.com/2015/10/08/%E4%B8%8D%E9%94%99%E7%9A%84%E5%AD%A6%E4%B9%A0%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%E4%B9%8B%E4%B8%89%E2%80%94%E6%B3%A1%E5%9C%A8%E7%BD%91%E4%B8%8A%E7%9A%84%E6%97%A5%E5%AD%90/"/>
-    <id>http://hanhailong.com/2015/10/08/不错的学习技术博客之三—泡在网上的日子/</id>
-    <published>2015-10-08T08:19:33.000Z</published>
-    <updated>2015-10-08T08:27:38.000Z</updated>
-    <content type="html"><![CDATA[<p>这是<a href="http://hanhailong.com/tags/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/">不错的学习技术博客系列</a>第三篇，<a href="http://www.jcodecraeer.com/" target="_blank" rel="external">泡在网上的日子</a>上面的技术博客质量都非常高，文章内容非常广泛，不仅包括Android和IOS，还包括Html5/css3、JS、java、php等，甚至还包括设计模式和算法。</p>
-<p>还有就是包括代码，里面的代码大部分都托管在github上面，这里做了比较详细的系统分类，总体做的非常不错，我经常去上面浏览学习！！！</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>这是<a href="http://hanhailong.com/tags/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/">不错的学习技术博客系列</a>第三篇，<a href="http://www.jcodecraeer.com/" tar]]>
-    </summary>
-    
-      <category term="技术博客" scheme="http://hanhailong.com/tags/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/"/>
     
   </entry>
   

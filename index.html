@@ -118,7 +118,7 @@ var _hmt = _hmt || [];
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android咨询/" style="font-size: 10px;">Android咨询</a> <a href="/tags/Android工具/" style="font-size: 10px;">Android工具</a> <a href="/tags/Hexo主题/" style="font-size: 16.67px;">Hexo主题</a> <a href="/tags/IOS/" style="font-size: 16.67px;">IOS</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/RxAndroid/" style="font-size: 10px;">RxAndroid</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Sublime-Text/" style="font-size: 10px;">Sublime Text</a> <a href="/tags/技术博客/" style="font-size: 16.67px;">技术博客</a> <a href="/tags/随笔/" style="font-size: 13.33px;">随笔</a>
+						<a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android咨询/" style="font-size: 10px;">Android咨询</a> <a href="/tags/Android工具/" style="font-size: 10px;">Android工具</a> <a href="/tags/Hexo主题/" style="font-size: 15px;">Hexo主题</a> <a href="/tags/IOS/" style="font-size: 17.5px;">IOS</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/RxAndroid/" style="font-size: 10px;">RxAndroid</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Sublime-Text/" style="font-size: 10px;">Sublime Text</a> <a href="/tags/Swift/" style="font-size: 10px;">Swift</a> <a href="/tags/技术博客/" style="font-size: 15px;">技术博客</a> <a href="/tags/随笔/" style="font-size: 12.5px;">随笔</a>
 					</div>
 				</section>
 				
@@ -179,6 +179,107 @@ var _hmt = _hmt || [];
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-Swift-？和！的区别" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/28/Swift-？和！的区别/" class="article-date">
+  	<time datetime="2016-01-28T02:43:42.000Z" itemprop="datePublished">2016-01-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/28/Swift-？和！的区别/">Swift-？和！的区别</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Swift 是一种新的编程语言，用于编写iOS，OS X 和 watchOS应用程序。Swift 结合了 C 和 Objective-C 的优点并且不受 C 兼容性的限制。Swift 采用安全的编程模式并添加了很多新特性，这将使编程更简单，更灵活，也更有趣。Swift 是基于成熟而且倍受喜爱的 Cocoa 和 Cocoa Touch 框架，它的降临将重新定义软件开发。</p>
+<p>今天我们的主角是可选类型？和！</p>
+<p>Swift语言使用var定义变量，但和别的语言不同，Swift里不会自动给变量赋初始值，也就是说变量不会有默认值，所以要求使用变量之前必须要对其初始化。如果在使用变量之前不进行初始化就会报错：</p>
+<pre><code><span class="keyword">var</span> <span class="keyword">value</span> : String
+<span class="comment">//error: variable 'stringValue' used before being initialized</span>
+<span class="keyword">let</span> hash = <span class="keyword">value</span>.hashValue
+</code></pre><h2>Optional简介</h2>
+
+<p>讲到这里，我们的主角就要正式登场了——<em>Optional</em>，<em>Optional</em>其实是一个enum枚举值，它有两个值：<em>None</em>和<em>Some</em>。<em>Optional.None</em>其实就是nil，<em>Optional.Some</em>就是非nil，它会通过<em>Some(T)</em>来进行Wrap包装原始值，这也是为啥使用<em>Optional</em>类型的时候要进行拆包unWrap（从enum中读取原始值）了。下面是<em>Optional</em>的定义：</p>
+<pre><code><span class="class"><span class="keyword">enum</span> <span class="title">Optional</span>&lt;<span class="title">T</span>&gt; : <span class="title">LogicValue</span>, <span class="title">Reflectable</span> </span>{
+    <span class="keyword">case</span> <span class="type">None</span>
+    <span class="keyword">case</span> <span class="type">Some</span>(<span class="type">T</span>)
+    <span class="keyword">init</span>()
+    <span class="keyword">init</span>(<span class="number">_</span> some: <span class="type">T</span>)
+
+    <span class="comment">/// Allow use in a Boolean context.</span>
+    <span class="func"><span class="keyword">func</span> <span class="title">getLogicValue</span><span class="params">()</span></span> -&gt; <span class="type">Bool</span>
+
+    <span class="comment">/// Haskell's fmap, which was mis-named</span>
+    <span class="func"><span class="keyword">func</span> <span class="title">map</span><span class="generics">&lt;U&gt;</span><span class="params">(f: <span class="params">(T)</span></span></span> -&gt; <span class="type">U</span>) -&gt; <span class="type">U</span>?
+    <span class="func"><span class="keyword">func</span> <span class="title">getMirror</span><span class="params">()</span></span> -&gt; <span class="type">Mirror</span>
+}
+</code></pre><p>声明为<em>Optional</em>只需要在类型后面紧跟一个?或者！即可，如:</p>
+<pre><code><span class="keyword">var</span> strValue: <span class="built_in">String</span>?   <span class="comment">//?相当于下面这种写法的语法糖</span>
+<span class="keyword">var</span> strValue: Optional&lt;<span class="built_in">String</span>&gt;  
+</code></pre><p>上面的？这个Optional可选项类型声明，意思是我声明了一个Optional类型，而不是声明了一个String类型，它可能包含一个String值，也可能不包含，不包含默认值就为nil。我们可以通过if判断来区分是否为nil：</p>
+<pre><code><span class="keyword">if</span> strValue {
+    //<span class="keyword">do</span> something <span class="keyword">with</span> strValue
+}
+</code></pre><p>那么我们怎么使用Optional可选类型的值呢？直接在后面加上一个？号即可。如果是nil值，也就是Optional.None，会跳过后面的操作不执行，如果有值，也就是Optional.Some，就会进行unWrap拆包操作，比如：</p>
+<pre><code>//正确
+<span class="built_in">let</span> <span class="built_in">hash</span>Value = strValue?.hashValue
+//错误
+<span class="built_in">let</span> <span class="built_in">hash</span>Value = strValue.hashValue
+</code></pre><p>有一种特殊情况，假如我们非常肯定strValue一定是非nil的，我们也可以采用强制拆包处理：使用！</p>
+<pre><code><span class="built_in">let</span> <span class="built_in">hash</span>Value = strValue!.hashValue
+</code></pre><p>!就代表强制拆包，假如strValue是nil，你强制拆包也会报错</p>
+<h2>Optional可选类型？的使用场景</h2><br>1. 声明Optional变量<br><br>        var strValue : String?<br><br>2. 用在对Optional值操作中，用来判断是否能响应后面的操作<br><br>        let hashValue = strValue?.hashValue<br><br>3. 用于安全调用protocol的optional方法<br><br>        @objc protocol Downloadable {<br>            @optional func download(toPath: String) -&gt; Bool;<br>        }<br><br>        @objc class Content: Downloadable {<br>            //download method not be implemented<br>        }<br><br>        var delegate: Downloadable = Downloadable()<br>        delegate.download?(“some path”)<br><br>4. 使用 <em>as?</em> 向下转型<br><br>        if let dataSource = object as? UITableViewDataSource {<br>            let rowsInFirstSection  = dataSource.tableView(tableView, numberOfRowsInSection: 0)<br>        }<br><br><h2>Optional可选类型！的使用场景</h2>
+
+<ol>
+<li><p>强制对可选类型Optional进行拆包</p>
+<pre><code><span class="built_in">let</span> <span class="built_in">hash</span>Value = strValue!.hashValue
+</code></pre></li>
+<li><p>声明隐式拆包，一般用于类中的属性</p>
+<pre><code><span class="keyword">var</span> strValue : <span class="built_in">String</span>!
+</code></pre></li>
+</ol>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IOS/">IOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Swift/">Swift</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-Android小知识总结" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -486,6 +587,9 @@ maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.C
 <p><a href="http://developer.android.com/intl/zh-cn/tools/help/proguard.html">Proguard</a>工具通过移除无用的代码以及使用语义隐晦的名称来重命名类、字段和方法，从而达到压缩、优化和混淆代码的目的。最终您将获得一个较小的 .apk 文件，此文件更难于进行反向工程。由于 ProGuard 会使应用更难于进行反向工程，因此当应用使用对安全性要求极高的功能时（例如，当您向应用授予许可时），您必须使用此工具。</p>
 <p>ProGuard 已集成到 Android 构建系统，所以您无需手动调用此工具。只有当您在发布模式下构建应用时，ProGuard 才会运行，因此当您在调试模式下构建应用时，就无需处理混淆后的代码。是否运行 ProGuard 完全由您决定，但我们强烈建议您运行该工具。</p>
 <p>本文介绍如何启用和配置 ProGuard，以及如何使用 retrace 工具解码混淆后的堆栈跟踪信息。</p>
+<p>除了基本的Proguard混淆外，还有一些其他的混淆方式和工具。例如：混淆资源</p>
+<p><a href="http://tech.meituan.com/mt-android-resource-obfuscation.html">美团资源混淆</a></p>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&amp;mid=208135658&amp;idx=1&amp;sn=ac9bd6b4927e9e82f9fa14e396183a8f&amp;scene=0#rd">微信资源混淆</a></p>
       
     </div>
     
@@ -855,64 +959,6 @@ maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.C
       
         <p class="article-more-link">
           <a  href="/2015/11/23/Android-小米桌面图标显示角标数/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-Android-部分作品鉴赏" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/04/Android-部分作品鉴赏/" class="article-date">
-  	<time datetime="2015-11-04T15:32:50.000Z" itemprop="datePublished">2015-11-04</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/04/Android-部分作品鉴赏/">Android-部分作品鉴赏</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>时间过得真快，马上快毕业四年了，这里整理了下我做过的部分App，当然还有一些其他的App，不是外包就是没有纪念意义，这里就不列举了！</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/随笔/">随笔</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/11/04/Android-部分作品鉴赏/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
