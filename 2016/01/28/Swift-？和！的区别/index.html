@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="韩海龙的博客">
 <meta property="og:description" content="Swift 是一种新的编程语言，用于编写iOS，OS X 和 watchOS应用程序。Swift 结合了 C 和 Objective-C 的优点并且不受 C 兼容性的限制。Swift 采用安全的编程模式并添加了很多新特性，这将使编程更简单，更灵活，也更有趣。Swift 是基于成熟而且倍受喜爱的 Cocoa 和 Cocoa Touch 框架，它的降临将重新定义软件开发。
 今天我们的主角是可选类型？和">
-<meta property="og:updated_time" content="2016-01-29T07:24:07.000Z">
+<meta property="og:updated_time" content="2016-01-29T07:30:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Swift-？和！的区别">
 <meta name="twitter:description" content="Swift 是一种新的编程语言，用于编写iOS，OS X 和 watchOS应用程序。Swift 结合了 C 和 Objective-C 的优点并且不受 C 兼容性的限制。Swift 采用安全的编程模式并添加了很多新特性，这将使编程更简单，更灵活，也更有趣。Swift 是基于成熟而且倍受喜爱的 Cocoa 和 Cocoa Touch 框架，它的降临将重新定义软件开发。
@@ -225,7 +225,8 @@ var _hmt = _hmt || [];
 <pre><code><span class="keyword">var</span> <span class="keyword">value</span> : String
 <span class="comment">//error: variable 'stringValue' used before being initialized</span>
 <span class="keyword">let</span> hash = <span class="keyword">value</span>.hashValue
-</code></pre><h2>Optional简介</h2>
+</code></pre><a id="more"></a>
+<h2>Optional简介</h2>
 
 <p>讲到这里，我们的主角就要正式登场了——<em>Optional</em>，<em>Optional</em>其实是一个enum枚举值，它有两个值：<em>None</em>和<em>Some</em>。<em>Optional.None</em>其实就是nil，<em>Optional.Some</em>就是非nil，它会通过<em>Some(T)</em>来进行Wrap包装原始值，这也是为啥使用<em>Optional</em>类型的时候要进行拆包unWrap（从enum中读取原始值）了。下面是<em>Optional</em>的定义：</p>
 <pre><code><span class="class"><span class="keyword">enum</span> <span class="title">Optional</span>&lt;<span class="title">T</span>&gt; : <span class="title">LogicValue</span>, <span class="title">Reflectable</span> </span>{
@@ -256,7 +257,34 @@ var _hmt = _hmt || [];
 </code></pre><p>有一种特殊情况，假如我们非常肯定strValue一定是非nil的，我们也可以采用强制拆包处理：使用！</p>
 <pre><code><span class="built_in">let</span> <span class="built_in">hash</span>Value = strValue!.hashValue
 </code></pre><p>!就代表强制拆包，假如strValue是nil，你强制拆包也会报错</p>
-<h2>Optional可选类型？的使用场景</h2><br>1. 声明Optional变量<br><br>        var strValue : String?<br><br>2. 用在对Optional值操作中，用来判断是否能响应后面的操作<br><br>        let hashValue = strValue?.hashValue<br><br>3. 用于安全调用protocol的optional方法<br><br>        @objc protocol Downloadable {<br>            @optional func download(toPath: String) -&gt; Bool;<br>        }<br><br>        @objc class Content: Downloadable {<br>            //download method not be implemented<br>        }<br><br>        var delegate: Downloadable = Downloadable()<br>        delegate.download?(“some path”)<br><br>4. 使用 <em>as?</em> 向下转型<br><br>        if let dataSource = object as? UITableViewDataSource {<br>            let rowsInFirstSection  = dataSource.tableView(tableView, numberOfRowsInSection: 0)<br>        }<br><br><h2>Optional可选类型！的使用场景</h2>
+<h2>Optional可选类型？的使用场景</h2>
+
+<ol>
+<li><p>声明Optional变量</p>
+<pre><code><span class="keyword">var</span> strValue : <span class="built_in">String</span>?
+</code></pre></li>
+<li><p>用在对Optional值操作中，用来判断是否能响应后面的操作</p>
+<pre><code><span class="built_in">let</span> <span class="built_in">hash</span>Value = strValue?.hashValue
+</code></pre></li>
+<li><p>用于安全调用protocol的optional方法</p>
+<pre><code><span class="variable">@objc</span> protocol Downloadable {
+    <span class="variable">@optional</span> func <span class="function">download</span>(<span class="attribute">toPath</span>: String) -&gt; Bool;
+}
+
+<span class="variable">@objc</span> class <span class="attribute">Content</span>: Downloadable {
+    <span class="comment">//download method not be implemented</span>
+}
+
+var <span class="attribute">delegate</span>: Downloadable = <span class="function">Downloadable</span>()
+delegate.download?(<span class="string">"some path"</span>)
+</code></pre></li>
+<li><p>使用 <em>as?</em> 向下转型</p>
+<pre><code><span class="keyword">if</span> <span class="keyword">let</span> dataSource = <span class="keyword">object</span> <span class="keyword">as</span>? UITableViewDataSource {
+    <span class="keyword">let</span> rowsInFirstSection  = dataSource.tableView(tableView, numberOfRowsInSection: <span class="number">0</span>)
+}
+</code></pre></li>
+</ol>
+<h2>Optional可选类型！的使用场景</h2>
 
 <ol>
 <li><p>强制对可选类型Optional进行拆包</p>

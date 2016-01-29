@@ -212,48 +212,7 @@ var _hmt = _hmt || [];
 <pre><code><span class="keyword">var</span> <span class="keyword">value</span> : String
 <span class="comment">//error: variable 'stringValue' used before being initialized</span>
 <span class="keyword">let</span> hash = <span class="keyword">value</span>.hashValue
-</code></pre><h2>Optional简介</h2>
-
-<p>讲到这里，我们的主角就要正式登场了——<em>Optional</em>，<em>Optional</em>其实是一个enum枚举值，它有两个值：<em>None</em>和<em>Some</em>。<em>Optional.None</em>其实就是nil，<em>Optional.Some</em>就是非nil，它会通过<em>Some(T)</em>来进行Wrap包装原始值，这也是为啥使用<em>Optional</em>类型的时候要进行拆包unWrap（从enum中读取原始值）了。下面是<em>Optional</em>的定义：</p>
-<pre><code><span class="class"><span class="keyword">enum</span> <span class="title">Optional</span>&lt;<span class="title">T</span>&gt; : <span class="title">LogicValue</span>, <span class="title">Reflectable</span> </span>{
-    <span class="keyword">case</span> <span class="type">None</span>
-    <span class="keyword">case</span> <span class="type">Some</span>(<span class="type">T</span>)
-    <span class="keyword">init</span>()
-    <span class="keyword">init</span>(<span class="number">_</span> some: <span class="type">T</span>)
-
-    <span class="comment">/// Allow use in a Boolean context.</span>
-    <span class="func"><span class="keyword">func</span> <span class="title">getLogicValue</span><span class="params">()</span></span> -&gt; <span class="type">Bool</span>
-
-    <span class="comment">/// Haskell's fmap, which was mis-named</span>
-    <span class="func"><span class="keyword">func</span> <span class="title">map</span><span class="generics">&lt;U&gt;</span><span class="params">(f: <span class="params">(T)</span></span></span> -&gt; <span class="type">U</span>) -&gt; <span class="type">U</span>?
-    <span class="func"><span class="keyword">func</span> <span class="title">getMirror</span><span class="params">()</span></span> -&gt; <span class="type">Mirror</span>
-}
-</code></pre><p>声明为<em>Optional</em>只需要在类型后面紧跟一个?或者！即可，如:</p>
-<pre><code><span class="keyword">var</span> strValue: <span class="built_in">String</span>?   <span class="comment">//?相当于下面这种写法的语法糖</span>
-<span class="keyword">var</span> strValue: Optional&lt;<span class="built_in">String</span>&gt;  
-</code></pre><p>上面的？这个Optional可选项类型声明，意思是我声明了一个Optional类型，而不是声明了一个String类型，它可能包含一个String值，也可能不包含，不包含默认值就为nil。我们可以通过if判断来区分是否为nil：</p>
-<pre><code><span class="keyword">if</span> strValue {
-    //<span class="keyword">do</span> something <span class="keyword">with</span> strValue
-}
-</code></pre><p>那么我们怎么使用Optional可选类型的值呢？直接在后面加上一个？号即可。如果是nil值，也就是Optional.None，会跳过后面的操作不执行，如果有值，也就是Optional.Some，就会进行unWrap拆包操作，比如：</p>
-<pre><code>//正确
-<span class="built_in">let</span> <span class="built_in">hash</span>Value = strValue?.hashValue
-//错误
-<span class="built_in">let</span> <span class="built_in">hash</span>Value = strValue.hashValue
-</code></pre><p>有一种特殊情况，假如我们非常肯定strValue一定是非nil的，我们也可以采用强制拆包处理：使用！</p>
-<pre><code><span class="built_in">let</span> <span class="built_in">hash</span>Value = strValue!.hashValue
-</code></pre><p>!就代表强制拆包，假如strValue是nil，你强制拆包也会报错</p>
-<h2>Optional可选类型？的使用场景</h2><br>1. 声明Optional变量<br><br>        var strValue : String?<br><br>2. 用在对Optional值操作中，用来判断是否能响应后面的操作<br><br>        let hashValue = strValue?.hashValue<br><br>3. 用于安全调用protocol的optional方法<br><br>        @objc protocol Downloadable {<br>            @optional func download(toPath: String) -&gt; Bool;<br>        }<br><br>        @objc class Content: Downloadable {<br>            //download method not be implemented<br>        }<br><br>        var delegate: Downloadable = Downloadable()<br>        delegate.download?(“some path”)<br><br>4. 使用 <em>as?</em> 向下转型<br><br>        if let dataSource = object as? UITableViewDataSource {<br>            let rowsInFirstSection  = dataSource.tableView(tableView, numberOfRowsInSection: 0)<br>        }<br><br><h2>Optional可选类型！的使用场景</h2>
-
-<ol>
-<li><p>强制对可选类型Optional进行拆包</p>
-<pre><code><span class="built_in">let</span> <span class="built_in">hash</span>Value = strValue!.hashValue
-</code></pre></li>
-<li><p>声明隐式拆包，一般用于类中的属性</p>
-<pre><code><span class="keyword">var</span> strValue : <span class="built_in">String</span>!
-</code></pre></li>
-</ol>
-
+</code></pre>
       
     </div>
     
@@ -266,6 +225,10 @@ var _hmt = _hmt || [];
 
       
 
+      
+        <p class="article-more-link">
+          <a  href="/2016/01/28/Swift-？和！的区别/#more">more >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
