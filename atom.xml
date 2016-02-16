@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2016-01-29T07:30:24.000Z</updated>
+  <updated>2016-02-16T08:22:54.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -13,6 +13,54 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[OC、Swift代码注释#pragma mark]]></title>
+    <link href="http://hanhailong.com/2016/02/16/OC%E3%80%81Swift%E4%BB%A3%E7%A0%81%E6%B3%A8%E9%87%8A-pragma-mark/"/>
+    <id>http://hanhailong.com/2016/02/16/OC、Swift代码注释-pragma-mark/</id>
+    <published>2016-02-16T08:10:49.000Z</published>
+    <updated>2016-02-16T08:22:54.000Z</updated>
+    <content type="html"><![CDATA[<p>以前在我们写OC代码的时候，经常通过下面语法来为代码添加注释：</p>
+<pre><code><span class="id">#pragma</span> <span class="tag">mark</span> – Initialization 
+<span class="tag">code</span> here...
+<span class="id">#pragma</span> <span class="tag">mark</span> – Table Managementmore 
+<span class="tag">code</span> here...
+</code></pre><p>这样写了之后，就会出现下面的效果提示：</p>
+<p><img src="http://image86.360doc.com/DownloadImg/2015/06/1910/55141162_1" alt=""></p>
+<p>但是，如果是Swift代码，这种写法就不好使了，下面给出Swift代码注释，Swift代码注释有三种:</p>
+<ol>
+<li><p>MARK</p>
+<pre><code><span class="comment">// MARK: - Initialization</span>
+<span class="tag">code</span> here...
+<span class="comment">// MARK: - View Managementmore </span>
+<span class="tag">code</span> here...
+</code></pre><p> 效果图如下：<br> <img src="http://image86.360doc.com/DownloadImg/2015/06/1910/55141162_2" alt=""></p>
+</li>
+<li><p>TODO</p>
+<pre><code><span class="comment">// <span class="doctag">TODO:</span> - <span class="label">XXXXXXXX</span></span>
+<span class="tag">code</span> here...
+</code></pre><p> 效果图如下：<br> <img src="http://image86.360doc.com/DownloadImg/2015/06/1910/55141162_3" alt=""></p>
+</li>
+<li><p>FIXME</p>
+<pre><code><span class="comment">// <span class="doctag">FIXME:</span> - <span class="label">XXXXXXXX</span></span>
+<span class="tag">code</span> here...
+</code></pre><p> 效果图如下：<br> <img src="http://image86.360doc.com/DownloadImg/2015/06/1910/55141162_4" alt=""></p>
+</li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>以前在我们写OC代码的时候，经常通过下面语法来为代码添加注释：</p>
+<pre><code><span class="id">#pragma</span> <span class="tag">mark</span> – Initialization 
+<span clas]]>
+    </summary>
+    
+      <category term="IOS" scheme="http://hanhailong.com/tags/IOS/"/>
+    
+      <category term="OC" scheme="http://hanhailong.com/tags/OC/"/>
+    
+      <category term="Swift" scheme="http://hanhailong.com/tags/Swift/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Swift-？和！的区别]]></title>
@@ -2674,52 +2722,6 @@ public static interface OnSwitchStateChangeListener {
 ]]></content>
     <summary type="html">
     <![CDATA[<p>本博客采用的是<a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="external">Yilia</a>主题，这里就以Yilia讲解为例，首先你要去<a href="http:/]]>
-    </summary>
-    
-      <category term="Hexo主题" scheme="http://hanhailong.com/tags/Hexo%E4%B8%BB%E9%A2%98/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Hexo—正确添加RSS订阅]]></title>
-    <link href="http://hanhailong.com/2015/10/08/Hexo%E2%80%94%E6%AD%A3%E7%A1%AE%E6%B7%BB%E5%8A%A0RSS%E8%AE%A2%E9%98%85/"/>
-    <id>http://hanhailong.com/2015/10/08/Hexo—正确添加RSS订阅/</id>
-    <published>2015-10-08T13:07:13.000Z</published>
-    <updated>2015-10-08T13:51:57.000Z</updated>
-    <content type="html"><![CDATA[<p>看到别人的博客都有RSS订阅功能，就想着给自己的博客也添加RSS订阅功能。</p>
-<p>看网上的教程，写的不是很详细，都是很简单的一句话。而我按照网上的教程愣是没整出来。真是验证了一句古话：<font color="red">尽信书不如无书</font></p>
-<p>最后，终于让我整出来了，特此把完整的过程记录一下：</p>
-<a id="more"></a>
-<p>先看下整出来的效果图：</p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/rss.png?raw=true" alt="RSS效果图"></p>
-<p>首先，先安装<a href="https://github.com/hexojs/hexo-generator-feed" target="_blank" rel="external">hexo-generator-feed</a></p>
-<pre><code>$ npm <span class="operator"><span class="keyword">install</span> hexo-generator-feed <span class="comment">--save</span></span>
-</code></pre><p>安装完后，会在node_modules目录下生成hexo-generator-feed目录，如图：</p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/rss-feed.png?raw=true" alt="image"></p>
-<p>安装完hexo-generator-feed后，将其配置到根目录的<font color="red">_config.yml</font></p>
-<pre><code><span class="preprocessor"># Extensions</span>
-<span class="preprocessor">## Plugins: http://hexo.io/plugins/</span>
-<span class="preprocessor">#RSS订阅</span>
-<span class="label">plugin:</span>
-- hexo-generator-feed
-<span class="preprocessor">#Feed Atom</span>
-<span class="label">feed:</span>
-<span class="label">type:</span> atom
-<span class="label">path:</span> atom.xml
-<span class="label">limit:</span> <span class="number">20</span>
-</code></pre><p>其中，feed是可选项，可配可不配！</p>
-<p>最后，在你当前主题下的<font color="blue">_config.yml</font>下，添加RSS订阅链接即可，这里我用的是<a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="external">Yilia</a>主题，subnav下添加rss：</p>
-<pre><code><span class="preprocessor"># SubNav</span>
-<span class="label">subnav:</span>
-<span class="label">rss:</span> <span class="string">"/atom.xml"</span>
-</code></pre><p>添加之后，运行<font color="red">hexo g</font>后，就会在页面上生成RSS图标，如下图：</p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/rss-result.png?raw=true" alt="image"></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>看到别人的博客都有RSS订阅功能，就想着给自己的博客也添加RSS订阅功能。</p>
-<p>看网上的教程，写的不是很详细，都是很简单的一句话。而我按照网上的教程愣是没整出来。真是验证了一句古话：<font color='red'>尽信书不如无书</font></p>
-<p>最后，终于让我整出来了，特此把完整的过程记录一下：</p>]]>
-    
     </summary>
     
       <category term="Hexo主题" scheme="http://hanhailong.com/tags/Hexo%E4%B8%BB%E9%A2%98/"/>

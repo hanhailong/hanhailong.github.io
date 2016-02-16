@@ -118,7 +118,7 @@ var _hmt = _hmt || [];
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android咨询/" style="font-size: 10px;">Android咨询</a> <a href="/tags/Android工具/" style="font-size: 10px;">Android工具</a> <a href="/tags/Hexo主题/" style="font-size: 15px;">Hexo主题</a> <a href="/tags/IOS/" style="font-size: 17.5px;">IOS</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/RxAndroid/" style="font-size: 10px;">RxAndroid</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Sublime-Text/" style="font-size: 10px;">Sublime Text</a> <a href="/tags/Swift/" style="font-size: 10px;">Swift</a> <a href="/tags/技术博客/" style="font-size: 15px;">技术博客</a> <a href="/tags/随笔/" style="font-size: 12.5px;">随笔</a>
+						<a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android咨询/" style="font-size: 10px;">Android咨询</a> <a href="/tags/Android工具/" style="font-size: 10px;">Android工具</a> <a href="/tags/Hexo主题/" style="font-size: 15px;">Hexo主题</a> <a href="/tags/IOS/" style="font-size: 17.5px;">IOS</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/OC/" style="font-size: 10px;">OC</a> <a href="/tags/RxAndroid/" style="font-size: 10px;">RxAndroid</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Sublime-Text/" style="font-size: 10px;">Sublime Text</a> <a href="/tags/Swift/" style="font-size: 12.5px;">Swift</a> <a href="/tags/技术博客/" style="font-size: 15px;">技术博客</a> <a href="/tags/随笔/" style="font-size: 12.5px;">随笔</a>
 					</div>
 				</section>
 				
@@ -179,6 +179,87 @@ var _hmt = _hmt || [];
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-OC、Swift代码注释-pragma-mark" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/02/16/OC、Swift代码注释-pragma-mark/" class="article-date">
+  	<time datetime="2016-02-16T08:10:49.000Z" itemprop="datePublished">2016-02-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/02/16/OC、Swift代码注释-pragma-mark/">OC、Swift代码注释#pragma mark</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>以前在我们写OC代码的时候，经常通过下面语法来为代码添加注释：</p>
+<pre><code><span class="id">#pragma</span> <span class="tag">mark</span> – Initialization 
+<span class="tag">code</span> here...
+<span class="id">#pragma</span> <span class="tag">mark</span> – Table Managementmore 
+<span class="tag">code</span> here...
+</code></pre><p>这样写了之后，就会出现下面的效果提示：</p>
+<p><img src="http://image86.360doc.com/DownloadImg/2015/06/1910/55141162_1" alt=""></p>
+<p>但是，如果是Swift代码，这种写法就不好使了，下面给出Swift代码注释，Swift代码注释有三种:</p>
+<ol>
+<li><p>MARK</p>
+<pre><code><span class="comment">// MARK: - Initialization</span>
+<span class="tag">code</span> here...
+<span class="comment">// MARK: - View Managementmore </span>
+<span class="tag">code</span> here...
+</code></pre><p> 效果图如下：<br> <img src="http://image86.360doc.com/DownloadImg/2015/06/1910/55141162_2" alt=""></p>
+</li>
+<li><p>TODO</p>
+<pre><code><span class="comment">// <span class="doctag">TODO:</span> - <span class="label">XXXXXXXX</span></span>
+<span class="tag">code</span> here...
+</code></pre><p> 效果图如下：<br> <img src="http://image86.360doc.com/DownloadImg/2015/06/1910/55141162_3" alt=""></p>
+</li>
+<li><p>FIXME</p>
+<pre><code><span class="comment">// <span class="doctag">FIXME:</span> - <span class="label">XXXXXXXX</span></span>
+<span class="tag">code</span> here...
+</code></pre><p> 效果图如下：<br> <img src="http://image86.360doc.com/DownloadImg/2015/06/1910/55141162_4" alt=""></p>
+</li>
+</ol>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IOS/">IOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OC/">OC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Swift/">Swift</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-Swift-？和！的区别" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -860,69 +941,6 @@ maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.C
 
       
 
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-Android-小米桌面图标显示角标数" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/23/Android-小米桌面图标显示角标数/" class="article-date">
-  	<time datetime="2015-11-23T07:07:11.000Z" itemprop="datePublished">2015-11-23</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/23/Android-小米桌面图标显示角标数/">Android-小米桌面图标显示角标数</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3>基本介绍</h3>
-
-<p>最近有群里问：怎样在小米手机桌面的图标上显示角标数，我看了下我的红米note手机，果然有的第三方app图标上显示角标数，尤其是微信和QQ。这让我立马想到了：小米是不是对通知栏做了手脚。立马我查了相关文档并做了相关的测试，发现果然如我猜测的：MIUI系统对通知栏做了手脚。它目前有两种情况：</p>
-<ol>
-<li>默认情况<br> 当第三方app向通知栏发送一条通知（一般不带进度条并且用户可以删除的通知），那么此时app icon的角标数就会显示1。<br> 这个时候app显示的角标数和通知栏里app发送的通知数是对应的，即向通知栏发多少条通知就会显示多少角标数。</li>
-</ol>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/11/23/Android-小米桌面图标显示角标数/#more">more >></a>
-        </p>
       
       <div class="clearfix"></div>
     </div>
