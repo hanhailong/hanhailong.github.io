@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2016-02-17T06:17:18.000Z</updated>
+  <updated>2016-02-17T16:08:36.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://hanhailong.com/2016/02/16/Rebound-Android%E7%9A%84%E5%BC%B9%E7%B0%A7%E5%8A%A8%E7%94%BB%E5%BA%93/"/>
     <id>http://hanhailong.com/2016/02/16/Rebound-Android的弹簧动画库/</id>
     <published>2016-02-16T15:55:13.000Z</published>
-    <updated>2016-02-17T06:17:18.000Z</updated>
+    <updated>2016-02-17T16:08:36.000Z</updated>
     <content type="html"><![CDATA[<h2>简介</h2>
 
 <p><a href="http://facebook.github.io/rebound/" target="_blank" rel="external">官方网站</a></p>
@@ -98,7 +98,9 @@ springChain.setControlSpringIndex(<span class="number">2</span>).getControlSprin
 <p><em>SpringChain</em>需要设置一个起主导控制作用的Spring，通过<em>setControlSpringIndex</em>方法来设置</p>
 <h2>高仿新浪弹出菜单</h2>
 
-<p>待续…</p>
+<p>先看下高仿后的效果图：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tanhuang-offical-demo3.gif?raw=true" alt=""></p>
+<p>这里由于篇幅原因，就暂时先不讲解实现原理了，如需要看源码去我的github上下载，下载地址为：<a href="https://github.com/hanhailong/sina-popmenu" target="_blank" rel="external">高仿新浪弹出菜单</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h2>简介</h2>
