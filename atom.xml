@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2016-02-16T08:22:54.000Z</updated>
+  <updated>2016-02-17T06:17:18.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -13,6 +13,109 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Rebound-Android的弹簧动画库]]></title>
+    <link href="http://hanhailong.com/2016/02/16/Rebound-Android%E7%9A%84%E5%BC%B9%E7%B0%A7%E5%8A%A8%E7%94%BB%E5%BA%93/"/>
+    <id>http://hanhailong.com/2016/02/16/Rebound-Android的弹簧动画库/</id>
+    <published>2016-02-16T15:55:13.000Z</published>
+    <updated>2016-02-17T06:17:18.000Z</updated>
+    <content type="html"><![CDATA[<h2>简介</h2>
+
+<p><a href="http://facebook.github.io/rebound/" target="_blank" rel="external">官方网站</a></p>
+<p><a href="https://github.com/facebook/rebound" target="_blank" rel="external">github</a></p>
+<p><em>Rebound</em>是facebook出品的一个弹簧动画库，与之对应的IOS版本有一个<a href="https://github.com/facebook/pop" target="_blank" rel="external">pop</a>动画库，也是非常的强大给力。Facebook真是互联网企业中的楷模，开源了很多的实用开源库，大赞一个！！！</p>
+<p>话说回来，facebook为啥推出这个库呢？主要就是现有的动画离真实物理世界差别比较明显，为了让动画看起来真实自然，带有力量的效果，<em>Rebound</em>应运而生。两个比较重要的参数，一个是拉力Tension，一个是摩擦力Friction，拉力越大，弹簧效果越明显；摩擦力越大，弹框效果阻力越大、越不明显。如果这个摩擦力的值设置为0，就像真实世界中处于真空状态，一点摩擦力都没有，这个弹簧效果会一直无限制重复下去，根本停不下来，不信看效果图：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tanhuang-wuxian.gif?raw=true" alt=""></p>
+<p>我们把摩擦力的值改成1试试：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tanhuang-moca1.gif?raw=true" alt=""></p>
+<a id="more"></a>
+<h2>初级用法</h2>
+
+<p><em>Rebound</em>提供了非常简洁的api方法来供我们调用，我们只需要配置一些简单的参数就可以使用了，下面看看官网给出的例子：</p>
+<pre><code><span class="comment">// Create a system to run the physics loop for a set of springs.</span>
+SpringSystem springSystem = SpringSystem.create();
+
+<span class="comment">// Add a spring to the system.</span>
+Spring <span class="keyword">spring</span> = springSystem.createSpring();
+
+<span class="comment">// Add a listener to observe the motion of the spring.</span>
+<span class="keyword">spring</span>.addListener(new SimpleSpringListener() {
+
+  <span class="variable">@Override</span>
+  public void onSpringUpdate(Spring <span class="keyword">spring</span>) {
+    <span class="comment">// You can observe the updates in the spring</span>
+    <span class="comment">// state by asking its current value in onSpringUpdate.</span>
+    <span class="keyword">float</span> value = (<span class="keyword">float</span>) <span class="keyword">spring</span>.getCurrentValue();
+    <span class="keyword">float</span> <span class="keyword">scale</span> = <span class="number">1</span>f - (value * <span class="number">0.5</span>f);
+    myView.setScaleX(<span class="keyword">scale</span>);
+    myView.setScaleY(<span class="keyword">scale</span>);
+  }
+});
+
+<span class="comment">// Set the spring in motion; moving from 0 to 1</span>
+<span class="keyword">spring</span>.setEndValue(<span class="number">1</span>);
+</code></pre><p>我们看下对应的效果图：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tanhuang-offical-demo.gif?raw=true" alt=""></p>
+<p>你们发现，好像弹簧效果不明显，<em>Rebound</em>默认的拉力和摩擦力参数分别是40和7，我们看下<em>Rebound</em>里面有个<em>defaultConfig</em></p>
+<pre><code><span class="keyword">public</span> <span class="keyword">static</span> SpringConfig defaultConfig = SpringConfig.fromOrigamiTensionAndFriction(<span class="number">40</span>, <span class="number">7</span>);
+</code></pre><p>为了让弹簧效果更明显，我们修改下<em>SpringConfig</em>的值，代码如下：</p>
+<pre><code>spring.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(<span class="number">100</span>,<span class="number">1</span>));
+</code></pre><p>我们将拉力值改成100，摩擦力值改成1，效果图如下：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tanhuang-offical-demo1.gif?raw=true" alt=""></p>
+<p>效果很赞了吧！</p>
+<h2>高级用法：多个view连锁动画</h2>
+
+<p>如果想要做很多view的连锁动画怎么办？<em>Rebound</em>也提供了<em>SpringChain</em>这个接口。直接看代码吧：</p>
+<pre><code>SpringChain springChain = SpringChain.create(<span class="number">40</span>,<span class="number">6</span>,<span class="number">50</span>,<span class="number">7</span>);
+
+<span class="keyword">int</span> childCount = viewGroup.getChildCount();
+<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; childCount; i++) {
+    final View view = viewGroup.getChildAt(i);
+
+    springChain.addSpring(<span class="keyword">new</span> SimpleSpringListener() {
+        @<span class="function">Override
+        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSpringUpdate</span><span class="params">(Spring spring)</span> </span>{
+            view.setTranslationY((<span class="keyword">float</span>) spring.getCurrentValue());
+        }
+    });
+}
+
+List&lt;Spring&gt; springs = springChain.getAllSprings();
+<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; springs.size(); i++) {
+    springs.get(i).setCurrentValue(<span class="number">400</span>);
+}
+
+springChain.setControlSpringIndex(<span class="number">2</span>).getControlSpring().setEndValue(<span class="number">0</span>);
+</code></pre><p>效果图如下：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tanhuang-offical-demo2.gif?raw=true" alt=""></p>
+<p>我们来看看<em>SpringChain</em>这个类，创建它有两个create方法：</p>
+<ol>
+<li>默认无参数create()</li>
+<li>有参数的create(int mainTension,int mainFriction,int attachmentTension,int attachmentFriction)</li>
+</ol>
+<p>其中带参数的第一个参数表示起主导作用Spring的拉力系数，第二个参数表示起主导作用Spring的摩擦力系数，第三个和第四个表示附属的拉力和摩擦力系数</p>
+<p><em>SpringChain</em>需要设置一个起主导控制作用的Spring，通过<em>setControlSpringIndex</em>方法来设置</p>
+<h2>高仿新浪弹出菜单</h2>
+
+<p>待续…</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2>简介</h2>
+
+<p><a href="http://facebook.github.io/rebound/">官方网站</a></p>
+<p><a href="https://github.com/facebook/rebound">github</a></p>
+<p><em>Rebound</em>是facebook出品的一个弹簧动画库，与之对应的IOS版本有一个<a href="https://github.com/facebook/pop">pop</a>动画库，也是非常的强大给力。Facebook真是互联网企业中的楷模，开源了很多的实用开源库，大赞一个！！！</p>
+<p>话说回来，facebook为啥推出这个库呢？主要就是现有的动画离真实物理世界差别比较明显，为了让动画看起来真实自然，带有力量的效果，<em>Rebound</em>应运而生。两个比较重要的参数，一个是拉力Tension，一个是摩擦力Friction，拉力越大，弹簧效果越明显；摩擦力越大，弹框效果阻力越大、越不明显。如果这个摩擦力的值设置为0，就像真实世界中处于真空状态，一点摩擦力都没有，这个弹簧效果会一直无限制重复下去，根本停不下来，不信看效果图：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tanhuang-wuxian.gif?raw=true" alt=""></p>
+<p>我们把摩擦力的值改成1试试：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tanhuang-moca1.gif?raw=true" alt=""></p>]]>
+    
+    </summary>
+    
+      <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[OC、Swift代码注释#pragma mark]]></title>
@@ -2692,39 +2795,6 @@ public static interface OnSwitchStateChangeListener {
       <category term="RxAndroid" scheme="http://hanhailong.com/tags/RxAndroid/"/>
     
       <category term="RxJava" scheme="http://hanhailong.com/tags/RxJava/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Hexo—添加百度统计代码]]></title>
-    <link href="http://hanhailong.com/2015/10/08/Hexo%E2%80%94%E6%B7%BB%E5%8A%A0%E7%99%BE%E5%BA%A6%E7%BB%9F%E8%AE%A1%E4%BB%A3%E7%A0%81/"/>
-    <id>http://hanhailong.com/2015/10/08/Hexo—添加百度统计代码/</id>
-    <published>2015-10-08T15:31:31.000Z</published>
-    <updated>2015-10-08T16:05:53.000Z</updated>
-    <content type="html"><![CDATA[<p>本博客采用的是<a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="external">Yilia</a>主题，这里就以Yilia讲解为例，首先你要去<a href="http://tongji.baidu.com/" target="_blank" rel="external">百度统计</a>注册账号，并获取到相关的百度统计代码：</p>
-<ol>
-<li><p>编辑文件<font color="blue"><strong>themes/yilia/_config.yml</strong></font>，添加一行配置代码：</p>
-<pre><code><span class="string">baidu_tongji:</span> <span class="literal">true</span>
-</code></pre></li>
-<li><p>新建文件<font color="blue"><strong>themes/yilia/layout/_partial/baidu_tongji.ejs</strong></font>，内容如下：</p>
-<pre><code><span class="xml"></span>&lt;%<span class="ruby"> <span class="keyword">if</span> (theme.baidu_tongji) { </span>%&gt;<span class="xml">
-<span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="undefined">
-#申请的百度统计代码
-</span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
-</span>&lt;%<span class="ruby"> } </span>%&gt;<span class="xml"></span>
-</code></pre></li>
-<li><p>编辑<font color="blue">themes/yilia/layout/_partial/head.ejs</font>文件，在<font color="red">&lt;/head&gt;</font>之前添加代码：</p>
-<pre><code>&lt;<span class="preprocessor">%</span>- partial<span class="comment">("baidu_tongji")</span> <span class="preprocessor">%</span>&gt;
-</code></pre></li>
-<li><p>重新部署发布，搞定睡觉！！！</p>
-</li>
-</ol>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>本博客采用的是<a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="external">Yilia</a>主题，这里就以Yilia讲解为例，首先你要去<a href="http:/]]>
-    </summary>
-    
-      <category term="Hexo主题" scheme="http://hanhailong.com/tags/Hexo%E4%B8%BB%E9%A2%98/"/>
     
   </entry>
   

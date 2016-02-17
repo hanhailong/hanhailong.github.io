@@ -180,6 +180,72 @@ var _hmt = _hmt || [];
 </nav>
       <div class="body-wrap">
   
+    <article id="post-Rebound-Android的弹簧动画库" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/02/16/Rebound-Android的弹簧动画库/" class="article-date">
+  	<time datetime="2016-02-16T15:55:13.000Z" itemprop="datePublished">2016-02-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/02/16/Rebound-Android的弹簧动画库/">Rebound-Android的弹簧动画库</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2>简介</h2>
+
+<p><a href="http://facebook.github.io/rebound/">官方网站</a></p>
+<p><a href="https://github.com/facebook/rebound">github</a></p>
+<p><em>Rebound</em>是facebook出品的一个弹簧动画库，与之对应的IOS版本有一个<a href="https://github.com/facebook/pop">pop</a>动画库，也是非常的强大给力。Facebook真是互联网企业中的楷模，开源了很多的实用开源库，大赞一个！！！</p>
+<p>话说回来，facebook为啥推出这个库呢？主要就是现有的动画离真实物理世界差别比较明显，为了让动画看起来真实自然，带有力量的效果，<em>Rebound</em>应运而生。两个比较重要的参数，一个是拉力Tension，一个是摩擦力Friction，拉力越大，弹簧效果越明显；摩擦力越大，弹框效果阻力越大、越不明显。如果这个摩擦力的值设置为0，就像真实世界中处于真空状态，一点摩擦力都没有，这个弹簧效果会一直无限制重复下去，根本停不下来，不信看效果图：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tanhuang-wuxian.gif?raw=true" alt=""></p>
+<p>我们把摩擦力的值改成1试试：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tanhuang-moca1.gif?raw=true" alt=""></p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/02/16/Rebound-Android的弹簧动画库/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
     <article id="post-OC、Swift代码注释-pragma-mark" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -863,84 +929,6 @@ maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.C
         <p class="article-more-link">
           <a  href="/2015/12/27/Android性能优化之常见的内存泄漏/#more">more >></a>
         </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-Sublime-Text自动开启换行Word-Wrap" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/24/Sublime-Text自动开启换行Word-Wrap/" class="article-date">
-  	<time datetime="2015-11-24T10:02:27.000Z" itemprop="datePublished">2015-11-24</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/24/Sublime-Text自动开启换行Word-Wrap/">Sublime Text自动开启换行Word Wrap</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Sublime Text，绝对是神器中的神器，之前在windows电脑上一直都是用nodepad++。mac上也没找到太好的编辑工具，之前曾用过破解版的<em>UltraEdit</em>，但是自从第一次用了Sublime Text后，就彻底的把它打入冷宫了！！</p>
-<p>下面讲讲如何开启Sublime Text的自动换行功能，默认情况下是不开启的。当然你也可以点击导航栏上View-&gt;Word Wrap开启，不过对我们程序猿来说，还是太麻烦了。这里从根本上解决自动换行的问题。</p>
-<p>解决方案：<br>    我这里用的是mac版本的，windows同理</p>
-<pre><code>Preferences-&gt;Setting - <span class="built_ins">User</span>
-</code></pre><p>在打开的<em>Preferences.sublime-settings</em>文件里面，你将会看到类似下面的内容：</p>
-<pre><code>{
-    "<span class="attribute">ignored_packages</span>":
-    <span class="value">[
-        <span class="string">"Markdown"</span>,
-        <span class="string">"Vintage"</span>
-    ]
-</span>}
-</code></pre><p>很明显，这是一个json格式的配置文件，在后面直接追加</p>
-<pre><code>{ "<span class="attribute">word_wrap</span>" : <span class="value"><span class="literal">true</span> </span>}
-</code></pre><p>修改之后的文件内容为：</p>
-<pre><code>{
-    "<span class="attribute">ignored_packages</span>":
-    <span class="value">[
-        <span class="string">"Markdown"</span>,
-        <span class="string">"Vintage"</span>
-    ]</span>,
-    "<span class="attribute">word_wrap</span>":<span class="value"><span class="literal">true</span>
-</span>}
-</code></pre><p>重启Sublime Text后，你将会发现文字、代码超过一行后会自动换行！！！</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Sublime-Text/">Sublime Text</a></li></ul>
-	</div>
-
-      
-
       
       <div class="clearfix"></div>
     </div>
