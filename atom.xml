@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2016-02-17T16:08:36.000Z</updated>
+  <updated>2016-02-18T09:14:09.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -19,17 +19,19 @@
     <link href="http://hanhailong.com/2016/02/16/Rebound-Android%E7%9A%84%E5%BC%B9%E7%B0%A7%E5%8A%A8%E7%94%BB%E5%BA%93/"/>
     <id>http://hanhailong.com/2016/02/16/Rebound-Android的弹簧动画库/</id>
     <published>2016-02-16T15:55:13.000Z</published>
-    <updated>2016-02-17T16:08:36.000Z</updated>
+    <updated>2016-02-18T09:14:09.000Z</updated>
     <content type="html"><![CDATA[<h2>简介</h2>
 
 <p><a href="http://facebook.github.io/rebound/" target="_blank" rel="external">官方网站</a></p>
 <p><a href="https://github.com/facebook/rebound" target="_blank" rel="external">github</a></p>
 <p><em>Rebound</em>是facebook出品的一个弹簧动画库，与之对应的IOS版本有一个<a href="https://github.com/facebook/pop" target="_blank" rel="external">pop</a>动画库，也是非常的强大给力。Facebook真是互联网企业中的楷模，开源了很多的实用开源库，大赞一个！！！</p>
+<p>讲解<em>Rebound</em>之前，先看看我们根据<em>Rebound</em>高仿的新浪微博弹出菜单，看效果图：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tanhuang-offical-demo3.gif?raw=true" alt=""></p>
+<a id="more"></a>
 <p>话说回来，facebook为啥推出这个库呢？主要就是现有的动画离真实物理世界差别比较明显，为了让动画看起来真实自然，带有力量的效果，<em>Rebound</em>应运而生。两个比较重要的参数，一个是拉力Tension，一个是摩擦力Friction，拉力越大，弹簧效果越明显；摩擦力越大，弹框效果阻力越大、越不明显。如果这个摩擦力的值设置为0，就像真实世界中处于真空状态，一点摩擦力都没有，这个弹簧效果会一直无限制重复下去，根本停不下来，不信看效果图：</p>
 <p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tanhuang-wuxian.gif?raw=true" alt=""></p>
 <p>我们把摩擦力的值改成1试试：</p>
 <p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tanhuang-moca1.gif?raw=true" alt=""></p>
-<a id="more"></a>
 <h2>初级用法</h2>
 
 <p><em>Rebound</em>提供了非常简洁的api方法来供我们调用，我们只需要配置一些简单的参数就可以使用了，下面看看官网给出的例子：</p>
@@ -100,7 +102,23 @@ springChain.setControlSpringIndex(<span class="number">2</span>).getControlSprin
 
 <p>先看下高仿后的效果图：</p>
 <p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tanhuang-offical-demo3.gif?raw=true" alt=""></p>
-<p>这里由于篇幅原因，就暂时先不讲解实现原理了，如需要看源码去我的github上下载，下载地址为：<a href="https://github.com/hanhailong/sina-popmenu" target="_blank" rel="external">高仿新浪弹出菜单</a></p>
+<p>这里给出示例代码：</p>
+<pre><code>PopMenu popMenu = <span class="keyword">new</span> PopMenu.Builder().attachToActivity(MainActivity.<span class="keyword">this</span>)
+                .addMenuItem(<span class="keyword">new</span> PopMenuItem(<span class="string">"文字"</span>, getResources().getDrawable(R.drawable.tabbar_compose_idea)))
+                .addMenuItem(<span class="keyword">new</span> PopMenuItem(<span class="string">"照片/视频"</span>, getResources().getDrawable(R.drawable.tabbar_compose_photo)))
+                .addMenuItem(<span class="keyword">new</span> PopMenuItem(<span class="string">"头条文章"</span>, getResources().getDrawable(R.drawable.tabbar_compose_headlines)))
+                .addMenuItem(<span class="keyword">new</span> PopMenuItem(<span class="string">"签到"</span>, getResources().getDrawable(R.drawable.tabbar_compose_lbs)))
+                .addMenuItem(<span class="keyword">new</span> PopMenuItem(<span class="string">"点评"</span>, getResources().getDrawable(R.drawable.tabbar_compose_review)))
+                .addMenuItem(<span class="keyword">new</span> PopMenuItem(<span class="string">"更多"</span>, getResources().getDrawable(R.drawable.tabbar_compose_more)))
+                .setOnItemClickListener(<span class="keyword">new</span> PopMenuItemListener() {
+                    <span class="annotation">@Override</span>
+                    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onItemClick</span><span class="params">(PopMenu popMenu, <span class="keyword">int</span> position)</span> </span>{
+                        Toast.makeText(MainActivity.<span class="keyword">this</span>, <span class="string">"你点击了第"</span> + position + <span class="string">"个位置"</span>, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .build();   
+popMenu.show();
+</code></pre><p>这里由于篇幅原因，就暂时先不讲解实现原理了，如需要看源码去我的github上下载，下载地址为：<a href="https://github.com/hanhailong/sina-popmenu" target="_blank" rel="external">高仿新浪弹出菜单</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<h2>简介</h2>
@@ -108,10 +126,8 @@ springChain.setControlSpringIndex(<span class="number">2</span>).getControlSprin
 <p><a href="http://facebook.github.io/rebound/">官方网站</a></p>
 <p><a href="https://github.com/facebook/rebound">github</a></p>
 <p><em>Rebound</em>是facebook出品的一个弹簧动画库，与之对应的IOS版本有一个<a href="https://github.com/facebook/pop">pop</a>动画库，也是非常的强大给力。Facebook真是互联网企业中的楷模，开源了很多的实用开源库，大赞一个！！！</p>
-<p>话说回来，facebook为啥推出这个库呢？主要就是现有的动画离真实物理世界差别比较明显，为了让动画看起来真实自然，带有力量的效果，<em>Rebound</em>应运而生。两个比较重要的参数，一个是拉力Tension，一个是摩擦力Friction，拉力越大，弹簧效果越明显；摩擦力越大，弹框效果阻力越大、越不明显。如果这个摩擦力的值设置为0，就像真实世界中处于真空状态，一点摩擦力都没有，这个弹簧效果会一直无限制重复下去，根本停不下来，不信看效果图：</p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tanhuang-wuxian.gif?raw=true" alt=""></p>
-<p>我们把摩擦力的值改成1试试：</p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tanhuang-moca1.gif?raw=true" alt=""></p>]]>
+<p>讲解<em>Rebound</em>之前，先看看我们根据<em>Rebound</em>高仿的新浪微博弹出菜单，看效果图：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/tanhuang-offical-demo3.gif?raw=true" alt=""></p>]]>
     
     </summary>
     
