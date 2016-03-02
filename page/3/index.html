@@ -68,6 +68,11 @@ var _hmt = _hmt || [];
 							<div class="ribbon"></div>
 						</div>
 						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
 						
 					</div>
 					
@@ -77,6 +82,8 @@ var _hmt = _hmt || [];
 					<ul class="tips-inner">
 						<li>菜单</li>
 						<li>标签</li>
+						
+						<li>友情链接</li>
 						
 						
 					</ul>
@@ -118,11 +125,19 @@ var _hmt = _hmt || [];
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android咨询/" style="font-size: 10px;">Android咨询</a> <a href="/tags/Android工具/" style="font-size: 10px;">Android工具</a> <a href="/tags/Hexo主题/" style="font-size: 15px;">Hexo主题</a> <a href="/tags/IOS/" style="font-size: 17.5px;">IOS</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/OC/" style="font-size: 10px;">OC</a> <a href="/tags/RxAndroid/" style="font-size: 10px;">RxAndroid</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Sublime-Text/" style="font-size: 10px;">Sublime Text</a> <a href="/tags/Swift/" style="font-size: 12.5px;">Swift</a> <a href="/tags/技术博客/" style="font-size: 15px;">技术博客</a> <a href="/tags/随笔/" style="font-size: 12.5px;">随笔</a>
+						<a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android咨询/" style="font-size: 10px;">Android咨询</a> <a href="/tags/Android工具/" style="font-size: 10px;">Android工具</a> <a href="/tags/Hexo主题/" style="font-size: 15px;">Hexo主题</a> <a href="/tags/IOS/" style="font-size: 17.5px;">IOS</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/OC/" style="font-size: 10px;">OC</a> <a href="/tags/RxAndroid/" style="font-size: 10px;">RxAndroid</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Sublime-Text/" style="font-size: 10px;">Sublime Text</a> <a href="/tags/Swift/" style="font-size: 12.5px;">Swift</a> <a href="/tags/技术博客/" style="font-size: 15px;">技术博客</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/随笔/" style="font-size: 12.5px;">随笔</a>
 					</div>
 				</section>
 				
 				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://xiedeliang.com/">小谢的博客</a>
+			        
+			        </div>
+				</section>
 				
 
 				
@@ -179,6 +194,68 @@ var _hmt = _hmt || [];
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-RxBus—通过RxJava来替换EventBus" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/10/09/RxBus—通过RxJava来替换EventBus/" class="article-date">
+  	<time datetime="2015-10-09T15:25:07.000Z" itemprop="datePublished">2015-10-09</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/09/RxBus—通过RxJava来替换EventBus/">RxBus—通过RxJava来替换EventBus</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2>前言</h2>
+
+<p><a href="https://github.com/ReactiveX/RxJava">RxJava</a>有多火？看看Github上star数量就知道了，那什么是RxJava呢？</p>
+<p>RxJava 在 GitHub 主页上的自我介绍是 “a library for composing asynchronous and event-based programs using observable sequences for the Java VM”（一个在 Java VM 上使用可观测的序列来组成异步的、基于事件的程序的库）。这就是 RxJava ，概括得非常精准。</p>
+<p>换一种说法，RxJava 是一个响应式编程框架，采用观察者设计模式。所以自然少不了 Observable 和 Subscriber 这两个东东了。</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RxAndroid/">RxAndroid</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RxJava/">RxJava</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/10/09/RxBus—通过RxJava来替换EventBus/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-Hexo—添加百度统计代码" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -698,64 +775,6 @@ var _hmt = _hmt || [];
       
         <p class="article-more-link">
           <a  href="/2015/09/28/IOS-通过自定义iCarousel来高仿土巴兔选择装修风格效果-中间选中项放大/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/09/27/Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果/" class="article-date">
-  	<time datetime="2015-09-27T08:30:20.000Z" itemprop="datePublished">2015-09-27</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/27/Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果/">Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近看到有同事在用土巴兔这个app，看了里面的一些效果非常的不错，就试着模仿了一下，首先模仿的是土巴兔里面一个选择装修风格的效果，先看原版效果图如下：<br><img src="http://img.blog.csdn.net/20150928093046209" alt="image"></p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/09/27/Android-通过自定义ViewPager来高仿土巴兔选择装修风格效果/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
