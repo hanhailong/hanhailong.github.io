@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2016-02-19T06:16:44.000Z</updated>
+  <updated>2016-03-02T13:58:13.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -15,27 +15,168 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[常用算法整理]]></title>
-    <link href="http://hanhailong.com/2016/02/19/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95%E6%95%B4%E7%90%86/"/>
-    <id>http://hanhailong.com/2016/02/19/常用算法整理/</id>
-    <published>2016-02-19T05:20:46.000Z</published>
-    <updated>2016-02-19T06:16:44.000Z</updated>
-    <content type="html"><![CDATA[<h2>简介</h2>
+    <title><![CDATA[Java反转单链表实战]]></title>
+    <link href="http://hanhailong.com/2016/02/25/Java%E5%8F%8D%E8%BD%AC%E5%8D%95%E9%93%BE%E8%A1%A8%E5%AE%9E%E6%88%98/"/>
+    <id>http://hanhailong.com/2016/02/25/Java反转单链表实战/</id>
+    <published>2016-02-25T15:49:07.000Z</published>
+    <updated>2016-03-02T13:58:13.000Z</updated>
+    <content type="html"><![CDATA[<p>算法是程序代码的灵魂！！！Java反转单链表这种算法一般会在面试中遇到，尤其是一些大公司！！！这里就来通过Java代码实战来讲解下实现反转的两种方法。</p>
+<ol>
+<li>递归</li>
+<li>普通遍历</li>
+</ol>
+<p>这里介绍的两种方法都很常见，递归在算法里面非常常见！！</p>
+<p>首先，我们要定义一个Node节点类：</p>
+<pre><code><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Node</span>{
+    <span class="keyword">int</span> <span class="keyword">value</span>;
+    Node nextNode;
+    <span class="function"><span class="keyword">public</span> <span class="title">Node</span>(<span class="params"><span class="keyword">int</span> <span class="keyword">value</span>, Node nextNode</span>) </span>{
+        super();
+        <span class="keyword">this</span>.<span class="keyword">value</span> = <span class="keyword">value</span>;
+        <span class="keyword">this</span>.nextNode = nextNode;
+    }
+}
+</code></pre><p>因为是单链表，这里只有<em>nextNode</em>和当前节点的值。</p>
+<a id="more"></a>
+<p>我们这里初始化n个节点的链表，我们写一个初始化Node的方法：</p>
+<pre><code><span class="comment">/**
+     * 初始化单链表
+     * <span class="doctag">@param</span> num 数量
+     * <span class="doctag">@return</span>
+     */</span>
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function">Node <span class="title">init</span><span class="params">(<span class="keyword">int</span> num)</span> </span>{
+        Node node = <span class="keyword">new</span> Node(<span class="number">0</span>, <span class="keyword">null</span>);
+        Node cur = <span class="keyword">null</span>;
+        Node temp = <span class="keyword">null</span>;
+        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span> ; i &lt; num;i++){
+            temp = <span class="keyword">new</span> Node(i, <span class="keyword">null</span>);
+            <span class="keyword">if</span> (i == <span class="number">1</span>) {
+                node.nextNode = temp;
+            }<span class="keyword">else</span>{
+                cur.nextNode = temp;
+            }
+            cur = temp;
+        }
+        <span class="keyword">return</span> node;
+    }
+</code></pre><p>然后，再把这个链表循环打印一下，先写一个out输出打印方法：</p>
+<pre><code><span class="comment">/**
+     * 打印节点值
+     * @param head
+     */</span>
+    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">out</span>(<span class="params">Node head</span>) </span>{
+        Node tempNode = head;
+        <span class="keyword">while</span>(tempNode != <span class="keyword">null</span>){            
+            System.err.println(tempNode.<span class="keyword">value</span>);
+            tempNode = tempNode.nextNode;
+        }
+    }
+</code></pre><p>我们在<em>main</em>方法里面打印一下结果：</p>
+<pre><code>Node head = init<span class="list">(<span class="number">10</span>)</span><span class="comment">;</span>
+out<span class="list">(<span class="keyword">head</span>)</span><span class="comment">;</span>
+</code></pre><p>最后输出的结果值为：</p>
+<pre><code><span class="number">0</span>
+<span class="number">1</span>
+<span class="number">2</span>
+<span class="number">3</span>
+<span class="number">4</span>
+<span class="number">5</span>
+<span class="number">6</span>
+<span class="number">7</span>
+<span class="number">8</span>
+<span class="number">9</span>
+</code></pre><h2>普通遍历</h2>
 
-<p>本博客算法所有涉及到编程的代码全都用Java来实现，算法不分语言！！</p>
-<h2>判断一个数是不是质数</h2>
+<pre><code>/**
+     * 反转单链表
+     * <span class="constant">@param</span> head
+     * <span class="constant">@return</span>
+     */
+    private <span class="keyword">static</span> Node reverseHead(Node head) {
+        <span class="keyword">if</span> (head == <span class="literal">null</span>) {
+            <span class="keyword">return</span> head<span class="comment">;</span>
+        }
 
-<p>首先，要明白什么是质数：质数又称素数,是指在一个大于1的自然数中，除了1和此整数自身外，不能被其他自然数整除的数</p>
+        Node pre = head<span class="comment">;</span>
+        Node cur = head.nextNode<span class="comment">;</span>
+        Node <span class="keyword">next</span> = <span class="literal">null</span><span class="comment">;</span>
+        <span class="keyword">while</span>(cur != <span class="literal">null</span>){
+            <span class="keyword">next</span> = cur.nextNode<span class="comment">;</span>
+            cur.nextNode = pre<span class="comment">;</span>
+
+            pre = cur<span class="comment">;</span>
+            cur = <span class="keyword">next</span><span class="comment">;</span>
+        }
+        head.nextNode = <span class="literal">null</span><span class="comment">;</span>
+        head = pre<span class="comment">;</span>
+        <span class="keyword">return</span> head<span class="comment">;</span>
+    }
+</code></pre><p>我们在main函数里调用下这个方法：</p>
+<pre><code>Node reverseHead = reverseHead<span class="list">(<span class="keyword">head</span>)</span><span class="comment">;</span>
+out<span class="list">(<span class="keyword">reverseHead</span>)</span><span class="comment">;</span>
+</code></pre><p>我们看下输出的结果值：</p>
+<pre><code><span class="number">9</span>
+<span class="number">8</span>
+<span class="number">7</span>
+<span class="number">6</span>
+<span class="number">5</span>
+<span class="number">4</span>
+<span class="number">3</span>
+<span class="number">2</span>
+<span class="number">1</span>
+<span class="number">0</span>
+</code></pre><h2>递归</h2>
+
+<pre><code><span class="comment">/**
+     * 递归反转
+     * <span class="doctag">@param</span> head
+     * <span class="doctag">@return</span>
+     */</span>
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="function">Node <span class="title">reverseByRecur</span><span class="params">(Node current)</span> </span>{
+        <span class="keyword">if</span> (current == <span class="keyword">null</span> || current.nextNode == <span class="keyword">null</span>) <span class="keyword">return</span> current;  
+         Node nextNode = current.nextNode;  
+         current.nextNode = <span class="keyword">null</span>;  
+         Node reverseRest = reverseByRecur(nextNode);  
+         nextNode.nextNode = current;  
+         <span class="keyword">return</span> reverseRest;  
+    }
+</code></pre><p>我们在main函数里调用：</p>
+<pre><code>out<span class="list">(<span class="keyword">reverseByRecur</span><span class="list">(<span class="keyword">head</span>)</span>)</span><span class="comment">;</span>
+</code></pre><p>我们看下输出的结果值：</p>
+<pre><code><span class="number">9</span>
+<span class="number">8</span>
+<span class="number">7</span>
+<span class="number">6</span>
+<span class="number">5</span>
+<span class="number">4</span>
+<span class="number">3</span>
+<span class="number">2</span>
+<span class="number">1</span>
+<span class="number">0</span>
+</code></pre><p>两种方法都可以实现单链表反转，普通循环遍历容易理解一点，递归需要很强的逻辑性和思维性！！！</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<h2>简介</h2>
-
-<p>本博客算法所有涉及到编程的代码全都用Java来实现，算法不分语言！！</p>
-<h2>判断一个数是不是质数</h2>
-
-<p>首先，要明白什么是质数：质数又称素数,是指在一个大于1的自然数中，除了1和此整数自身外，不能被其他自然数整除的数</p>
-]]>
+    <![CDATA[<p>算法是程序代码的灵魂！！！Java反转单链表这种算法一般会在面试中遇到，尤其是一些大公司！！！这里就来通过Java代码实战来讲解下实现反转的两种方法。</p>
+<ol>
+<li>递归</li>
+<li>普通遍历</li>
+</ol>
+<p>这里介绍的两种方法都很常见，递归在算法里面非常常见！！</p>
+<p>首先，我们要定义一个Node节点类：</p>
+<pre><code><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Node</span>{
+    <span class="keyword">int</span> <span class="keyword">value</span>;
+    Node nextNode;
+    <span class="function"><span class="keyword">public</span> <span class="title">Node</span>(<span class="params"><span class="keyword">int</span> <span class="keyword">value</span>, Node nextNode</span>) </span>{
+        super();
+        <span class="keyword">this</span>.<span class="keyword">value</span> = <span class="keyword">value</span>;
+        <span class="keyword">this</span>.nextNode = nextNode;
+    }
+}
+</code></pre><p>因为是单链表，这里只有<em>nextNode</em>和当前节点的值。</p>]]>
+    
     </summary>
+    
+      <category term="Java" scheme="http://hanhailong.com/tags/Java/"/>
     
       <category term="算法" scheme="http://hanhailong.com/tags/%E7%AE%97%E6%B3%95/"/>
     
