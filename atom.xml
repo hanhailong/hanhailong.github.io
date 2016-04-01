@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2016-04-01T08:51:02.000Z</updated>
+  <updated>2016-04-01T10:25:23.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -19,14 +19,12 @@
     <link href="http://hanhailong.com/2016/04/01/%E6%8E%A5%E5%8F%A3%E5%92%8C%E6%8A%BD%E8%B1%A1%E7%B1%BB%E5%8C%BA%E5%88%AB/"/>
     <id>http://hanhailong.com/2016/04/01/接口和抽象类区别/</id>
     <published>2016-04-01T07:03:02.000Z</published>
-    <updated>2016-04-01T08:51:02.000Z</updated>
+    <updated>2016-04-01T10:25:23.000Z</updated>
     <content type="html"><![CDATA[<p>接口和抽象类有什么区别？</p>
 <p>你选择使用接口和抽象类的依据是什么？</p>
-<p>##理解抽象</p>
-<p>abstract class和interface是Java语言中对于抽象类定义进行支持的两种机制，正是由于这两种机制的存在，才赋予了Java强大的面向对象能力。 abstract class和interface之间在对于抽象类定义的支持方面具有很大的相似性，甚至可以相互替换，因此很多开发者在进行抽象类定义时对于 abstract class和interface的选择显得比较随意。</p>
+<h1 id="理解抽象">理解抽象</h1><p>abstract class和interface是Java语言中对于抽象类定义进行支持的两种机制，正是由于这两种机制的存在，才赋予了Java强大的面向对象能力。 abstract class和interface之间在对于抽象类定义的支持方面具有很大的相似性，甚至可以相互替换，因此很多开发者在进行抽象类定义时对于 abstract class和interface的选择显得比较随意。</p>
 <p>其实，两者之间还是有很大的区别的，对于它们的选择甚至反映出对于问题领域本质的理解、对于设计意图的理解是否正确、合理。本文将对它们之间的区别进行一番剖析，试图给开发者提供一个在二者之间进行选择的依据。</p>
-<p>##语法定义理解</p>
-<ol>
+<h1 id="语法定义理解">语法定义理解</h1><ol>
 <li><p>抽象类</p>
 <pre><code><span class="annotation">abstract</span> <span class="keyword">class</span> Demo ｛    
 
@@ -51,13 +49,11 @@
 </code></pre></li>
 </ol>
 <p>在abstract class方式中，Demo可以有自己的数据成员，也可以有非abstarct的成员方法，而在interface方式的实现中，Demo只能够有静态的 不能被修改的数据成员（也就是必须是static final的，不过在interface中一般不定义数据成员），所有的成员方法都是abstract的。从某种意义上说，interface是一种特殊 形式的abstract class。</p>
-<p>##编程角度理解</p>
-<p>首先，abstract class在Java语言中表示的是一种继承关系，一个类只能使用一次继承关系。但是，一个类却可以实现多个interface。也许，这是Java语言的设计者在考虑Java对于多重继承的支持方面的一种折中考虑吧。</p>
+<a id="more"></a>
+<h1 id="编程角度理解">编程角度理解</h1><p>首先，abstract class在Java语言中表示的是一种继承关系，一个类只能使用一次继承关系。但是，一个类却可以实现多个interface。也许，这是Java语言的设计者在考虑Java对于多重继承的支持方面的一种折中考虑吧。</p>
 <p>其次，在abstract class的定义中，我们可以赋予方法的默认行为。但是在interface的定义中，方法却不能拥有默认行为，为了绕过这个限制，必须使用委托，但是这会 增加一些复杂性，有时会造成很大的麻烦。</p>
-<p>##一般性理解</p>
-<p>接口和抽象类的概念不一样。接口是对动作的抽象，抽象类是对根源的抽象。<br>抽象类表示的是，这个对象是什么。接口表示的是，这个对象能做什么。比如，男人，女人，这两个类（如果是类的话……），他们的抽象类是人。说明，他们都是人。<br>人可以吃东西，狗也可以吃东西，你可以把“吃东西”定义成一个接口，然后让这些类去实现它.<br>所以，在高级语言上，一个类只能继承一个类（抽象类）(正如人不可能同时是生物和非生物)，但是可以实现多个接口(吃饭接口、走路接口)。</p>
-<p>##总结</p>
-<ol>
+<h1 id="一般性理解">一般性理解</h1><p>接口和抽象类的概念不一样。接口是对动作的抽象，抽象类是对根源的抽象。<br>抽象类表示的是，这个对象是什么。接口表示的是，这个对象能做什么。比如，男人，女人，这两个类（如果是类的话……），他们的抽象类是人。说明，他们都是人。<br>人可以吃东西，狗也可以吃东西，你可以把“吃东西”定义成一个接口，然后让这些类去实现它.<br>所以，在高级语言上，一个类只能继承一个类（抽象类）(正如人不可能同时是生物和非生物)，但是可以实现多个接口(吃饭接口、走路接口)。</p>
+<h1 id="总结">总结</h1><ol>
 <li><p>抽象类和接口都不能直接实例化，如果要实例化，抽象类变量必须指向实现所有抽象方法的子类对象，接口变量必须指向实现所有接口方法的类对象。</p>
 </li>
 <li><p>抽象类要被子类继承，接口要被类实现。</p>
@@ -83,8 +79,34 @@
     <summary type="html">
     <![CDATA[<p>接口和抽象类有什么区别？</p>
 <p>你选择使用接口和抽象类的依据是什么？</p>
-<p>##理解抽象</p>
-<p>abstract class和interface是Java语言中对于抽象类定义进行支持的两种机制，正是由于这两种机制的存在，才赋予了Java强大的面向对象]]>
+<h1 id="理解抽象">理解抽象</h1><p>abstract class和interface是Java语言中对于抽象类定义进行支持的两种机制，正是由于这两种机制的存在，才赋予了Java强大的面向对象能力。 abstract class和interface之间在对于抽象类定义的支持方面具有很大的相似性，甚至可以相互替换，因此很多开发者在进行抽象类定义时对于 abstract class和interface的选择显得比较随意。</p>
+<p>其实，两者之间还是有很大的区别的，对于它们的选择甚至反映出对于问题领域本质的理解、对于设计意图的理解是否正确、合理。本文将对它们之间的区别进行一番剖析，试图给开发者提供一个在二者之间进行选择的依据。</p>
+<h1 id="语法定义理解">语法定义理解</h1><ol>
+<li><p>抽象类</p>
+<pre><code><span class="annotation">abstract</span> <span class="keyword">class</span> Demo ｛    
+
+    <span class="annotation">abstract</span> <span class="keyword">void</span> method<span class="number">1</span>();    
+
+    <span class="annotation">abstract</span> <span class="keyword">void</span> method<span class="number">2</span>();    
+
+    …    
+
+｝    
+</code></pre></li>
+<li><p>接口</p>
+<pre><code><span class="keyword">interface</span> <span class="title">Demo</span> {    
+
+    <span class="function"><span class="keyword">void</span> <span class="title">method1</span>(<span class="params"></span>)</span>;    
+
+    <span class="function"><span class="keyword">void</span> <span class="title">method2</span>(<span class="params"></span>)</span>;    
+
+    …    
+
+}    
+</code></pre></li>
+</ol>
+<p>在abstract class方式中，Demo可以有自己的数据成员，也可以有非abstarct的成员方法，而在interface方式的实现中，Demo只能够有静态的 不能被修改的数据成员（也就是必须是static final的，不过在interface中一般不定义数据成员），所有的成员方法都是abstract的。从某种意义上说，interface是一种特殊 形式的abstract class。</p>]]>
+    
     </summary>
     
       <category term="Java" scheme="http://hanhailong.com/tags/Java/"/>
