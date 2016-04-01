@@ -41,7 +41,7 @@
 <link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Android," />
+  <meta name="keywords" content="Java," />
 
 
 
@@ -59,19 +59,25 @@
 
 
 
-<meta name="description" content="之前看了很多关于Android事件Touch传递机制的文章，感觉还是老外讲的最清楚。原版PDF地址：Mastering the Android Touch System，github的demo地址：demo">
+<meta name="description" content="接口和抽象类有什么区别？
+你选择使用接口和抽象类的依据是什么？
+##理解抽象
+abstract class和interface是Java语言中对于抽象类定义进行支持的两种机制，正是由于这两种机制的存在，才赋予了Java强大的面向对象能力。 abstract class和interface之间在对于抽象类定义的支持方面具有很大的相似性，甚至可以相互替换，因此很多开发者在进行抽象类定义时对于 abst">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android-三张图搞定Touch事件传递机制">
-<meta property="og:url" content="http://hanhailong.com/2015/09/24/Android-三张图搞定Touch事件传递机制/index.html">
+<meta property="og:title" content="接口和抽象类区别">
+<meta property="og:url" content="http://hanhailong.com/2016/04/01/接口和抽象类区别/index.html">
 <meta property="og:site_name" content="韩海龙的博客">
-<meta property="og:description" content="之前看了很多关于Android事件Touch传递机制的文章，感觉还是老外讲的最清楚。原版PDF地址：Mastering the Android Touch System，github的demo地址：demo">
-<meta property="og:image" content="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/view_touch_ignorant.png?raw=true">
-<meta property="og:image" content="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/view_touch_interested.png?raw=true">
-<meta property="og:image" content="https://raw.githubusercontent.com/hanhailong/AndroidStudyResources/master/screenshot/view_touch_intercept.png">
-<meta property="og:updated_time" content="2015-09-23T22:33:28.000Z">
+<meta property="og:description" content="接口和抽象类有什么区别？
+你选择使用接口和抽象类的依据是什么？
+##理解抽象
+abstract class和interface是Java语言中对于抽象类定义进行支持的两种机制，正是由于这两种机制的存在，才赋予了Java强大的面向对象能力。 abstract class和interface之间在对于抽象类定义的支持方面具有很大的相似性，甚至可以相互替换，因此很多开发者在进行抽象类定义时对于 abst">
+<meta property="og:updated_time" content="2016-04-01T07:57:51.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android-三张图搞定Touch事件传递机制">
-<meta name="twitter:description" content="之前看了很多关于Android事件Touch传递机制的文章，感觉还是老外讲的最清楚。原版PDF地址：Mastering the Android Touch System，github的demo地址：demo">
+<meta name="twitter:title" content="接口和抽象类区别">
+<meta name="twitter:description" content="接口和抽象类有什么区别？
+你选择使用接口和抽象类的依据是什么？
+##理解抽象
+abstract class和interface是Java语言中对于抽象类定义进行支持的两种机制，正是由于这两种机制的存在，才赋予了Java强大的面向对象能力。 abstract class和interface之间在对于抽象类定义的支持方面具有很大的相似性，甚至可以相互替换，因此很多开发者在进行抽象类定义时对于 abst">
 
 
 
@@ -89,7 +95,7 @@
   };
 </script>
 
-  <title> Android-三张图搞定Touch事件传递机制 | 韩海龙的博客 </title>
+  <title> 接口和抽象类区别 | 韩海龙的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -229,7 +235,7 @@
             
             
               
-                Android-三张图搞定Touch事件传递机制
+                接口和抽象类区别
               
             
           </h1>
@@ -241,8 +247,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-09-24T06:27:43+08:00" content="2015-09-24">
-              2015-09-24
+            <time itemprop="dateCreated" datetime="2016-04-01T15:03:02+08:00" content="2016-04-01">
+              2016-04-01
             </time>
           </span>
 
@@ -252,8 +258,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/09/24/Android-三张图搞定Touch事件传递机制/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/24/Android-三张图搞定Touch事件传递机制/" itemprop="commentsCount"></span>
+                <a href="/2016/04/01/接口和抽象类区别/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/01/接口和抽象类区别/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -275,28 +281,64 @@
       
 
       
-        <p>之前看了很多关于Android事件Touch传递机制的文章，感觉还是老外讲的最清楚。原版PDF地址：<a href="http://wugengxin.cn/download/pdf/android/PRE_andevcon_mastering-the-android-touch-system.pdf" target="_blank" rel="external">Mastering the Android Touch System</a>，github的demo地址：<a href="https://github.com/devunwired/custom-touch-examples" target="_blank" rel="external">demo</a></p>
-<a id="more"></a>
-<p>上图之前先讲下Android事件的基础知识：</p>
+        <p>接口和抽象类有什么区别？</p>
+<p>你选择使用接口和抽象类的依据是什么？</p>
+<p>##理解抽象</p>
+<p>abstract class和interface是Java语言中对于抽象类定义进行支持的两种机制，正是由于这两种机制的存在，才赋予了Java强大的面向对象能力。 abstract class和interface之间在对于抽象类定义的支持方面具有很大的相似性，甚至可以相互替换，因此很多开发者在进行抽象类定义时对于 abstract class和interface的选择显得比较随意。</p>
+<p>其实，两者之间还是有很大的区别的，对于它们的选择甚至反映出对于问题领域本质的理解、对于设计意图的理解是否正确、合理。本文将对它们之间的区别进行一番剖析，试图给开发者提供一个在二者之间进行选择的依据。</p>
+<p>##语法定义理解</p>
 <ol>
-<li>所有的Touch事件都封装到MotionEvent里面</li>
-<li>事件处理包括三种情况，分别为：传递—-dispatchTouchEvent()函数、拦截——onInterceptTouchEvent()函数、消费—-onTouchEvent()函数和OnTouchListener </li>
-<li>事件类型分为ACTION_DOWN, ACTION_UP, ACTION_MOVE, ACTION_POINTER_DOWN, ACTION_POINTER_UP, ACTION_CANCEL等，每个事件都是以ACTION_DOWN开始ACTION_UP结束</li>
+<li><p>抽象类</p>
+<pre><code><span class="annotation">abstract</span> <span class="keyword">class</span> Demo ｛    
+
+    <span class="annotation">abstract</span> <span class="keyword">void</span> method<span class="number">1</span>();    
+
+    <span class="annotation">abstract</span> <span class="keyword">void</span> method<span class="number">2</span>();    
+
+    …    
+
+｝    
+</code></pre></li>
+<li><p>接口</p>
+<pre><code><span class="keyword">interface</span> <span class="title">Demo</span> {    
+
+    <span class="function"><span class="keyword">void</span> <span class="title">method1</span>(<span class="params"></span>)</span>;    
+
+    <span class="function"><span class="keyword">void</span> <span class="title">method2</span>(<span class="params"></span>)</span>;    
+
+    …    
+
+}    
+</code></pre></li>
 </ol>
-<p>Android事件传递流程：</p>
+<p>在abstract class方式中，Demo可以有自己的数据成员，也可以有非abstarct的成员方法，而在interface方式的实现中，Demo只能够有静态的 不能被修改的数据成员（也就是必须是static final的，不过在interface中一般不定义数据成员），所有的成员方法都是abstract的。从某种意义上说，interface是一种特殊 形式的abstract class。</p>
+<p>##编程角度理解</p>
+<p>首先，abstract class在Java语言中表示的是一种继承关系，一个类只能使用一次继承关系。但是，一个类却可以实现多个interface。也许，这是Java语言的设计者在考虑Java对于多重继承的支持方面的一种折中考虑吧。</p>
+<p>其次，在abstract class的定义中，我们可以赋予方法的默认行为。但是在interface的定义中，方法却不能拥有默认行为，为了绕过这个限制，必须使用委托，但是这会 增加一些复杂性，有时会造成很大的麻烦。</p>
+<p>##一般性理解</p>
+<p>接口和抽象类的概念不一样。接口是对动作的抽象，抽象类是对根源的抽象。<br>抽象类表示的是，这个对象是什么。接口表示的是，这个对象能做什么。比如，男人，女人，这两个类（如果是类的话……），他们的抽象类是人。说明，他们都是人。<br>人可以吃东西，狗也可以吃东西，你可以把“吃东西”定义成一个接口，然后让这些类去实现它.<br>所以，在高级语言上，一个类只能继承一个类（抽象类）(正如人不可能同时是生物和非生物)，但是可以实现多个接口(吃饭接口、走路接口)。</p>
+<p>##总结</p>
 <ol>
-<li>事件都是从Activity.dispatchTouchEvent()开始传递</li>
-<li>事件由父View传递给子View，ViewGroup可以通过onInterceptTouchEvent()方法对事件拦截，停止其向子view传递</li>
-<li>如果事件从上往下传递过程中一直没有被停止，且最底层子View没有消费事件，事件会反向往上传递，这时父View(ViewGroup)可以进行消费，如果还是没有被消费的话，最后会到Activity的onTouchEvent()函数。</li>
-<li>如果View没有对ACTION_DOWN进行消费，之后的其他事件不会传递过来，也就是说ACTION_DOWN必须返回true，之后的事件才会传递进来</li>
-<li>OnTouchListener优先于onTouchEvent()对事件进行消费</li>
-</ol>
-<hr>
-<p>效果图如下：</p>
-<ol>
-<li>View不处理事件流程图（View没有消费事件）<br><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/view_touch_ignorant.png?raw=true" alt="Touch Ignore"></li>
-<li>View处理事件<br><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/view_touch_interested.png?raw=true" alt="Touch interest"></li>
-<li>事件拦截<br><img src="https://raw.githubusercontent.com/hanhailong/AndroidStudyResources/master/screenshot/view_touch_intercept.png" alt="Touch Intercept"></li>
+<li><p>抽象类和接口都不能直接实例化，如果要实例化，抽象类变量必须指向实现所有抽象方法的子类对象，接口变量必须指向实现所有接口方法的类对象。</p>
+</li>
+<li><p>抽象类要被子类继承，接口要被类实现。</p>
+</li>
+<li><p>接口只能做方法申明，抽象类中可以做方法申明，也可以做方法实现</p>
+</li>
+<li><p>接口里定义的变量只能是公共的静态的常量，抽象类中的变量是普通变量。</p>
+</li>
+<li><p>抽象类里的抽象方法必须全部被子类所实现，如果子类不能全部实现父类抽象方法，那么该子类只能是抽象类。同样，一个实现接口的时候，如不能全部实现接口方法，那么该类也只能为抽象类。</p>
+</li>
+<li><p>抽象方法只能申明，不能实现。abstract void abc();不能写成abstract void abc(){}。</p>
+</li>
+<li><p>抽象类里可以没有抽象方法</p>
+</li>
+<li><p>如果一个类里有抽象方法，那么这个类只能是抽象类</p>
+</li>
+<li><p>抽象方法要被实现，所以不能是静态的，也不能是私有的。</p>
+</li>
+<li><p>接口可继承接口，并可多继承接口，但类只能单根继承。</p>
+</li>
 </ol>
 
       
@@ -312,7 +354,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Android/" rel="tag">#Android</a>
+            <a href="/tags/Java/" rel="tag">#Java</a>
           
         </div>
       
@@ -321,17 +363,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/09/20/Android-通过-Keep注解来防止类、构造函数、方法、变量等混淆/" rel="next" title="Android-通过@Keep注解来防止类、构造函数、方法、变量等混淆">
-                <i class="fa fa-chevron-left"></i> Android-通过@Keep注解来防止类、构造函数、方法、变量等混淆
+              <a href="/2016/02/25/Java反转单链表实战/" rel="next" title="Java反转单链表实战">
+                <i class="fa fa-chevron-left"></i> Java反转单链表实战
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/09/24/Android：第一个App用户量突破十万大关，正迈向二十万/" rel="prev" title="Android：第一个App用户量突破十万大关，正迈向二十万...">
-                Android：第一个App用户量突破十万大关，正迈向二十万... <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -357,8 +395,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/09/24/Android-三张图搞定Touch事件传递机制/"
-           data-title="Android-三张图搞定Touch事件传递机制" data-url="http://hanhailong.com/2015/09/24/Android-三张图搞定Touch事件传递机制/">
+      <div class="ds-thread" data-thread-key="2016/04/01/接口和抽象类区别/"
+           data-title="接口和抽象类区别" data-url="http://hanhailong.com/2016/04/01/接口和抽象类区别/">
       </div>
     
   </div>
