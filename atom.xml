@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2016-04-01T10:25:23.000Z</updated>
+  <updated>2016-04-02T07:47:24.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -13,6 +13,38 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[apk打包流程梳理]]></title>
+    <link href="http://hanhailong.com/2016/04/02/apk%E6%89%93%E5%8C%85%E6%B5%81%E7%A8%8B%E6%A2%B3%E7%90%86/"/>
+    <id>http://hanhailong.com/2016/04/02/apk打包流程梳理/</id>
+    <published>2016-04-02T05:42:26.000Z</published>
+    <updated>2016-04-02T07:47:24.000Z</updated>
+    <content type="html"><![CDATA[<h1 id="简介">简介</h1><p>一些初学Android的开发者可能只知道写完项目，然后点击AndroidStudio中的run按钮就可以把项目运行到手机或者模拟器上，而一个apk是怎么从编译打包到最后签名安装到手机上的原理不知道，这里就带领大家理解一下内部的原理</p>
+<h1 id="简单build流程">简单build流程</h1><p>首先，我们看下官网介绍<a href="http://developer.android.com/intl/zh-cn/tools/building/index.html" target="_blank" rel="external">Building and Running Overview</a>,官网给了我们一张非常简单的编译、打包、apk生成内容以及签名的图片，因为官网必须得用vpn才能访问，这里我就直接下载下来了，简单build图片如下：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/build-simplified.png?raw=true" alt=""></p>
+<p>图片大体介绍了从Project到运行到设备或者模拟器的一个大体流程，我们也从中看到一个完整的apk包含如下内容：一个或多个dex文件、resources.arsc、未编译的资源文件以及AndroidManifest.xml文件等等</p>
+<h1 id="详细打包流程">详细打包流程</h1><p>官网给了我们一张非常清晰的打包流程图：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/android_build.png?raw=true" alt=""></p>
+<h1 id="打包步骤">打包步骤</h1><p>总体打包步骤我们可以概括以下七步：</p>
+<ol>
+<li>通过aapt打包资源文件，生成R.java和resources.arsc</li>
+<li>处理aidl文件，生成对应的java接口文件</li>
+<li>编译项目工程源代码，生成.class文件</li>
+<li>Dex命令处理，将第三步生成的.class文件和第三方的库一起生成classes.dex文件</li>
+<li>通过apkbuilder工具将aapt生成的resources.arsc、classes.dex（可能多个）、其他的资源一块打包生成apk文件</li>
+<li>通过Jarsigner对第五步生成的apk进行debug或者release签名，只有签名完的apk才能进行安装</li>
+<li>通过aipalign对签名后的apk进行对其处理，使apk中所有资源文件距离文件起始偏移为4字节的整数倍，从而在通过内存映射访问apk文件时会更快</li>
+</ol>
+<p>其实还应该有最后一步，那就是通过adb install命令将生成的apk安装到设备或者模拟器上</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="简介">简介</h1><p>一些初学Android的开发者可能只知道写完项目，然后点击AndroidStudio中的run按钮就可以把项目运行到手机或者模拟器上，而一个apk是怎么从编译打包到最后签名安装到手机上的原理不知道，这里就带领大家理解一下内部的原理</p]]>
+    </summary>
+    
+      <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[接口和抽象类区别]]></title>
@@ -2735,31 +2767,6 @@ gem sources -a <span class="string">https:</span><span class="comment">//ruby.ta
     </summary>
     
       <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Android Support Library 23.1 now available]]></title>
-    <link href="http://hanhailong.com/2015/10/19/Android-Support-Library-23-1-now-available/"/>
-    <id>http://hanhailong.com/2015/10/19/Android-Support-Library-23-1-now-available/</id>
-    <published>2015-10-19T02:50:32.000Z</published>
-    <updated>2015-10-19T03:14:48.000Z</updated>
-    <content type="html"><![CDATA[<p><strong>Support V4</strong> gets a number of important bug fixes as well as a few new features for NestedScrollView and around MediaSessionCompat.</p>
-<p><strong>Media Router</strong> has gotten a design overhaul, making connecting and controlling remote devices such as Google Cast enabled devices even easier.</p>
-<p><strong>RecyclerView</strong> has a significant <strong>backward incompatible</strong> change to the animation system, offering new flexibility and support for item content animations. You’ll find a SimpleItemAnimator helper class for easing the transition to the new animation system.</p>
-<p><strong>AppCompat</strong> adds a new tint aware <em>Seekbar</em>, <em>ImageButton</em>, and <em>ImageView</em> and updating styling to <em>SwitchCompat</em>.</p>
-<p><strong>Design</strong> improves TextInputLayout with support for character counting, the new <em>SCROLL_FLAG_SNAP</em> allows <em>AppBarLayout</em> children to snap completely on or off the screen when scrolling completes, and <em>NavigationView</em> now supports custom views for menu items.</p>
-<p><strong>Percent</strong> adds support for <em>setting a custom aspect ratio</em> to both <em>PercentFrameLayout</em> and <em>PercentRelativeLayout</em>.</p>
-<p><strong>Custom Tabs</strong> increases the customization available with the ability to hide the URL bar when scrolling down and change the custom action button for current custom tab session as well as the ability to receive tab shown and hidden events.</p>
-<p><strong>Leanback</strong> updates <em>GuidedStepFragment</em> so it can be placed on top of existing content and adds new search completion type annotations for SearchFragment.﻿</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p><strong>Support V4</strong> gets a number of important bug fixes as well as a few new features for NestedScrollView and around MediaSessi]]>
-    </summary>
-    
-      <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
-    
-      <category term="Android咨询" scheme="http://hanhailong.com/tags/Android%E5%92%A8%E8%AF%A2/"/>
     
   </entry>
   

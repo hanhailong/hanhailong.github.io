@@ -228,6 +228,114 @@
             
               
                 
+                <a class="post-title-link" href="/2015/12/27/Android性能优化之如何避免Overdraw/" itemprop="url">
+                  Android性能优化之如何避免Overdraw
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-12-27T20:14:37+08:00" content="2015-12-27">
+              2015-12-27
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/12/27/Android性能优化之如何避免Overdraw/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/27/Android性能优化之如何避免Overdraw/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2>什么是Overdraw？</h2>
+
+<p>Overdraw就是过度绘制，是指在一帧的时间内（16.67ms）像素被绘制了多次，理论上一个像素每次只绘制一次是最优的，但是由于重叠的布局导致一些像素会被多次绘制，而每次绘制都会对应到CPU的一组绘图命令和GPU的一些操作，当这个操作耗时超过16.67ms时，就会出现掉帧现象，也就是我们所说的卡顿，所以对重叠不可见元素的重复绘制会产生额外的开销，需要尽量减少Overdraw的发生。</p>
+<p>Android提供了测量Overdraw的选项，在开发者选项－调试GPU过度绘制（Show GPU Overdraw），打开选项就可以看到当前页面Overdraw的状态，就可以观察屏幕的绘制状态。该工具会使用三种不同的颜色绘制屏幕，来指示overdraw发生在哪里以及程度如何，其中：</p>
+<p>没有颜色： 意味着没有overdraw。像素只画了一次。</p>
+<p>蓝色： 意味着overdraw 1倍。像素绘制了两次。大片的蓝色还是可以接受的（若整个窗口是蓝色的，可以摆脱一层）。</p>
+<p>绿色： 意味着overdraw 2倍。像素绘制了三次。中等大小的绿色区域是可以接受的但你应该尝试优化、减少它们。</p>
+<p>浅红： 意味着overdraw 3倍。像素绘制了四次，小范围可以接受。</p>
+<p>暗红： 意味着overdraw 4倍。像素绘制了五次或者更多。这是错误的，要修复它们。</p>
+<p><img src="http://jbcdn2.b0.upaiyun.com/2015/12/1f79c3f75b4b42bd4b2140ff7d14ee73.jpg" alt=""></p>
+<p>那么我们怎么来消灭overdraw呢？总的原则就是：尽量避免重叠不可见元素的绘制，基于这个原则，我们大概可以想出以下几招： </p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/12/27/Android性能优化之如何避免Overdraw/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2015/12/27/Android-性能优化之-使用线程池处理异步任务/" itemprop="url">
                   Android 性能优化之--使用线程池处理异步任务
                 </a>
@@ -1154,109 +1262,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/10/19/Android-Support-Library-23-1-now-available/" itemprop="url">
-                  Android Support Library 23.1 now available
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-10-19T10:50:32+08:00" content="2015-10-19">
-              2015-10-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/10/19/Android-Support-Library-23-1-now-available/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/19/Android-Support-Library-23-1-now-available/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>Support V4</strong> gets a number of important bug fixes as well as a few new features for NestedScrollView and around MediaSessionCompat.</p>
-<p><strong>Media Router</strong> has gotten a design overhaul, making connecting and controlling remote devices such as Google Cast enabled devices even easier.</p>
-<p><strong>RecyclerView</strong> has a significant <strong>backward incompatible</strong> change to the animation system, offering new flexibility and support for item content animations. You’ll find a SimpleItemAnimator helper class for easing the transition to the new animation system.</p>
-<p><strong>AppCompat</strong> adds a new tint aware <em>Seekbar</em>, <em>ImageButton</em>, and <em>ImageView</em> and updating styling to <em>SwitchCompat</em>.</p>
-<p><strong>Design</strong> improves TextInputLayout with support for character counting, the new <em>SCROLL_FLAG_SNAP</em> allows <em>AppBarLayout</em> children to snap completely on or off the screen when scrolling completes, and <em>NavigationView</em> now supports custom views for menu items.</p>
-<p><strong>Percent</strong> adds support for <em>setting a custom aspect ratio</em> to both <em>PercentFrameLayout</em> and <em>PercentRelativeLayout</em>.</p>
-<p><strong>Custom Tabs</strong> increases the customization available with the ability to hide the URL bar when scrolling down and change the custom action button for current custom tab session as well as the ability to receive tab shown and hidden events.</p>
-<p><strong>Leanback</strong> updates <em>GuidedStepFragment</em> so it can be placed on top of existing content and adds new search completion type annotations for SearchFragment.﻿</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1302,7 +1307,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">39</span>
+              <span class="site-state-item-count">40</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -228,6 +228,118 @@
             
               
                 
+                <a class="post-title-link" href="/2016/04/02/apk打包流程梳理/" itemprop="url">
+                  apk打包流程梳理
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-02T13:42:26+08:00" content="2016-04-02">
+              2016-04-02
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/02/apk打包流程梳理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/02/apk打包流程梳理/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="简介">简介</h1><p>一些初学Android的开发者可能只知道写完项目，然后点击AndroidStudio中的run按钮就可以把项目运行到手机或者模拟器上，而一个apk是怎么从编译打包到最后签名安装到手机上的原理不知道，这里就带领大家理解一下内部的原理</p>
+<h1 id="简单build流程">简单build流程</h1><p>首先，我们看下官网介绍<a href="http://developer.android.com/intl/zh-cn/tools/building/index.html" target="_blank" rel="external">Building and Running Overview</a>,官网给了我们一张非常简单的编译、打包、apk生成内容以及签名的图片，因为官网必须得用vpn才能访问，这里我就直接下载下来了，简单build图片如下：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/build-simplified.png?raw=true" alt=""></p>
+<p>图片大体介绍了从Project到运行到设备或者模拟器的一个大体流程，我们也从中看到一个完整的apk包含如下内容：一个或多个dex文件、resources.arsc、未编译的资源文件以及AndroidManifest.xml文件等等</p>
+<h1 id="详细打包流程">详细打包流程</h1><p>官网给了我们一张非常清晰的打包流程图：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/android_build.png?raw=true" alt=""></p>
+<h1 id="打包步骤">打包步骤</h1><p>总体打包步骤我们可以概括以下七步：</p>
+<ol>
+<li>通过aapt打包资源文件，生成R.java和resources.arsc</li>
+<li>处理aidl文件，生成对应的java接口文件</li>
+<li>编译项目工程源代码，生成.class文件</li>
+<li>Dex命令处理，将第三步生成的.class文件和第三方的库一起生成classes.dex文件</li>
+<li>通过apkbuilder工具将aapt生成的resources.arsc、classes.dex（可能多个）、其他的资源一块打包生成apk文件</li>
+<li>通过Jarsigner对第五步生成的apk进行debug或者release签名，只有签名完的apk才能进行安装</li>
+<li>通过aipalign对签名后的apk进行对其处理，使apk中所有资源文件距离文件起始偏移为4字节的整数倍，从而在通过内存映射访问apk文件时会更快</li>
+</ol>
+<p>其实还应该有最后一步，那就是通过adb install命令将生成的apk安装到设备或者模拟器上</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/04/01/接口和抽象类区别/" itemprop="url">
                   接口和抽象类区别
                 </a>
@@ -1274,114 +1386,6 @@ maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.C
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/12/27/Android性能优化之如何避免Overdraw/" itemprop="url">
-                  Android性能优化之如何避免Overdraw
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-12-27T20:14:37+08:00" content="2015-12-27">
-              2015-12-27
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/12/27/Android性能优化之如何避免Overdraw/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/27/Android性能优化之如何避免Overdraw/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2>什么是Overdraw？</h2>
-
-<p>Overdraw就是过度绘制，是指在一帧的时间内（16.67ms）像素被绘制了多次，理论上一个像素每次只绘制一次是最优的，但是由于重叠的布局导致一些像素会被多次绘制，而每次绘制都会对应到CPU的一组绘图命令和GPU的一些操作，当这个操作耗时超过16.67ms时，就会出现掉帧现象，也就是我们所说的卡顿，所以对重叠不可见元素的重复绘制会产生额外的开销，需要尽量减少Overdraw的发生。</p>
-<p>Android提供了测量Overdraw的选项，在开发者选项－调试GPU过度绘制（Show GPU Overdraw），打开选项就可以看到当前页面Overdraw的状态，就可以观察屏幕的绘制状态。该工具会使用三种不同的颜色绘制屏幕，来指示overdraw发生在哪里以及程度如何，其中：</p>
-<p>没有颜色： 意味着没有overdraw。像素只画了一次。</p>
-<p>蓝色： 意味着overdraw 1倍。像素绘制了两次。大片的蓝色还是可以接受的（若整个窗口是蓝色的，可以摆脱一层）。</p>
-<p>绿色： 意味着overdraw 2倍。像素绘制了三次。中等大小的绿色区域是可以接受的但你应该尝试优化、减少它们。</p>
-<p>浅红： 意味着overdraw 3倍。像素绘制了四次，小范围可以接受。</p>
-<p>暗红： 意味着overdraw 4倍。像素绘制了五次或者更多。这是错误的，要修复它们。</p>
-<p><img src="http://jbcdn2.b0.upaiyun.com/2015/12/1f79c3f75b4b42bd4b2140ff7d14ee73.jpg" alt=""></p>
-<p>那么我们怎么来消灭overdraw呢？总的原则就是：尽量避免重叠不可见元素的绘制，基于这个原则，我们大概可以想出以下几招： </p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/12/27/Android性能优化之如何避免Overdraw/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1427,7 +1431,7 @@ maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.C
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">39</span>
+              <span class="site-state-item-count">40</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
