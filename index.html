@@ -954,9 +954,7 @@
 
       
         
-          <h2>onCreate中计算View的高度</h2>
-
-<p>可以借助getViewTreeObserver().addOnGlobalLayoutListener()来获得宽度或者高度，示例代码如下：</p>
+          <h1 id="onCreate中计算View的高度">onCreate中计算View的高度</h1><p>可以借助getViewTreeObserver().addOnGlobalLayoutListener()来获得宽度或者高度，示例代码如下：</p>
 <pre><code>mWebView.getViewTreeObserver().addOnGlobalLayoutListener(<span class="keyword">new</span> ViewTreeObserver.OnGlobalLayoutListener() {
             <span class="annotation">@Override</span>
             <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onGlobalLayout</span><span class="params">()</span> </span>{
@@ -966,9 +964,7 @@
                 mWebView.getViewTreeObserver().removeOnGlobalLayoutListener(<span class="keyword">this</span>);
             }
         });
-</code></pre><h2>PopupWindow计算高度</h2>
-
-<p>PopupWindow在初始化创建好后，我想知道它的高度和宽度，可以这样计算：</p>
+</code></pre><h1 id="PopupWindow计算高度">PopupWindow计算高度</h1><p>PopupWindow在初始化创建好后，我想知道它的高度和宽度，可以这样计算：</p>
 <pre><code><span class="tag">popupWindow</span><span class="class">.getContentView</span>()<span class="class">.measure</span>(0, 0);
 <span class="tag">popupWindow</span><span class="class">.getContentView</span>()<span class="class">.getMeasuredWidth</span>();
 <span class="tag">popupWindow</span><span class="class">.getContentView</span>()<span class="class">.getMeasuredHeight</span>();
@@ -1520,6 +1516,14 @@ maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.C
               
                 <li class="links-of-blogroll-item">
                   <a href="http://xiedeliang.com/" target="_blank">小谢博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.zhaiyifan.cn/" target="_blank">markzhai's home</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/lmj623565791" target="_blank">鸿洋的博客</a>
                 </li>
               
             </ul>
