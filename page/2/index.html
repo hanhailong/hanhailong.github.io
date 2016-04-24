@@ -228,6 +228,246 @@
             
               
                 
+                <a class="post-title-link" href="/2016/01/11/Java小知识总结/" itemprop="url">
+                  Java小知识总结
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-01-11T17:41:10+08:00" content="2016-01-11">
+              2016-01-11
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/11/Java小知识总结/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/11/Java小知识总结/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2>编译时、运行时</h2>
+
+<p><strong>编译时</strong>顾名思义就是正在编译的时候.那啥叫编译呢?就是编译器帮你把源代码翻译成机器能识别的代码。例如：Java编译器把写的java文件编译成jvm能识别的class字节码文件。</p>
+<p>而在编译的时候会涉及到一些比如常量折叠等技术，这个以后细讲！</p>
+<p><strong>运行时</strong>就是代码跑起来了.被装载到内存中去了.(你的代码保存在磁盘上没装入内存之前是个死家伙.只有跑到内存中才变成活的).而运行时类型检查就与前面讲的编译时类型检查(或者静态类型检查)不一样.不是简单的扫描代码.而是在内存中做些操作,做些判断.</p>
+<h2>下面的代码片段中，行A和行B所标识的代码有什么区别呢？</h2>
+
+<pre><code><span class="keyword">public</span> <span class="keyword">class</span> ConstantFolding {
+
+    <span class="keyword">static</span> final  <span class="keyword">int</span> number1 = <span class="number">5</span>;
+
+    <span class="keyword">static</span> final  <span class="keyword">int</span> number2 = <span class="number">6</span>;
+
+    <span class="keyword">static</span> <span class="keyword">int</span> number3 = <span class="number">5</span>;
+
+    <span class="keyword">static</span> <span class="keyword">int</span> number4= <span class="number">6</span>;
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[ ] args)</span> </span>{
+
+          <span class="keyword">int</span> product1 = number1 * number2;         <span class="comment">//line A</span>
+
+          <span class="keyword">int</span> product2 = number3 * number4;         <span class="comment">//line B</span>
+
+    }
+}
+</code></pre><p>在行A的代码中，product的值是在编译期计算的，行B则是在运行时计算的。如果你使用Java反编译器（例如，jd-gui）来反编译ConstantFolding.class文件的话，那么你就会从下面的结果里得到答案。</p>
+<pre><code><span class="keyword">public</span> <span class="keyword">class</span> ConstantFolding
+{
+  <span class="keyword">static</span> final <span class="keyword">int</span> number1 = <span class="number">5</span>;
+  <span class="keyword">static</span> final <span class="keyword">int</span> number2 = <span class="number">6</span>;
+  <span class="keyword">static</span> <span class="keyword">int</span> number3 = <span class="number">5</span>;
+  <span class="keyword">static</span> <span class="keyword">int</span> number4 = <span class="number">6</span>;
+
+  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[ ] args)</span>
+  </span>{
+      <span class="keyword">int</span> product1 = <span class="number">30</span>;
+      <span class="keyword">int</span> product2 = number3 * number4;
+  }
+}
+</code></pre><p>常量折叠是一种Java编译器使用的优化技术。由于final变量的值不会改变，因此就可以对它们优化。Java反编译器和javap命令都是查看编译后的代码（例如，字节码）的利器。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/12/28/Android进阶之ProGuard代码混淆/" itemprop="url">
+                  Android进阶之ProGuard代码混淆
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-12-28T21:35:41+08:00" content="2015-12-28">
+              2015-12-28
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/12/28/Android进阶之ProGuard代码混淆/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/28/Android进阶之ProGuard代码混淆/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2>简介</h2>
+
+<p><a href="http://developer.android.com/intl/zh-cn/tools/help/proguard.html">Proguard</a>工具通过移除无用的代码以及使用语义隐晦的名称来重命名类、字段和方法，从而达到压缩、优化和混淆代码的目的。最终您将获得一个较小的 .apk 文件，此文件更难于进行反向工程。由于 ProGuard 会使应用更难于进行反向工程，因此当应用使用对安全性要求极高的功能时（例如，当您向应用授予许可时），您必须使用此工具。</p>
+<p>ProGuard 已集成到 Android 构建系统，所以您无需手动调用此工具。只有当您在发布模式下构建应用时，ProGuard 才会运行，因此当您在调试模式下构建应用时，就无需处理混淆后的代码。是否运行 ProGuard 完全由您决定，但我们强烈建议您运行该工具。</p>
+<p>本文介绍如何启用和配置 ProGuard，以及如何使用 retrace 工具解码混淆后的堆栈跟踪信息。</p>
+<p>除了基本的Proguard混淆外，还有一些其他的混淆方式和工具。例如：混淆资源</p>
+<p><a href="http://tech.meituan.com/mt-android-resource-obfuscation.html">美团资源混淆</a></p>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&amp;mid=208135658&amp;idx=1&amp;sn=ac9bd6b4927e9e82f9fa14e396183a8f&amp;scene=0#rd">微信资源混淆</a></p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/12/28/Android进阶之ProGuard代码混淆/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2015/12/27/Android性能优化之如何避免Overdraw/" itemprop="url">
                   Android性能优化之如何避免Overdraw
                 </a>
@@ -1057,216 +1297,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/10/22/cocoapods安装失败-bad-response-Not-Found-404-http-ruby-taobao-org-latest-specs-4-8-gz/" itemprop="url">
-                  cocoapods安装失败-bad response Not Found 404 (http://ruby.taobao.org/latest_specs.4.8.gz
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-10-22T13:37:34+08:00" content="2015-10-22">
-              2015-10-22
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/10/22/cocoapods安装失败-bad-response-Not-Found-404-http-ruby-taobao-org-latest-specs-4-8-gz/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/22/cocoapods安装失败-bad-response-Not-Found-404-http-ruby-taobao-org-latest-specs-4-8-gz/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>最近把MAC系统升级到了最新版本-10.11（OS X EI Capitan），发现之前装的<a href="https://github.com/CocoaPods/CocoaPods">CocoaPods</a>不能用了，只好重新装了。执行如下命令：</p>
-<pre><code>sudo gem <span class="keyword">install</span> cocoapods
-</code></pre><p>发现报如下错误：<br><img src="https://github.com/hanhailong/IOSStudyResource/blob/master/screenshot/cocoapods/pod_error.png?raw=true" alt="image"></p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/22/cocoapods安装失败-bad-response-Not-Found-404-http-ruby-taobao-org-latest-specs-4-8-gz/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/10/20/Android-教你自作一个简单而又实用的流式Tag标签布局/" itemprop="url">
-                  Android-教你自作一个简单而又实用的流式Tag标签布局
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-10-20T18:26:19+08:00" content="2015-10-20">
-              2015-10-20
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/10/20/Android-教你自作一个简单而又实用的流式Tag标签布局/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/20/Android-教你自作一个简单而又实用的流式Tag标签布局/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>在这一章节，我们继续学习Android自定义控件。这里要自定义的是Android里面的一个常用控件-Android流式Tag布局，这里我们命名为：<a href="https://github.com/hanhailong/FlowTag/blob/master/library/src/main/java/com/hhl/library/FlowTagLayout.java">FlowTagLayout</a>，我们要实现的流式布局，有如下特色：</p>
-<ul>
-<li>填充数据和ListView、GridView用法一样使用Adapter，更新数据直接通过adapter.notifyDataChanged来更新</li>
-<li>支持点击、单选、多选三种模式：FLOW_TAG_CHECKED_NONE、FLOW_TAG_CHECKED_SINGLE、FLOW_TAG_CHECKED_MULTI</li>
-</ul>
-<h3>正式讲解之前先看下我们实现后的效果图：</h3>
-
-<p> <img src="https://github.com/hanhailong/AndroidStudyResources/raw/master/screenshot/flow_tag.gif?raw=true" alt="image"></p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/20/Android-教你自作一个简单而又实用的流式Tag标签布局/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1307,7 +1342,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-count">42</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1317,7 +1352,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
