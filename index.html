@@ -228,6 +228,334 @@
             
               
                 
+                <a class="post-title-link" href="/2016/06/27/优化查询加载大数量的本地相册图片/" itemprop="url">
+                  优化查询加载大数量的本地相册图片
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-27T16:20:09+08:00" content="2016-06-27">
+              2016-06-27
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/27/优化查询加载大数量的本地相册图片/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/27/优化查询加载大数量的本地相册图片/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="优化查询加载大数量的本地相册图片">优化查询加载大数量的本地相册图片</h2><h3 id="一、概述">一、概述</h3><p>讲解优化查询相册图片之前，我们先来看下PM提出的需求，PM的需求很简单，就要做一个类似微信的图片加载器，主要包含两个需求：</p>
+<ul>
+<li>进入图片选择页面就要显示出手机中所有照片，包括系统相册图片和其他目录下的图片，按照时间倒叙排列</li>
+<li>更换相册功能，更换相册页面列出手机中所有的图片目录列表，并且显示出当前目录下所有图片的个数、目录封面图片</li>
+</ul>
+<p>这两个需求看似简单，实则隐藏着一系列的性能优化问题。在做优化之前，我们调研了一些其他比较出名的app在加载大数量图片的性能表现（gif录制的不够清晰，但展示问题已经够了）：</p>
+<h4 id="微信">微信</h4><p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/album/wechat_albums.gif?raw=true" alt=""></p>
+<p>微信的图片查询速度还是非常快的，基本上进入图片选择页面，相册数据就已经查出来了，包括各个图片目录下图片的个数和封面图片的url，这个体验还是比较好的</p>
+<h4 id="新浪微博">新浪微博</h4><p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/album/sina_albums.gif?raw=true" alt=""></p>
+<p>相比较微信来说，新浪微博做的体验就比较差了，进入图片选择页面后，先是黑屏然后是白屏，连图片加载进度条都没有，让用户，等过一段时间才显示出来，这个体验较差</p>
+<h4 id="QQ">QQ</h4><p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/album/qq_albums.gif?raw=true" alt=""></p>
+<p>QQ一上来是加载的最近100张照片，速度非常快，但是进入Camera相册（有5000多张）后，有一个进度条等待，我体验了下，等待的时间还是比较长的，这个体验比新浪微博稍微好点，比微信差</p>
+<h4 id="闲鱼">闲鱼</h4><p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/album/xianyu_albums.gif?raw=true" alt=""></p>
+<p>闲鱼是做的最烂的一个，一上来是卡死四五秒，然后是黑屏两三秒，最后才显示出来</p>
+<h3 id="二、综合对比">二、综合对比</h3><p>经过综合对比后，就微信做的还比较好，基本上进入相册页面就能展示出所有照片，相册目录也非常快的展示出来！！！经过调研后，发现微信是采用循环分页加载策略，我们优化的思路也是采用这种策略，先看优化后的效果图：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/album/58_albums.gif?raw=true" alt=""></p>
+<p>进入图片选择页面，图片能够非常快的显示出来，进入更换相册页面，图片目录也能非常快的显示出来，这里没有做图片目录的缓存：一是因为查询速度不慢，二是能够刷新出最新拍的照片或者去掉删除的照片；切换各个相册目录，图片都能非常快速的查询出来，体验还是不错的！！！</p>
+<h3 id="三、优化实现">三、优化实现</h3><h4 id="优化查询相册目录">优化查询相册目录</h4><p>因为要列举出所有的相册目录列表，这里没有其他好的办法，直接请求<em>ContentResolver</em>的<em>query</em>方法来查询，这里为了加速查询，去掉了while循环中一些耗时的判断，例如检测图片是否存在等等，下面看具体代码：</p>
+<pre><code><span class="keyword">String</span>[] projection = {MediaStore.Images.ImageColumns.DATA, MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME};
+
+        <span class="comment">//时间倒叙排列</span>
+        <span class="keyword">String</span> sortOrder = MediaStore.Images.Media.DATE_TAKEN + <span class="string">" DESC "</span>;
+        Cursor <span class="built_in">cursor</span> = mContext.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                projection, <span class="keyword">null</span>, <span class="keyword">null</span>, sortOrder);
+
+        List&lt;PicFolderItem&gt; picList = <span class="keyword">new</span> ArrayList&lt;PicFolderItem&gt;();
+        <span class="keyword">if</span> (<span class="built_in">cursor</span> != <span class="keyword">null</span>) {
+
+            <span class="comment">//一个辅助集合，防止统一目录查询多次</span>
+            HashSet&lt;<span class="keyword">String</span>&gt; dirPaths = <span class="keyword">new</span> HashSet&lt;<span class="keyword">String</span>&gt;();
+
+            <span class="comment">//所有照片</span>
+            PicFolderItem allFolderItem = <span class="keyword">new</span> PicFolderItem();
+            allFolderItem.count = <span class="built_in">cursor</span>.getCount();
+            allFolderItem.name = ALL_PHOTO;
+            picList.<span class="built_in">add</span>(allFolderItem);
+
+            <span class="keyword">while</span> (<span class="built_in">cursor</span>.moveToNext()) {
+                <span class="comment">// 获取图片的路径</span>
+                <span class="keyword">String</span> path = <span class="built_in">cursor</span>.getString(<span class="built_in">cursor</span>.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
+                <span class="keyword">String</span> bucketName = <span class="built_in">cursor</span>.getString(<span class="built_in">cursor</span>.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME));
+
+                <span class="keyword">if</span> (TextUtils.isEmpty(allFolderItem.coverImagePath)) {
+                    allFolderItem.coverImagePath = path;
+                }
+
+                File parentFile = <span class="keyword">new</span> File(path).getParentFile();
+                <span class="keyword">if</span> (parentFile == <span class="keyword">null</span>) <span class="keyword">continue</span>;
+
+                <span class="keyword">String</span> dirPath = parentFile.getAbsolutePath();
+
+                PicFolderItem folderItem = <span class="keyword">null</span>;
+                <span class="comment">// 利用一个HashSet防止多次扫描同一个文件夹（不加这个判断，图片多起来还是相当恐怖的~~）</span>
+                <span class="keyword">if</span> (dirPaths.contains(dirPath)) {
+                    <span class="keyword">continue</span>;
+                } <span class="keyword">else</span> {
+                    dirPaths.<span class="built_in">add</span>(dirPath);
+
+                    <span class="built_in">boolean</span> isNew = <span class="keyword">true</span>;
+                    <span class="comment">//判断一下是否dirPath不同，但是bucketName相同</span>
+                    <span class="keyword">for</span> (PicFolderItem item : picList) {
+                        <span class="keyword">if</span> (item.name.equals(bucketName)) {
+                            folderItem = item;
+                            item.addParentPath(dirPath);
+                            isNew = <span class="keyword">false</span>;
+                            <span class="keyword">break</span>;
+                        }
+                    }
+
+                    <span class="keyword">if</span> (isNew) {
+                        folderItem = <span class="keyword">new</span> PicFolderItem();
+                        folderItem.coverImagePath = path;
+                        folderItem.name = bucketName;
+                        folderItem.addParentPath(dirPath);
+                    }
+                }
+
+                <span class="keyword">String</span>[] array = parentFile.list(<span class="keyword">new</span> FilenameFilter() {
+                    @Override
+                    <span class="keyword">public</span> <span class="built_in">boolean</span> accept(File dir, <span class="keyword">String</span> filename) {
+                        <span class="keyword">if</span> (filename.endsWith(<span class="string">".jpg"</span>)
+                                || filename.endsWith(<span class="string">".png"</span>)
+                                || filename.endsWith(<span class="string">".jpeg"</span>))
+                            <span class="keyword">return</span> <span class="keyword">true</span>;
+                        <span class="keyword">return</span> <span class="keyword">false</span>;
+                    }
+                });
+
+                <span class="built_in">int</span> arrayCount = array == <span class="keyword">null</span> ? <span class="number">0</span> : array.length;
+                folderItem.count += arrayCount;
+                <span class="keyword">if</span> (!picList.contains(folderItem) &amp;&amp; arrayCount &gt; <span class="number">0</span>) {
+                    picList.<span class="built_in">add</span>(folderItem);
+                }
+            }
+        }
+</code></pre><p>这样就能非常快速的查询出手机中所有的图片目录、目录的图片张数以及封面图url。这里主要优化了三点：</p>
+<ul>
+<li><p>while循环中去除耗时判断</p>
+<p>  之前的代码中存在判断文件图片是否存在的代码：</p>
+<pre><code><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isFileExist(String path) {
+ <span class="keyword">File</span> <span class="keyword">file</span> = <span class="keyword">new</span> <span class="keyword">File</span>(path);
+ <span class="keyword">if</span> (<span class="keyword">file</span> == <span class="keyword">null</span> || !<span class="keyword">file</span>.exists()) {
+     <span class="keyword">return</span> <span class="keyword">false</span>;
+ }
+ <span class="keyword">return</span> <span class="keyword">true</span>;
+ }
+</code></pre><p>   这段代码放到while循环中是很恐怖的，我测试了下，5000多张图片都要检测的话总时间会增加三四秒。这个判断可以放到外面去，具体操作哪一个图片的时候再做具体的业务判断！</p>
+</li>
+<li><p>防止一个图片文件夹被扫描多次</p>
+<p>  这里添加了一个临时变量来存储已经扫描过的图片目录，已经扫描的就不在处理了：</p>
+<pre><code><span class="comment">//一个辅助集合，防止统一目录查询多次</span>
+   HashSet&lt;<span class="built_in">String</span>&gt; dirPaths = <span class="keyword">new</span>     HashSet&lt;<span class="built_in">String</span>&gt;();
+</code></pre><p> 这块优化了之后效果还是很明显的，相同的目录不会扫描多次！</p>
+</li>
+<li><p>获取图片目录下图片个数</p>
+<pre><code>String<span class="keyword">[</span>]<span class="instruction"> array </span>=<span class="function"> parentFile.list(</span>new<span class="function"> FilenameFilter(</span><span class="function">)</span> {
+                        @Override
+                       <span class="keyword"> public</span> boolean<span class="function"> accept(</span>File dir, String filename<span class="function">)</span> {
+                           <span class="instruction"> if </span>(filename.endsWith(<span class="string">".jpg"</span><span class="function">)</span>
+                                    ||<span class="function"> filename.endsWith(</span><span class="string">".png"</span><span class="function">)</span>
+                                    ||<span class="function"> filename.endsWith(</span><span class="string">".jpeg"</span><span class="function">)</span><span class="function">)</span>
+                               <span class="instruction"> return </span>true;
+                           <span class="instruction"> return </span>false;
+                        }
+                    }<span class="function">)</span>;
+</code></pre></li>
+</ul>
+<p>这个file.list()方法内部是一个native方法，查询效率非常快！！！</p>
+<h4 id="两种加载图片策略">两种加载图片策略</h4><p>cursor这个游标在每次打开关闭都比较耗时，对于那些图片数量不多的目录，就没有必要使用cursor来查询，这里我们分了两个策略：</p>
+<ul>
+<li><p>一次加载策略</p>
+<p>  当图片目录下图片数量小于500张时采用file.list这个native方法来一次加载所有图片</p>
+</li>
+<li><p>循环分页加载策略</p>
+<p>  当图片数量大于等于500张时采用循环分页加载策略</p>
+</li>
+</ul>
+<h5 id="一次加载策略实现">一次加载策略实现</h5><p>我们这里看下一次加载完策略实现代码：</p>
+<pre><code><span class="comment"><span class="markdown">/**
+<span class="code">     * 根据文件夹目录查询加载里面的所有图片，图片格式.jpg .png .jpeg</span>
+<span class="code">     *</span>
+<span class="code">     * @param dirs</span>
+<span class="code">     * @return</span>
+<span class="code">     */</span></span></span>
+    public <span class="literal">static</span> Observable&lt;<span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt;&gt; loadAlbumsByDirs(<span class="built_in">String</span>... dirs) {
+        <span class="keyword">return</span> Observable.just(dirs)
+                .map(<span class="keyword">new</span> Func1&lt;<span class="built_in">String</span>[], <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt;&gt;() {
+                    <span class="annotation">@Override</span>
+                    public <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; call(<span class="built_in">String</span>[] strings) {
+                        <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; picList = <span class="keyword">new</span> ArrayList&lt;<span class="built_in">String</span>&gt;();
+                        <span class="keyword">if</span> (strings != <span class="keyword">null</span>) {
+                            <span class="keyword">for</span> (<span class="built_in">String</span> dir : strings) {
+                                File dirFile = <span class="keyword">new</span> File(dir);
+                                <span class="built_in">String</span>[] list = dirFile.list(<span class="keyword">new</span> FilenameFilter() {
+                                    <span class="annotation">@Override</span>
+                                    public boolean accept(File dir, <span class="built_in">String</span> filename) {
+                                        <span class="keyword">if</span> (filename.endsWith(<span class="string">".jpg"</span>) || filename.endsWith(<span class="string">".png"</span>)
+                                                || filename.endsWith(<span class="string">".jpeg"</span>))
+                                            <span class="keyword">return</span> <span class="keyword">true</span>;
+                                        <span class="keyword">return</span> <span class="keyword">false</span>;
+                                    }
+                                });
+
+                                <span class="keyword">if</span> (list == <span class="keyword">null</span>) <span class="keyword">continue</span>;
+
+                                <span class="keyword">for</span> (<span class="built_in">String</span> str : list) {
+                                    <span class="built_in">String</span> path = <span class="keyword">new</span> File(dir, str).getAbsolutePath();
+                                    picList.add(path);
+                                }
+                            }
+                        }
+
+                        <span class="keyword">return</span> picList;
+                    }
+                }).map(<span class="keyword">new</span> Func1&lt;<span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt;, <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt;&gt;() {
+                    <span class="annotation">@Override</span>
+                    public <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; call(<span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; strings) {
+                        <span class="comment">//对picList进行排序</span>
+                        Collections.sort(strings, <span class="keyword">new</span> Comparator&lt;<span class="built_in">String</span>&gt;() {
+                            <span class="annotation">@Override</span>
+                            public <span class="built_in">int</span> compare(<span class="built_in">String</span> lhs, <span class="built_in">String</span> rhs) {
+                                Long time1 = <span class="keyword">new</span> File(lhs).lastModified();
+                                Long time2 = <span class="keyword">new</span> File(rhs).lastModified();
+                                <span class="keyword">return</span> time2.compareTo(time1);
+                            }
+                        });
+                        <span class="keyword">return</span> strings;
+                    }
+                }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }        
+</code></pre><p>首先通过file.list()查询出所有的图片，然后按照时间倒叙进行排序。这种适合图片数量小的情况。</p>
+<h5 id="循环分页加载策略实现">循环分页加载策略实现</h5><p>这个策略借鉴了微信，通过分页的方式来一页一页的加载图片，直到所有的图片都加载完成。先看核心代码：</p>
+<pre><code><span class="comment">/**
+     * 根据图片目录名称来进行分页查询图片
+     *
+     * @param folderName 父目录名称
+     * @param pageIndex  页码
+     * @return
+     */</span>
+    <span class="keyword">public</span> <span class="keyword">static</span> Observable&lt;PicFolderItem&gt; loadAlbumsByPage(<span class="keyword">String</span> folderName, <span class="keyword">final</span> <span class="built_in">int</span> pageIndex) {
+        <span class="keyword">return</span> Observable.just(folderName).<span class="built_in">map</span>(<span class="keyword">new</span> Func1&lt;<span class="keyword">String</span>, PicFolderItem&gt;() {
+            @Override
+            <span class="keyword">public</span> PicFolderItem call(<span class="keyword">String</span> s) {
+                PicFolderItem folderItem = <span class="keyword">new</span> PicFolderItem();
+
+                <span class="keyword">String</span>[] projection = {MediaStore.Images.ImageColumns.DATA, MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME};
+                <span class="keyword">String</span> sortOrder = MediaStore.Images.Media.DATE_TAKEN + <span class="string">" DESC limit "</span> + PAGE_SIZE + <span class="string">" offset "</span> + pageIndex * PAGE_SIZE;
+                <span class="comment">//执行分页</span>
+                <span class="keyword">String</span> selection = <span class="keyword">null</span>;
+                <span class="keyword">if</span> (!ALL_PHOTO.equals(s)) {
+                    selection = MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME + <span class="string">" = '"</span> + s + <span class="string">"' "</span>;
+                }
+
+                Cursor <span class="built_in">cursor</span> = mContext.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        projection, selection, <span class="keyword">null</span>, sortOrder);
+
+                <span class="keyword">if</span> (<span class="built_in">cursor</span> != <span class="keyword">null</span>) {
+                    <span class="built_in">int</span> dataIndex = <span class="built_in">cursor</span>.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                    <span class="keyword">while</span> (<span class="built_in">cursor</span>.moveToNext()) {
+                        <span class="comment">// 获取图片的路径</span>
+                        <span class="keyword">String</span> path = <span class="built_in">cursor</span>.getString(dataIndex);
+                        folderItem.imagePathList.<span class="built_in">add</span>(path);
+                    }
+
+                    <span class="built_in">cursor</span>.close();
+                }
+                <span class="keyword">return</span> folderItem;
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    }
+</code></pre><p>一开始的时候查询第一页的数据，当查询的数据列表大小大于等于我们要查询的PageSize大小时，我们就认为有下一页，pageIndex加1循环查询下一页，直到查询的列表大小小于PageSize。</p>
+<p>经过上面几步优化后，加载本地相册图片基本上就没有什么问题了。我们经过真机测试，图片5549张，都能够非常快速的查询出来，堪比微信和图库。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/04/23/React-Native-Android热更新/" itemprop="url">
                   React-Native-Android热更新
                 </a>
@@ -1212,152 +1540,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/01/12/IOS开发小技巧/" itemprop="url">
-                  IOS开发小技巧
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-01-12T16:05:17+08:00" content="2016-01-12">
-              2016-01-12
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/01/12/IOS开发小技巧/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/12/IOS开发小技巧/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2>IOS配置某个圆角大小</h2>
-
-<p>iOS开发中各种圆角也随处可见,最简单给控件添加圆角的方式就是给视图的layer设置corner属性了:</p>
-<pre><code><span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.cornerRadius</span> = <span class="number">5.</span>f;  
-<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.masksToBounds</span> = <span class="literal">YES</span>;  
-</code></pre><p>这种方式无法配置圆角数量(只能添加view的四个角全为圆角),无法配置某个圆角大小.</p>
-<p>这个问题我们可以用<em>UIBezierPath</em>来完美解决，示例代码如下：</p>
-<pre><code><span class="built_in">UIBezierPath</span> *maskPath = [<span class="built_in">UIBezierPath</span> bezierPathWithRoundedRect:<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.bounds</span> byRoundingCorners:<span class="built_in">UIRectCornerTopLeft</span> | <span class="built_in">UIRectCornerBottomLeft</span> cornerRadii:<span class="built_in">CGSizeMake</span>(<span class="number">20</span>, <span class="number">0</span>)];
-
-<span class="built_in">CAShapeLayer</span> *maskLayer = [[<span class="built_in">CAShapeLayer</span> alloc] init];
-
-maskLayer<span class="variable">.frame</span> = <span class="keyword">self</span><span class="variable">.view</span><span class="variable">.bounds</span>;
-
-maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.CGPath</span>;
-
-<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.mask</span> = maskLayer;
-
-<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.cornerRadius</span> = <span class="number">5.</span>f;
-<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.masksToBounds</span> = <span class="literal">YES</span>;
-</code></pre><p>想要配置某个角为圆角的话,只需要指定对应的<em>UIRectCorner</em>即可，<em>UIRectCorner</em>有五个值：</p>
-<pre><code><span class="built_in">UIRectCornerAllCorners</span> 全角
-<span class="built_in">UIRectCornerTopLeft</span>    左上角
-<span class="built_in">UIRectCornerTopRight</span>   右上角
-<span class="built_in">UIRectCornerBottomLeft</span> 左下角
-<span class="built_in">UIRectCornerBottomRight</span> 右下角
-</code></pre><h2>UITableView分割线顶到头</h2>
-
-<p>我们在使用tableview时会发现分割线的左边会短一些，通常可以使用setSeparatorInset:UIEdgeInsetsZero 来解决。但是升级到XCode6之后，在iOS8里发现没有效果。下面给出解决办法：</p>
-<ol>
-<li><p>第一步</p>
-<p>  if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {</p>
-<pre><code>[<span class="literal">self</span>.<span class="built_in">table</span>View <span class="built_in">set</span>SeparatorInset:UIEdgeInsetsZero];
-</code></pre><p>  }</p>
-<p>  if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {</p>
-<pre><code>[<span class="literal">self</span>.<span class="built_in">table</span>View <span class="built_in">set</span>LayoutMargins:UIEdgeInsetsZero];
-</code></pre><p>  }</p>
-</li>
-</ol>
-<ol>
-<li><p>第二步</p>
-<pre><code><span class="tag">-</span> (void)<span class="tag">tableView</span>:(UITableView *)<span class="tag">tableView</span> <span class="tag">willDisplayCell</span>:(UITableViewCell *)<span class="tag">cell</span> <span class="tag">forRowAtIndexPath</span>:(NSIndexPath *)<span class="tag">indexPath</span>{
-    <span class="tag">if</span> ([cell <span class="attribute">respondsToSelector</span>:<span class="variable">@selector</span>(<span class="attribute">setSeparatorInset</span>:)]) {
-        <span class="attr_selector">[cell setSeparatorInset:UIEdgeInsetsZero]</span>;
-    }
-    <span class="tag">if</span> ([cell <span class="attribute">respondsToSelector</span>:<span class="variable">@selector</span>(<span class="attribute">setLayoutMargins</span>:)]) {
-        <span class="attr_selector">[cell setLayoutMargins:UIEdgeInsetsZero]</span>;
-    }
-}
-</code></pre></li>
-</ol>
-<p></p><h3>持续更新中…<h3><p></p>
-</h3></h3>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1403,7 +1585,7 @@ maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.C
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">42</span>
+              <span class="site-state-item-count">43</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1413,7 +1595,7 @@ maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.C
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

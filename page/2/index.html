@@ -228,6 +228,152 @@
             
               
                 
+                <a class="post-title-link" href="/2016/01/12/IOS开发小技巧/" itemprop="url">
+                  IOS开发小技巧
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-01-12T16:05:17+08:00" content="2016-01-12">
+              2016-01-12
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/12/IOS开发小技巧/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/12/IOS开发小技巧/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2>IOS配置某个圆角大小</h2>
+
+<p>iOS开发中各种圆角也随处可见,最简单给控件添加圆角的方式就是给视图的layer设置corner属性了:</p>
+<pre><code><span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.cornerRadius</span> = <span class="number">5.</span>f;  
+<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.masksToBounds</span> = <span class="literal">YES</span>;  
+</code></pre><p>这种方式无法配置圆角数量(只能添加view的四个角全为圆角),无法配置某个圆角大小.</p>
+<p>这个问题我们可以用<em>UIBezierPath</em>来完美解决，示例代码如下：</p>
+<pre><code><span class="built_in">UIBezierPath</span> *maskPath = [<span class="built_in">UIBezierPath</span> bezierPathWithRoundedRect:<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.bounds</span> byRoundingCorners:<span class="built_in">UIRectCornerTopLeft</span> | <span class="built_in">UIRectCornerBottomLeft</span> cornerRadii:<span class="built_in">CGSizeMake</span>(<span class="number">20</span>, <span class="number">0</span>)];
+
+<span class="built_in">CAShapeLayer</span> *maskLayer = [[<span class="built_in">CAShapeLayer</span> alloc] init];
+
+maskLayer<span class="variable">.frame</span> = <span class="keyword">self</span><span class="variable">.view</span><span class="variable">.bounds</span>;
+
+maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.CGPath</span>;
+
+<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.mask</span> = maskLayer;
+
+<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.cornerRadius</span> = <span class="number">5.</span>f;
+<span class="keyword">self</span><span class="variable">.view</span><span class="variable">.layer</span><span class="variable">.masksToBounds</span> = <span class="literal">YES</span>;
+</code></pre><p>想要配置某个角为圆角的话,只需要指定对应的<em>UIRectCorner</em>即可，<em>UIRectCorner</em>有五个值：</p>
+<pre><code><span class="built_in">UIRectCornerAllCorners</span> 全角
+<span class="built_in">UIRectCornerTopLeft</span>    左上角
+<span class="built_in">UIRectCornerTopRight</span>   右上角
+<span class="built_in">UIRectCornerBottomLeft</span> 左下角
+<span class="built_in">UIRectCornerBottomRight</span> 右下角
+</code></pre><h2>UITableView分割线顶到头</h2>
+
+<p>我们在使用tableview时会发现分割线的左边会短一些，通常可以使用setSeparatorInset:UIEdgeInsetsZero 来解决。但是升级到XCode6之后，在iOS8里发现没有效果。下面给出解决办法：</p>
+<ol>
+<li><p>第一步</p>
+<p>  if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {</p>
+<pre><code>[<span class="literal">self</span>.<span class="built_in">table</span>View <span class="built_in">set</span>SeparatorInset:UIEdgeInsetsZero];
+</code></pre><p>  }</p>
+<p>  if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {</p>
+<pre><code>[<span class="literal">self</span>.<span class="built_in">table</span>View <span class="built_in">set</span>LayoutMargins:UIEdgeInsetsZero];
+</code></pre><p>  }</p>
+</li>
+</ol>
+<ol>
+<li><p>第二步</p>
+<pre><code><span class="tag">-</span> (void)<span class="tag">tableView</span>:(UITableView *)<span class="tag">tableView</span> <span class="tag">willDisplayCell</span>:(UITableViewCell *)<span class="tag">cell</span> <span class="tag">forRowAtIndexPath</span>:(NSIndexPath *)<span class="tag">indexPath</span>{
+    <span class="tag">if</span> ([cell <span class="attribute">respondsToSelector</span>:<span class="variable">@selector</span>(<span class="attribute">setSeparatorInset</span>:)]) {
+        <span class="attr_selector">[cell setSeparatorInset:UIEdgeInsetsZero]</span>;
+    }
+    <span class="tag">if</span> ([cell <span class="attribute">respondsToSelector</span>:<span class="variable">@selector</span>(<span class="attribute">setLayoutMargins</span>:)]) {
+        <span class="attr_selector">[cell setLayoutMargins:UIEdgeInsetsZero]</span>;
+    }
+}
+</code></pre></li>
+</ol>
+<p></p><h3>持续更新中…<h3><p></p>
+</h3></h3>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/01/11/Java小知识总结/" itemprop="url">
                   Java小知识总结
                 </a>
@@ -1200,103 +1346,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/10/22/不错的IOS学习博客网站-IOS122/" itemprop="url">
-                  不错的IOS学习博客网站-IOS122
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-10-22T16:58:51+08:00" content="2015-10-22">
-              2015-10-22
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/10/22/不错的IOS学习博客网站-IOS122/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/22/不错的IOS学习博客网站-IOS122/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>这是<a href="http://hanhailong.com/tags/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/">不错的学习技术博客系列</a>第四篇，只不过<a href="http://www.ios122.com/" target="_blank" rel="external">IOS122</a>只讲解IOS技术。</p>
-<p>当我第一次打开这个博客的时候，我被里面的第三库资源震惊了，没想到作者整理了这么多的第三库资源。最重要的是，里面的博文质量非常高，绝对是IOS学习技术的最佳去处！！！</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1342,7 +1391,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">42</span>
+              <span class="site-state-item-count">43</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1352,7 +1401,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
