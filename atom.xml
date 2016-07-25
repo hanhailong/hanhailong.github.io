@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2016-07-16T02:44:39.000Z</updated>
+  <updated>2016-07-18T15:38:51.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -15,11 +15,26 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[ReactNative开发Android端遇到的一些坑总结]]></title>
+    <link href="http://hanhailong.com/2016/07/16/ReactNative%E5%BC%80%E5%8F%91Android%E7%AB%AF%E9%81%87%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91%E6%80%BB%E7%BB%93/"/>
+    <id>http://hanhailong.com/2016/07/16/ReactNative开发Android端遇到的一些坑总结/</id>
+    <published>2016-07-16T03:13:24.000Z</published>
+    <updated>2016-07-18T15:38:51.000Z</updated>
+    <content type="html"></content>
+    <summary type="html">
+    
+    </summary>
+    
+      <category term="-- Android -- ReactNative" scheme="http://hanhailong.com/tags/Android-ReactNative/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[优化查询加载大数量的本地相册图片]]></title>
     <link href="http://hanhailong.com/2016/06/27/%E4%BC%98%E5%8C%96%E6%9F%A5%E8%AF%A2%E5%8A%A0%E8%BD%BD%E5%A4%A7%E6%95%B0%E9%87%8F%E7%9A%84%E6%9C%AC%E5%9C%B0%E7%9B%B8%E5%86%8C%E5%9B%BE%E7%89%87/"/>
     <id>http://hanhailong.com/2016/06/27/优化查询加载大数量的本地相册图片/</id>
     <published>2016-06-27T08:20:09.000Z</published>
-    <updated>2016-07-16T02:44:39.000Z</updated>
+    <updated>2016-07-16T02:58:30.000Z</updated>
     <content type="html"><![CDATA[<h2 id="优化查询加载大数量的本地相册图片">优化查询加载大数量的本地相册图片</h2><h3 id="一、概述">一、概述</h3><p>讲解优化查询相册图片之前，我们先来看下PM提出的需求，PM的需求很简单，就是要做一个类似微信的本地相册图片查询控件，主要包含两个两部分：</p>
 <ul>
 <li>进入图片选择页面就要显示出手机中所有的照片，包括系统相册图片和其他目录下的所有图片，并按照时间倒叙排列</li>
@@ -999,7 +1014,7 @@ delegate.download?(<span class="string">"some path"</span>)
     <link href="http://hanhailong.com/2016/01/14/Android%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/"/>
     <id>http://hanhailong.com/2016/01/14/Android小知识总结/</id>
     <published>2016-01-14T15:00:27.000Z</published>
-    <updated>2016-04-20T08:49:11.000Z</updated>
+    <updated>2016-07-25T02:44:44.000Z</updated>
     <content type="html"><![CDATA[<h1 id="onCreate中计算View的高度">onCreate中计算View的高度</h1><p>可以借助getViewTreeObserver().addOnGlobalLayoutListener()来获得宽度或者高度，示例代码如下：</p>
 <pre><code>mWebView.getViewTreeObserver().addOnGlobalLayoutListener(<span class="keyword">new</span> ViewTreeObserver.OnGlobalLayoutListener() {
             <span class="annotation">@Override</span>
@@ -1080,6 +1095,32 @@ int heapSize = manager.getMemoryClass()<span class="comment">;</span>
 </code></pre><p>注意：这里获得heapSize是M为单位返回的 </p>
 <h1 id="duplicate_entry:_android/support/annotation/ColorRes-class">duplicate entry: android/support/annotation/ColorRes.class</h1><p>解决方案，只需要在app下的build.gradle加入以下配置就好了：</p>
 <pre><code><span class="keyword">configurations</span> { all*.<span class="keyword">exclude</span> <span class="keyword">group</span>: <span class="string">'com.android.support'</span>, module: <span class="string">'support-v4'</span> }
+</code></pre><h1 id="方便快捷实现Activity变暗，并带有动画">方便快捷实现Activity变暗，并带有动画</h1><pre><code><span class="comment">/**
+     * 调整窗口的透明度
+     * <span class="doctag">@param</span> from&gt;=0&amp;&amp;from&lt;=1.0f
+     * <span class="doctag">@param</span> to&gt;=0&amp;&amp;to&lt;=1.0f
+     * 
+     * */</span>
+    <span class="keyword">private</span> <span class="function"><span class="keyword">void</span> <span class="title">dimBackground</span><span class="params">(<span class="keyword">final</span> <span class="keyword">float</span> from, <span class="keyword">final</span> <span class="keyword">float</span> to)</span> </span>{
+        <span class="keyword">final</span> Window window = getWindow();
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(from, to);
+        valueAnimator.setDuration(<span class="number">500</span>);
+        valueAnimator.addUpdateListener(<span class="keyword">new</span> AnimatorUpdateListener() {
+            <span class="annotation">@Override</span>
+            <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span> </span>{
+                WindowManager.LayoutParams params = window.getAttributes();
+                params.alpha = (Float) animation.getAnimatedValue();
+                window.setAttributes(params);
+            }
+        });
+
+        valueAnimator.start();
+    }
+</code></pre><p>然后这样调用</p>
+<pre><code><span class="comment">/** 窗口背景变暗*/</span>
+dimBackground(<span class="number">1.0f</span>,<span class="number">0.5f</span>);
+<span class="comment">/** 窗口背景变亮*/</span>
+dimBackground(<span class="number">0.5f</span>,<span class="number">1.0f</span>);
 </code></pre><h1 id="待续…">待续…</h1>]]></content>
     <summary type="html">
     <![CDATA[<h1 id="onCreate中计算View的高度">onCreate中计算View的高度</h1><p>可以借助getViewTreeObserver().addOnGlobalLayoutListener()来获得宽度或者高度，示例代码如下：</p>
@@ -2405,89 +2446,6 @@ view.setLayerType(LAYER_TYPE_NONE)<span class="comment">;</span>
     </summary>
     
       <category term="随笔" scheme="http://hanhailong.com/tags/%E9%9A%8F%E7%AC%94/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Android版本-编译VLC]]></title>
-    <link href="http://hanhailong.com/2015/10/27/Android%E7%89%88%E6%9C%AC-%E7%BC%96%E8%AF%91VLC/"/>
-    <id>http://hanhailong.com/2015/10/27/Android版本-编译VLC/</id>
-    <published>2015-10-27T13:54:31.000Z</published>
-    <updated>2015-11-05T16:06:59.000Z</updated>
-    <content type="html"><![CDATA[<h2>简述</h2>
-
-<p>最近公司项目<a href="http://www.jikexueyuan.com/app/" target="_blank" rel="external">极客学院</a>在线播放器要加一个需求：支持播放倍数加速、支持字幕；之前用的是一个第三方的开源库<a href="https://github.com/Bilibili/ijkplayer" target="_blank" rel="external">ijkplayer</a>，这个库也非常的给力，它对ffmpeg做了很好的封装，不过不支持加速减速播放，所以弃用改成<a href="https://wiki.videolan.org/AndroidCompile" target="_blank" rel="external">VLC-Android</a>，IOS的在这<a href="https://wiki.videolan.org/IOSCompile" target="_blank" rel="external">VLC-IOS</a>.</p>
-<a id="more"></a>
-<p>这里记录下编译Android版本的过程和遇到的错误：</p>
-<p>总体来说是比较顺利的，按照官方的wiki文档一步一步走下来，基本上没有遇到大问题，遇到唯一的问题是<a href="http://download.csdn.net/detail/hanhailong726188/9218615" target="_blank" rel="external">xz-5.0.3.tar.bz2</a>和<a href="http://download.csdn.net/detail/hanhailong726188/9218631" target="_blank" rel="external">protobuf-2.6.1.tar.gz</a>这两个库文件没有下载些来（因为被墙了），我单独下载安装的，这里我把这两个文件放到CSDN上了，有需要的自行下载！！</p>
-<h2>编译过程</h2>
-
-<p>编译的第一步肯定是需要下载一些必要的工具，如果你的系统是Linux，你可以通过api-get来安装：</p>
-<pre><code><span class="label">sudo</span> apt-<span class="preprocessor">get</span> install automake ant autopoint cmake <span class="keyword">build-essential </span>libtool \
-     patch pkg-config protobuf-compiler ragel <span class="keyword">subversion </span>unzip git
-</code></pre><p>我这里用的是Mac Ox，所以采用<a href="http://brew.sh/" target="_blank" rel="external">HomeBrew</a>来安装，首先需要执行命令：</p>
-<pre><code><span class="keyword">brew </span>install automake ant autopoint cmake <span class="keyword">build-essential </span>libtool \
-     patch pkg-config protobuf-compiler ragel <span class="keyword">subversion </span>unzip git
-</code></pre><p>然后等待上面的工具安装完成，安装完成后开始执行下一步</p>
-<p>这里假设你已经装好<a href="http://developer.android.com/sdk/index.html" target="_blank" rel="external">Android SDK</a>和<a href="http://developer.android.com/tools/sdk/ndk/index.html" target="_blank" rel="external">Android NDK</a></p>
-<h4>配置环境变量</h4>
-
-<p>1.cd命令到当前用户目录下，打开.bash_profile文件：</p>
-<pre><code><span class="title">cd</span> <span class="regexp">~
-open</span> .bash_profile
-</code></pre><p>如果没有.bash_profile，请touch新建一个.bash_profile</p>
-<pre><code><span class="tag">touch</span> <span class="class">.bash_profile</span>
-</code></pre><p>打开.bash_profile文件后，在文件里面输入</p>
-<pre><code>export ANDROID_SDK=/Users/HanHailong/Library/Android/sdk
-export ANDROID_NDK=/Users/HanHailong/NDK/android-ndk-r10e
-export PATH=<span class="variable">$PATH</span>:<span class="variable">$ANDROID</span>_SDK/platform-tools:<span class="variable">$ANDROID</span>_SDK/tools
-</code></pre><p>ANDROID_SDK和ANDROID_NDK后面的换成你自己对应的路径。</p>
-<h4>克隆代码</h4>
-
-<pre><code>git clone <span class="string">git:</span><span class="comment">//git.videolan.org/vlc-ports/android.git</span>
-</code></pre><p></p><h5>编译工程</h5><br>将项目clone下来后就开始编译项目了，<br>cd命令到你clone下来的工程里面，执行命令：<p></p>
-<pre><code>./compile.<span class="keyword">sh</span>
-</code></pre><p>然后VLC会自动执行一长系列的下载、编译工作，这里需要等老长时间，如果你有vpn，最好开启vpn，因为一些用到的文件被墙了！！我这里就遇到坑了，<a href="http://download.csdn.net/detail/hanhailong726188/9218615" target="_blank" rel="external">xz-5.0.3.tar.bz2</a>和<a href="http://download.csdn.net/detail/hanhailong726188/9218631" target="_blank" rel="external">protobuf-2.6.1.tar.gz</a>下载失败，而导致VLC编译失败，没办法，只能将上面两个文件单独下载下来.</p>
-<ol>
-<li><p>解压并安装protobuf</p>
-<p> 一步一步执行下面如下命令：</p>
-<pre><code>tar -zxf protobuf-<span class="number">2.6</span><span class="number">.1</span>.tar.gz
-cd protobuf-<span class="number">2.6</span><span class="number">.1</span>
-./configure
-make install
-</code></pre></li>
-</ol>
-<ol>
-<li><p>解压并安装xz</p>
-<p> 一步一步执行下面如下命令：</p>
-<pre><code>tar -zxf xz-<span class="number">5.0</span><span class="number">.3</span>.tar.bz2
-cd xz-<span class="number">5.0</span><span class="number">.3</span>
-./configure
-make install
-</code></pre></li>
-</ol>
-<p>执行完了后，继续回到VLC工程目录下执行命令：</p>
-<pre><code>./compile.<span class="keyword">sh</span>
-</code></pre><p>之后，VLC会继续执行下载、编译库文件，稍微等一段时间，快得几分钟，慢的十几分钟！！看编译成功后的截图：</p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/vlc_android.png?raw=true" alt="VLC"></p>
-<h4>编译结果</h4>
-
-<p>编译成功后，会在<font color="red">vlc-android/build/outputs/apk</font>目录下生成编译后的apk包：</p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/vlc_apk.png?raw=true" alt="apk"></p>
-<p>我们将其安装到真机上，效果图还是蛮不错的：</p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/vlc_1.png?raw=true" alt="image1"><br><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/vlc_2.png?raw=true" alt="image2"><br><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/vlc_3.png?raw=true" alt="image3"></p>
-<p>VLC很强大，支持字幕，支持锁定屏幕，支持跳转到某个具体时间，支持0.25-4倍的慢放、快放、支持亮度调节、支持音量调节、支持快进、支持直播等特性，是做在线视频播放的绝佳选择之一！！！！</p>
-<p>上面两个<a href="http://download.csdn.net/detail/hanhailong726188/9218615" target="_blank" rel="external">xz-5.0.3.tar.bz2</a>和<a href="http://download.csdn.net/detail/hanhailong726188/9218631" target="_blank" rel="external">protobuf-2.6.1.tar.gz</a>可以在这里下载！</p>
-<p>最后，附上我编译好的项目<a href="https://github.com/hanhailong/VCL-Android" target="_blank" rel="external">VLC-Android</a>，这里我只编译了四种so包（armeabi-v7a、armeabi、x86、mips），有需要的朋友自行下载。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2>简述</h2>
-
-<p>最近公司项目<a href="http://www.jikexueyuan.com/app/">极客学院</a>在线播放器要加一个需求：支持播放倍数加速、支持字幕；之前用的是一个第三方的开源库<a href="https://github.com/Bilibili/ijkplayer">ijkplayer</a>，这个库也非常的给力，它对ffmpeg做了很好的封装，不过不支持加速减速播放，所以弃用改成<a href="https://wiki.videolan.org/AndroidCompile">VLC-Android</a>，IOS的在这<a href="https://wiki.videolan.org/IOSCompile">VLC-IOS</a>.</p>]]>
-    
-    </summary>
-    
-      <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
     
   </entry>
   

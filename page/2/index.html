@@ -228,6 +228,118 @@
             
               
                 
+                <a class="post-title-link" href="/2016/01/14/Android小知识总结/" itemprop="url">
+                  Android小知识总结
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-01-14T23:00:27+08:00" content="2016-01-14">
+              2016-01-14
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/14/Android小知识总结/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/14/Android小知识总结/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="onCreate中计算View的高度">onCreate中计算View的高度</h1><p>可以借助getViewTreeObserver().addOnGlobalLayoutListener()来获得宽度或者高度，示例代码如下：</p>
+<pre><code>mWebView.getViewTreeObserver().addOnGlobalLayoutListener(<span class="keyword">new</span> ViewTreeObserver.OnGlobalLayoutListener() {
+            <span class="annotation">@Override</span>
+            <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onGlobalLayout</span><span class="params">()</span> </span>{
+                mWebView.getWidth();
+                mWebView.getHeight();
+                <span class="comment">//防止调用多次</span>
+                mWebView.getViewTreeObserver().removeOnGlobalLayoutListener(<span class="keyword">this</span>);
+            }
+        });
+</code></pre><h1 id="PopupWindow计算高度">PopupWindow计算高度</h1><p>PopupWindow在初始化创建好后，我想知道它的高度和宽度，可以这样计算：</p>
+<pre><code><span class="tag">popupWindow</span><span class="class">.getContentView</span>()<span class="class">.measure</span>(0, 0);
+<span class="tag">popupWindow</span><span class="class">.getContentView</span>()<span class="class">.getMeasuredWidth</span>();
+<span class="tag">popupWindow</span><span class="class">.getContentView</span>()<span class="class">.getMeasuredHeight</span>();
+</code></pre>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/01/14/Android小知识总结/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/01/12/IOS开发小技巧/" itemprop="url">
                   IOS开发小技巧
                 </a>
@@ -1246,106 +1358,6 @@ maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.C
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/10/27/Android版本-编译VLC/" itemprop="url">
-                  Android版本-编译VLC
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-10-27T21:54:31+08:00" content="2015-10-27">
-              2015-10-27
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/10/27/Android版本-编译VLC/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/27/Android版本-编译VLC/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2>简述</h2>
-
-<p>最近公司项目<a href="http://www.jikexueyuan.com/app/">极客学院</a>在线播放器要加一个需求：支持播放倍数加速、支持字幕；之前用的是一个第三方的开源库<a href="https://github.com/Bilibili/ijkplayer">ijkplayer</a>，这个库也非常的给力，它对ffmpeg做了很好的封装，不过不支持加速减速播放，所以弃用改成<a href="https://wiki.videolan.org/AndroidCompile">VLC-Android</a>，IOS的在这<a href="https://wiki.videolan.org/IOSCompile">VLC-IOS</a>.</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/27/Android版本-编译VLC/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1391,7 +1403,7 @@ maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.C
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">43</span>
+              <span class="site-state-item-count">44</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1401,7 +1413,7 @@ maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.C
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

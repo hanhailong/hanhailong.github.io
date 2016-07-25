@@ -228,6 +228,101 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/16/ReactNative开发Android端遇到的一些坑总结/" itemprop="url">
+                  ReactNative开发Android端遇到的一些坑总结
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-16T11:13:24+08:00" content="2016-07-16">
+              2016-07-16
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/16/ReactNative开发Android端遇到的一些坑总结/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/16/ReactNative开发Android端遇到的一些坑总结/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/06/27/优化查询加载大数量的本地相册图片/" itemprop="url">
                   优化查询加载大数量的本地相册图片
                 </a>
@@ -1355,118 +1450,6 @@ String[] list = dirFile.list(<span class="keyword">new</span> FilenameFilter() {
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/01/14/Android小知识总结/" itemprop="url">
-                  Android小知识总结
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-01-14T23:00:27+08:00" content="2016-01-14">
-              2016-01-14
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/01/14/Android小知识总结/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/14/Android小知识总结/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="onCreate中计算View的高度">onCreate中计算View的高度</h1><p>可以借助getViewTreeObserver().addOnGlobalLayoutListener()来获得宽度或者高度，示例代码如下：</p>
-<pre><code>mWebView.getViewTreeObserver().addOnGlobalLayoutListener(<span class="keyword">new</span> ViewTreeObserver.OnGlobalLayoutListener() {
-            <span class="annotation">@Override</span>
-            <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onGlobalLayout</span><span class="params">()</span> </span>{
-                mWebView.getWidth();
-                mWebView.getHeight();
-                <span class="comment">//防止调用多次</span>
-                mWebView.getViewTreeObserver().removeOnGlobalLayoutListener(<span class="keyword">this</span>);
-            }
-        });
-</code></pre><h1 id="PopupWindow计算高度">PopupWindow计算高度</h1><p>PopupWindow在初始化创建好后，我想知道它的高度和宽度，可以这样计算：</p>
-<pre><code><span class="tag">popupWindow</span><span class="class">.getContentView</span>()<span class="class">.measure</span>(0, 0);
-<span class="tag">popupWindow</span><span class="class">.getContentView</span>()<span class="class">.getMeasuredWidth</span>();
-<span class="tag">popupWindow</span><span class="class">.getContentView</span>()<span class="class">.getMeasuredHeight</span>();
-</code></pre>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/01/14/Android小知识总结/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1512,7 +1495,7 @@ String[] list = dirFile.list(<span class="keyword">new</span> FilenameFilter() {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">43</span>
+              <span class="site-state-item-count">44</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1522,7 +1505,7 @@ String[] list = dirFile.list(<span class="keyword">new</span> FilenameFilter() {
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
