@@ -850,6 +850,8 @@ String[] list = dirFile.list(<span class="keyword">new</span> FilenameFilter() {
 <p>图片大体介绍了从Project到运行到设备或者模拟器的一个大体流程，我们也从中看到一个完整的apk包含如下内容：一个或多个dex文件、resources.arsc、未编译的资源文件以及AndroidManifest.xml文件等等</p>
 <h1 id="详细打包流程">详细打包流程</h1><p>官网给了我们一张非常清晰的打包流程图：</p>
 <p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/android_build.png?raw=true" alt=""></p>
+<p>下面这幅图就是整个Android应用（不包含NDK部分）的构建编译框架详细流程说明（来源于官方）：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/android_build_detail.png?raw=true" alt=""></p>
 <h1 id="打包步骤">打包步骤</h1><p>总体打包步骤我们可以概括以下七步：</p>
 <ol>
 <li>通过aapt打包资源文件，生成R.java和resources.arsc</li>

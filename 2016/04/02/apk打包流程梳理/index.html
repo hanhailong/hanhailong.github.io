@@ -69,7 +69,8 @@
 简单build流程首先，我们看下官网介绍Building and Running Overview,官网给了我们一张非常简单的编译、打包、apk生成内容以及签名的图">
 <meta property="og:image" content="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/build-simplified.png?raw=true">
 <meta property="og:image" content="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/android_build.png?raw=true">
-<meta property="og:updated_time" content="2016-04-02T07:47:24.000Z">
+<meta property="og:image" content="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/android_build_detail.png?raw=true">
+<meta property="og:updated_time" content="2016-07-26T06:02:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="apk打包流程梳理">
 <meta name="twitter:description" content="简介一些初学Android的开发者可能只知道写完项目，然后点击AndroidStudio中的run按钮就可以把项目运行到手机或者模拟器上，而一个apk是怎么从编译打包到最后签名安装到手机上的原理不知道，这里就带领大家理解一下内部的原理
@@ -283,6 +284,8 @@
 <p>图片大体介绍了从Project到运行到设备或者模拟器的一个大体流程，我们也从中看到一个完整的apk包含如下内容：一个或多个dex文件、resources.arsc、未编译的资源文件以及AndroidManifest.xml文件等等</p>
 <h1 id="详细打包流程">详细打包流程</h1><p>官网给了我们一张非常清晰的打包流程图：</p>
 <p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/android_build.png?raw=true" alt=""></p>
+<p>下面这幅图就是整个Android应用（不包含NDK部分）的构建编译框架详细流程说明（来源于官方）：</p>
+<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/android_build_detail.png?raw=true" alt=""></p>
 <h1 id="打包步骤">打包步骤</h1><p>总体打包步骤我们可以概括以下七步：</p>
 <ol>
 <li>通过aapt打包资源文件，生成R.java和resources.arsc</li>
