@@ -228,6 +228,228 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/31/Android构建神器之Gradle/" itemprop="url">
+                  Android构建神器之Gradle
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-31T15:26:19+08:00" content="2016-08-31">
+              2016-08-31
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/31/Android构建神器之Gradle/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/31/Android构建神器之Gradle/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="什么是Gradle">什么是Gradle</h1><h1 id="Gradle构建生命周期">Gradle构建生命周期</h1><h2 id="构建阶段">构建阶段</h2><h3 id="初始化阶段">初始化阶段</h3><h3 id="配置阶段">配置阶段</h3><h3 id="执行阶段">执行阶段</h3><h1 id="Groovy小demo">Groovy小demo</h1><h1 id="Gradle实战">Gradle实战</h1><h1 id="Android_Gradle实战">Android Gradle实战</h1>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/31/Android-分析并优化首页启动时间/" itemprop="url">
+                  Android-分析并优化首页启动时间
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-31T17:21:07+08:00" content="2016-07-31">
+              2016-07-31
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/31/Android-分析并优化首页启动时间/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/31/Android-分析并优化首页启动时间/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="前言">前言</h1><p>随着app项目越来越大，功能业务越来越多，需要我们初始化的模块也越来越多，application中onCreate和attachBaseContext方法越来越臃肿，最直接导致的是我们app启动时间大大增加</p>
+<h1 id="性能分析">性能分析</h1><h2 id="首页HomeActivity">首页HomeActivity</h2><p>执行命令</p>
+<pre><code>am start -W com.wuba/com<span class="class">.wuba</span><span class="class">.home</span><span class="class">.activity</span><span class="class">.HomeActivity</span>
+</code></pre><p>输出结果：</p>
+<pre><code><span class="attribute">Starting</span>: <span class="string">Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=com.wuba/.home.activity.HomeActivity }</span>
+<span class="attribute">Status</span>: <span class="string">ok</span>
+<span class="attribute">Activity</span>: <span class="string">com.wuba/.home.activity.HomeActivity</span>
+<span class="attribute">ThisTime</span>: <span class="string">1858</span>
+<span class="attribute">TotalTime</span>: <span class="string">1858</span>
+<span class="attribute">WaitTime</span>: <span class="string">1925</span>
+<span class="attribute">Complete</span>
+</code></pre><h2 id="启动页面LaunchActivity">启动页面LaunchActivity</h2><p>执行命令</p>
+<pre><code>adb shell start -W com.wuba/com<span class="class">.wuba</span><span class="class">.activity</span><span class="class">.launch</span><span class="class">.LaunchActivity</span>
+</code></pre><p>输出结果</p>
+<pre><code><span class="attribute">Starting</span>: <span class="string">Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=com.wuba/.activity.launch.LaunchActivity }</span>
+<span class="attribute">Status</span>: <span class="string">ok</span>
+<span class="attribute">Activity</span>: <span class="string">com.wuba/.activity.launch.LaunchActivity</span>
+<span class="attribute">ThisTime</span>: <span class="string">1134</span>
+<span class="attribute">TotalTime</span>: <span class="string">1134</span>
+<span class="attribute">WaitTime</span>: <span class="string">1147</span>
+<span class="attribute">Complete</span>
+</code></pre><h2 id="启动场景">启动场景</h2><h3 id="冷启动">冷启动</h3><p>也就是我们常说的冷启动,这时候你的应用程序的进程是没有创建的. 这也是大部分应用的使用场景.用户在桌面上点击你应用的 icon 之后,首先要创建进程,然后才启动 MainActivity.这时候adb shell am start -w packagename/xxxActivity 返回的结果,就是标准的应用程序的启动时间（注意 Android 5.0 之前的手机是没有 WaitTime 这个值的）:</p>
+<pre><code><span class="attribute">Starting</span>: <span class="string">Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=com.wuba/.home.activity.HomeActivity }</span>
+<span class="attribute">Status</span>: <span class="string">ok</span>
+<span class="attribute">Activity</span>: <span class="string">com.wuba/.home.activity.HomeActivity</span>
+<span class="attribute">ThisTime</span>: <span class="string">1858</span>
+<span class="attribute">TotalTime</span>: <span class="string">1858</span>
+<span class="attribute">WaitTime</span>: <span class="string">1925</span>
+<span class="attribute">Complete</span>
+</code></pre><h3 id="热启动">热启动</h3><p>就是应用不是第一次启动，如果是你按Back键，并没有将应用进程杀掉的话，那么执行上述命令就会快一些，因为不用创建进程了，只需要启动一个Activity即可。这也就是我们说的应用热启动。</p>
+<h3 id="参考资料">参考资料</h3><p><a href="http://www.open-open.com/lib/view/open1451570355573.html" target="_blank" rel="external">http://www.open-open.com/lib/view/open1451570355573.html</a></p>
+<p><a href="https://www.zhihu.com/question/35487841/answer/63011462" target="_blank" rel="external">知乎·计算apk的启动时间</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/16/ReactNative开发Android端遇到的一些坑总结/" itemprop="url">
                   ReactNative开发Android端遇到的一些坑总结
                 </a>
@@ -1231,227 +1453,6 @@ String[] list = dirFile.list(<span class="keyword">new</span> FilenameFilter() {
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/02/16/OC、Swift代码注释-pragma-mark/" itemprop="url">
-                  OC、Swift代码注释#pragma mark
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-02-16T16:10:49+08:00" content="2016-02-16">
-              2016-02-16
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/16/OC、Swift代码注释-pragma-mark/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/16/OC、Swift代码注释-pragma-mark/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>以前在我们写OC代码的时候，经常通过下面语法来为代码添加注释：</p>
-<pre><code><span class="id">#pragma</span> <span class="tag">mark</span> – Initialization 
-<span class="tag">code</span> here...
-<span class="id">#pragma</span> <span class="tag">mark</span> – Table Managementmore 
-<span class="tag">code</span> here...
-</code></pre><p>但是，如果是Swift代码，这种写法就不好使了，下面给出Swift代码注释，Swift代码注释有三种:</p>
-<ol>
-<li><p>MARK</p>
-<pre><code><span class="comment">// MARK: - Initialization</span>
-<span class="tag">code</span> here...
-<span class="comment">// MARK: - View Managementmore </span>
-<span class="tag">code</span> here...
-</code></pre></li>
-<li><p>TODO</p>
-<pre><code><span class="comment">// <span class="doctag">TODO:</span> - <span class="label">XXXXXXXX</span></span>
-<span class="tag">code</span> here...
-</code></pre></li>
-<li><p>FIXME</p>
-<pre><code><span class="comment">// <span class="doctag">FIXME:</span> - <span class="label">XXXXXXXX</span></span>
-<span class="tag">code</span> here...
-</code></pre></li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/01/28/Swift-？和！的区别/" itemprop="url">
-                  Swift-？和！的区别
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-01-28T10:43:42+08:00" content="2016-01-28">
-              2016-01-28
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/01/28/Swift-？和！的区别/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/28/Swift-？和！的区别/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>Swift 是一种新的编程语言，用于编写iOS，OS X 和 watchOS应用程序。Swift 结合了 C 和 Objective-C 的优点并且不受 C 兼容性的限制。Swift 采用安全的编程模式并添加了很多新特性，这将使编程更简单，更灵活，也更有趣。Swift 是基于成熟而且倍受喜爱的 Cocoa 和 Cocoa Touch 框架，它的降临将重新定义软件开发。</p>
-<p>今天我们的主角是可选类型？和！</p>
-<p>Swift语言使用var定义变量，但和别的语言不同，Swift里不会自动给变量赋初始值，也就是说变量不会有默认值，所以要求使用变量之前必须要对其初始化。如果在使用变量之前不进行初始化就会报错：</p>
-<pre><code><span class="keyword">var</span> <span class="keyword">value</span> : String
-<span class="comment">//error: variable 'stringValue' used before being initialized</span>
-<span class="keyword">let</span> hash = <span class="keyword">value</span>.hashValue
-</code></pre>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/01/28/Swift-？和！的区别/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1497,7 +1498,7 @@ String[] list = dirFile.list(<span class="keyword">new</span> FilenameFilter() {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-count">46</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1507,7 +1508,7 @@ String[] list = dirFile.list(<span class="keyword">new</span> FilenameFilter() {
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

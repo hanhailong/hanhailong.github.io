@@ -4,7 +4,7 @@
   <subtitle><![CDATA[学习总结 思考感悟 知识管理 代码分享]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://hanhailong.com/"/>
-  <updated>2016-07-18T15:38:51.000Z</updated>
+  <updated>2016-08-31T08:17:29.000Z</updated>
   <id>http://hanhailong.com/</id>
   
   <author>
@@ -13,6 +13,69 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Android构建神器之Gradle]]></title>
+    <link href="http://hanhailong.com/2016/08/31/Android%E6%9E%84%E5%BB%BA%E7%A5%9E%E5%99%A8%E4%B9%8BGradle/"/>
+    <id>http://hanhailong.com/2016/08/31/Android构建神器之Gradle/</id>
+    <published>2016-08-31T07:26:19.000Z</published>
+    <updated>2016-08-31T08:17:29.000Z</updated>
+    <content type="html"><![CDATA[<h1 id="什么是Gradle">什么是Gradle</h1><h1 id="Gradle构建生命周期">Gradle构建生命周期</h1><h2 id="构建阶段">构建阶段</h2><h3 id="初始化阶段">初始化阶段</h3><h3 id="配置阶段">配置阶段</h3><h3 id="执行阶段">执行阶段</h3><h1 id="Groovy小demo">Groovy小demo</h1><h1 id="Gradle实战">Gradle实战</h1><h1 id="Android_Gradle实战">Android Gradle实战</h1>]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="什么是Gradle">什么是Gradle</h1><h1 id="Gradle构建生命周期">Gradle构建生命周期</h1><h2 id="构建阶段">构建阶段</h2><h3 id="初始化阶段">初始化阶段</h3><h3 id="配置阶段">配置阶段</]]>
+    </summary>
+    
+      <category term="-- Android -- Gradle" scheme="http://hanhailong.com/tags/Android-Gradle/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Android-分析并优化首页启动时间]]></title>
+    <link href="http://hanhailong.com/2016/07/31/Android-%E5%88%86%E6%9E%90%E5%B9%B6%E4%BC%98%E5%8C%96%E9%A6%96%E9%A1%B5%E5%90%AF%E5%8A%A8%E6%97%B6%E9%97%B4/"/>
+    <id>http://hanhailong.com/2016/07/31/Android-分析并优化首页启动时间/</id>
+    <published>2016-07-31T09:21:07.000Z</published>
+    <updated>2016-08-01T02:28:23.000Z</updated>
+    <content type="html"><![CDATA[<h1 id="前言">前言</h1><p>随着app项目越来越大，功能业务越来越多，需要我们初始化的模块也越来越多，application中onCreate和attachBaseContext方法越来越臃肿，最直接导致的是我们app启动时间大大增加</p>
+<h1 id="性能分析">性能分析</h1><h2 id="首页HomeActivity">首页HomeActivity</h2><p>执行命令</p>
+<pre><code>am start -W com.wuba/com<span class="class">.wuba</span><span class="class">.home</span><span class="class">.activity</span><span class="class">.HomeActivity</span>
+</code></pre><p>输出结果：</p>
+<pre><code><span class="attribute">Starting</span>: <span class="string">Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=com.wuba/.home.activity.HomeActivity }</span>
+<span class="attribute">Status</span>: <span class="string">ok</span>
+<span class="attribute">Activity</span>: <span class="string">com.wuba/.home.activity.HomeActivity</span>
+<span class="attribute">ThisTime</span>: <span class="string">1858</span>
+<span class="attribute">TotalTime</span>: <span class="string">1858</span>
+<span class="attribute">WaitTime</span>: <span class="string">1925</span>
+<span class="attribute">Complete</span>
+</code></pre><h2 id="启动页面LaunchActivity">启动页面LaunchActivity</h2><p>执行命令</p>
+<pre><code>adb shell start -W com.wuba/com<span class="class">.wuba</span><span class="class">.activity</span><span class="class">.launch</span><span class="class">.LaunchActivity</span>
+</code></pre><p>输出结果</p>
+<pre><code><span class="attribute">Starting</span>: <span class="string">Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=com.wuba/.activity.launch.LaunchActivity }</span>
+<span class="attribute">Status</span>: <span class="string">ok</span>
+<span class="attribute">Activity</span>: <span class="string">com.wuba/.activity.launch.LaunchActivity</span>
+<span class="attribute">ThisTime</span>: <span class="string">1134</span>
+<span class="attribute">TotalTime</span>: <span class="string">1134</span>
+<span class="attribute">WaitTime</span>: <span class="string">1147</span>
+<span class="attribute">Complete</span>
+</code></pre><h2 id="启动场景">启动场景</h2><h3 id="冷启动">冷启动</h3><p>也就是我们常说的冷启动,这时候你的应用程序的进程是没有创建的. 这也是大部分应用的使用场景.用户在桌面上点击你应用的 icon 之后,首先要创建进程,然后才启动 MainActivity.这时候adb shell am start -w packagename/xxxActivity 返回的结果,就是标准的应用程序的启动时间（注意 Android 5.0 之前的手机是没有 WaitTime 这个值的）:</p>
+<pre><code><span class="attribute">Starting</span>: <span class="string">Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=com.wuba/.home.activity.HomeActivity }</span>
+<span class="attribute">Status</span>: <span class="string">ok</span>
+<span class="attribute">Activity</span>: <span class="string">com.wuba/.home.activity.HomeActivity</span>
+<span class="attribute">ThisTime</span>: <span class="string">1858</span>
+<span class="attribute">TotalTime</span>: <span class="string">1858</span>
+<span class="attribute">WaitTime</span>: <span class="string">1925</span>
+<span class="attribute">Complete</span>
+</code></pre><h3 id="热启动">热启动</h3><p>就是应用不是第一次启动，如果是你按Back键，并没有将应用进程杀掉的话，那么执行上述命令就会快一些，因为不用创建进程了，只需要启动一个Activity即可。这也就是我们说的应用热启动。</p>
+<h3 id="参考资料">参考资料</h3><p><a href="http://www.open-open.com/lib/view/open1451570355573.html" target="_blank" rel="external">http://www.open-open.com/lib/view/open1451570355573.html</a></p>
+<p><a href="https://www.zhihu.com/question/35487841/answer/63011462" target="_blank" rel="external">知乎·计算apk的启动时间</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="前言">前言</h1><p>随着app项目越来越大，功能业务越来越多，需要我们初始化的模块也越来越多，application中onCreate和attachBaseContext方法越来越臃肿，最直接导致的是我们app启动时间大大增加</p>
+<h1 id="性能]]>
+    </summary>
+    
+      <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[ReactNative开发Android端遇到的一些坑总结]]></title>
@@ -1016,7 +1079,7 @@ delegate.download?(<span class="string">"some path"</span>)
     <link href="http://hanhailong.com/2016/01/14/Android%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/"/>
     <id>http://hanhailong.com/2016/01/14/Android小知识总结/</id>
     <published>2016-01-14T15:00:27.000Z</published>
-    <updated>2016-07-25T02:44:44.000Z</updated>
+    <updated>2016-10-25T05:44:24.000Z</updated>
     <content type="html"><![CDATA[<h1 id="onCreate中计算View的高度">onCreate中计算View的高度</h1><p>可以借助getViewTreeObserver().addOnGlobalLayoutListener()来获得宽度或者高度，示例代码如下：</p>
 <pre><code>mWebView.getViewTreeObserver().addOnGlobalLayoutListener(<span class="keyword">new</span> ViewTreeObserver.OnGlobalLayoutListener() {
             <span class="annotation">@Override</span>
@@ -1123,6 +1186,16 @@ int heapSize = manager.getMemoryClass()<span class="comment">;</span>
 dimBackground(<span class="number">1.0f</span>,<span class="number">0.5f</span>);
 <span class="comment">/** 窗口背景变亮*/</span>
 dimBackground(<span class="number">0.5f</span>,<span class="number">1.0f</span>);
+</code></pre><h1 id="Release模式下借助Proguard清除掉Log类日志">Release模式下借助Proguard清除掉Log类日志</h1><p>在Proguard配置文件中，确保没有添加 –dontoptimize选项，添加如下代码：</p>
+<pre><code>-assumenosideeffects <span class="keyword">class</span> android.util.Log {
+        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> *** <span class="title">d</span><span class="params">(...)</span></span>;
+        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> *** <span class="title">e</span><span class="params">(...)</span></span>;
+        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> *** <span class="title">i</span><span class="params">(...)</span></span>;
+        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> *** <span class="title">v</span><span class="params">(...)</span></span>;
+        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> *** <span class="title">println</span><span class="params">(...)</span></span>;
+        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> *** <span class="title">w</span><span class="params">(...)</span></span>;
+        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> *** <span class="title">wtf</span><span class="params">(...)</span></span>;
+}
 </code></pre><h1 id="待续…">待续…</h1>]]></content>
     <summary type="html">
     <![CDATA[<h1 id="onCreate中计算View的高度">onCreate中计算View的高度</h1><p>可以借助getViewTreeObserver().addOnGlobalLayoutListener()来获得宽度或者高度，示例代码如下：</p>
@@ -2331,123 +2404,6 @@ view.setLayerType(LAYER_TYPE_NONE)<span class="comment">;</span>
     </summary>
     
       <category term="Sublime Text" scheme="http://hanhailong.com/tags/Sublime-Text/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Android-小米桌面图标显示角标数]]></title>
-    <link href="http://hanhailong.com/2015/11/23/Android-%E5%B0%8F%E7%B1%B3%E6%A1%8C%E9%9D%A2%E5%9B%BE%E6%A0%87%E6%98%BE%E7%A4%BA%E8%A7%92%E6%A0%87%E6%95%B0/"/>
-    <id>http://hanhailong.com/2015/11/23/Android-小米桌面图标显示角标数/</id>
-    <published>2015-11-23T07:07:11.000Z</published>
-    <updated>2015-11-23T10:02:09.000Z</updated>
-    <content type="html"><![CDATA[<h3>基本介绍</h3>
-
-<p>最近有群里问：怎样在小米手机桌面的图标上显示角标数，我看了下我的红米note手机，果然有的第三方app图标上显示角标数，尤其是微信和QQ。这让我立马想到了：小米是不是对通知栏做了手脚。立马我查了相关文档并做了相关的测试，发现果然如我猜测的：MIUI系统对通知栏做了手脚。它目前有两种情况：</p>
-<ol>
-<li>默认情况<br> 当第三方app向通知栏发送一条通知（一般不带进度条并且用户可以删除的通知），那么此时app icon的角标数就会显示1。<br> 这个时候app显示的角标数和通知栏里app发送的通知数是对应的，即向通知栏发多少条通知就会显示多少角标数。</li>
-</ol>
-<a id="more"></a>
-<ol>
-<li><p>定义角标数量<br> 如果想让app在通知栏里只显示一条通知，但角标数是多个怎么办呢？</p>
-<p> 原理是通过反射拿到<em>Notification</em>的私有属性<em>extraNotification</em>，重点就是这个<em>extraNotification</em>,MIUI系统对这个重定义了，这个类在MIUI系统里是<em>android.app.MiuiNotification</em>这个类，这个类里面有个私有属性<em>messageCount</em>,我们只要改变这个<em>messageCount</em>值就能显示的改变app icon的角标数了。如下图所示：</p>
-</li>
-</ol>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/miui_notification.png?raw=true" alt="miuinotification">    </p>
-<p>这里给出代码示例：</p>
-<pre><code><span class="type">NotificationCompat</span>.<span class="type">Builder</span> builder = new <span class="type">NotificationCompat</span>.<span class="type">Builder</span>(this)
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle(<span class="string">"小米角标"</span>)
-            .setContentText(<span class="string">"miui桌面角标消息"</span>);
-
-    <span class="type">NotificationManagerCompat</span> managerCompat = <span class="type">NotificationManagerCompat</span>.<span class="keyword">from</span>(this);
-
-    <span class="type">Notification</span> notification = builder.build();
-    <span class="keyword">try</span> {
-        <span class="type">Field</span> field = notification.getClass().getDeclaredField(<span class="string">"extraNotification"</span>);
-
-        <span class="type">Object</span> extraNotification = field.get(notification);
-
-        <span class="type">Method</span> <span class="keyword">method</span> = extraNotification.getClass().getDeclaredMethod(<span class="string">"setMessageCount"</span>, <span class="type">int</span>.class);
-
-        <span class="keyword">method</span>.invoke(extraNotification, <span class="number">10</span>);
-    } catch (<span class="type">Exception</span> e) {
-          e.printStackTrace();
-    }
-
-    managerCompat.notify(<span class="number">0</span>, notification);
-</code></pre><p>上面的数字10就是要显示的角标数，我们看下结果：</p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/miui_app_icon_count.png?raw=true" alt="app-icon"></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h3>基本介绍</h3>
-
-<p>最近有群里问：怎样在小米手机桌面的图标上显示角标数，我看了下我的红米note手机，果然有的第三方app图标上显示角标数，尤其是微信和QQ。这让我立马想到了：小米是不是对通知栏做了手脚。立马我查了相关文档并做了相关的测试，发现果然如我猜测的：MIUI系统对通知栏做了手脚。它目前有两种情况：</p>
-<ol>
-<li>默认情况<br> 当第三方app向通知栏发送一条通知（一般不带进度条并且用户可以删除的通知），那么此时app icon的角标数就会显示1。<br> 这个时候app显示的角标数和通知栏里app发送的通知数是对应的，即向通知栏发多少条通知就会显示多少角标数。</li>
-</ol>]]>
-    
-    </summary>
-    
-      <category term="Android" scheme="http://hanhailong.com/tags/Android/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Android-部分作品鉴赏]]></title>
-    <link href="http://hanhailong.com/2015/11/04/Android-%E9%83%A8%E5%88%86%E4%BD%9C%E5%93%81%E9%89%B4%E8%B5%8F/"/>
-    <id>http://hanhailong.com/2015/11/04/Android-部分作品鉴赏/</id>
-    <published>2015-11-04T15:32:50.000Z</published>
-    <updated>2015-11-04T15:56:09.000Z</updated>
-    <content type="html"><![CDATA[<p>时间过得真快，马上快毕业四年了，这里整理了下我做过的部分App，当然还有一些其他的App，不是外包就是没有纪念意义，这里就不列举了！</p>
-<a id="more"></a>
-<h3>51拉勾</h3>
-
-<p><a href="http://www.wandoujia.com/apps/com.ydcy.lago.app" target="_blank" rel="external">51拉钩</a>是我做过的第二个商业Android客户端App，承载了我很多记忆，现在还记得当初和小伙伴们加班到晚上11点、12点甚至凌晨两三点的情景（岁月不饶人啊~~~）！！！</p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/lagou-1.png?raw=true" alt="家庭首页"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/lagou-2.png?raw=true" alt="家庭首页"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/lagou-3.png?raw=true" alt="家庭首页"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/lagou-4.png?raw=true" alt="家庭首页"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/lagou-5.png?raw=true" alt="家庭首页"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/lagou-6.png?raw=true" alt="家庭首页"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/lagou-7.png?raw=true" alt="家庭首页"></p>
-<h3>51听听</h3>
-
-<p><a href="http://www.wandoujia.com/apps/com.ydcy.ting.app" target="_blank" rel="external">51听听</a>是继51拉钩之后的又一个商业App，这个App比较有意思，里面包括大量童话、唐诗三百首等儿童教育方面的故事！！！</p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ting-1.png?raw=true" alt="51听"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ting-2.png?raw=true" alt="51听"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ting-3.png?raw=true" alt="51听"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ting-4.png?raw=true" alt="51听"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ting-5.png?raw=true" alt="51听"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ting-6.png?raw=true" alt="51听"></p>
-<h3>发镖</h3>
-
-<p><a href="http://www.wandoujia.com/apps/com.cubead.appclient" target="_blank" rel="external">发镖</a>这是我加入北京博雅立方做过的唯一的一款App，包括IOS版本，这个App以前叫营销掌中宝，是国内首家最专业的营销推广平台，服务类目包括微信营销、百度营销、建站推广等多产品类目。</p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-1.png?raw=true" alt="发镖"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-2.png?raw=true" alt="发镖"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-3.png?raw=true" alt="发镖"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-4.png?raw=true" alt="发镖"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-5.png?raw=true" alt="发镖"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-6.png?raw=true" alt="发镖"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-7.png?raw=true" alt="发镖"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-8.png?raw=true" alt="发镖"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-9.png?raw=true" alt="发镖"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/ying-10.png?raw=true" alt="发镖"></p>
-<h3>极客学院</h3>
-
-<p><a href="http://www.jikexueyuan.com/app/" target="_blank" rel="external">极客学院</a>，中国最大的IT职业在线教育平台！！</p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/jike-1.png?raw=true" alt="jike"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/jike-2.png?raw=true" alt="jike"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/jike-3.png?raw=true" alt="jike"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/jike-4.png?raw=true" alt="jike"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/jike-5.png?raw=true" alt="jike"></p>
-<p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/collections_app/jike-6.png?raw=true" alt="jike"></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>时间过得真快，马上快毕业四年了，这里整理了下我做过的部分App，当然还有一些其他的App，不是外包就是没有纪念意义，这里就不列举了！</p>]]>
-    
-    </summary>
-    
-      <category term="随笔" scheme="http://hanhailong.com/tags/%E9%9A%8F%E7%AC%94/"/>
     
   </entry>
   

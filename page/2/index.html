@@ -228,6 +228,227 @@
             
               
                 
+                <a class="post-title-link" href="/2016/02/16/OC、Swift代码注释-pragma-mark/" itemprop="url">
+                  OC、Swift代码注释#pragma mark
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-02-16T16:10:49+08:00" content="2016-02-16">
+              2016-02-16
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/02/16/OC、Swift代码注释-pragma-mark/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/16/OC、Swift代码注释-pragma-mark/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>以前在我们写OC代码的时候，经常通过下面语法来为代码添加注释：</p>
+<pre><code><span class="id">#pragma</span> <span class="tag">mark</span> – Initialization 
+<span class="tag">code</span> here...
+<span class="id">#pragma</span> <span class="tag">mark</span> – Table Managementmore 
+<span class="tag">code</span> here...
+</code></pre><p>但是，如果是Swift代码，这种写法就不好使了，下面给出Swift代码注释，Swift代码注释有三种:</p>
+<ol>
+<li><p>MARK</p>
+<pre><code><span class="comment">// MARK: - Initialization</span>
+<span class="tag">code</span> here...
+<span class="comment">// MARK: - View Managementmore </span>
+<span class="tag">code</span> here...
+</code></pre></li>
+<li><p>TODO</p>
+<pre><code><span class="comment">// <span class="doctag">TODO:</span> - <span class="label">XXXXXXXX</span></span>
+<span class="tag">code</span> here...
+</code></pre></li>
+<li><p>FIXME</p>
+<pre><code><span class="comment">// <span class="doctag">FIXME:</span> - <span class="label">XXXXXXXX</span></span>
+<span class="tag">code</span> here...
+</code></pre></li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/01/28/Swift-？和！的区别/" itemprop="url">
+                  Swift-？和！的区别
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-01-28T10:43:42+08:00" content="2016-01-28">
+              2016-01-28
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/28/Swift-？和！的区别/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/28/Swift-？和！的区别/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>Swift 是一种新的编程语言，用于编写iOS，OS X 和 watchOS应用程序。Swift 结合了 C 和 Objective-C 的优点并且不受 C 兼容性的限制。Swift 采用安全的编程模式并添加了很多新特性，这将使编程更简单，更灵活，也更有趣。Swift 是基于成熟而且倍受喜爱的 Cocoa 和 Cocoa Touch 框架，它的降临将重新定义软件开发。</p>
+<p>今天我们的主角是可选类型？和！</p>
+<p>Swift语言使用var定义变量，但和别的语言不同，Swift里不会自动给变量赋初始值，也就是说变量不会有默认值，所以要求使用变量之前必须要对其初始化。如果在使用变量之前不进行初始化就会报错：</p>
+<pre><code><span class="keyword">var</span> <span class="keyword">value</span> : String
+<span class="comment">//error: variable 'stringValue' used before being initialized</span>
+<span class="keyword">let</span> hash = <span class="keyword">value</span>.hashValue
+</code></pre>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/01/28/Swift-？和！的区别/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/01/14/Android小知识总结/" itemprop="url">
                   Android小知识总结
                 </a>
@@ -1157,207 +1378,6 @@ maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.C
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/11/23/Android-小米桌面图标显示角标数/" itemprop="url">
-                  Android-小米桌面图标显示角标数
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-11-23T15:07:11+08:00" content="2015-11-23">
-              2015-11-23
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/11/23/Android-小米桌面图标显示角标数/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/23/Android-小米桌面图标显示角标数/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3>基本介绍</h3>
-
-<p>最近有群里问：怎样在小米手机桌面的图标上显示角标数，我看了下我的红米note手机，果然有的第三方app图标上显示角标数，尤其是微信和QQ。这让我立马想到了：小米是不是对通知栏做了手脚。立马我查了相关文档并做了相关的测试，发现果然如我猜测的：MIUI系统对通知栏做了手脚。它目前有两种情况：</p>
-<ol>
-<li>默认情况<br> 当第三方app向通知栏发送一条通知（一般不带进度条并且用户可以删除的通知），那么此时app icon的角标数就会显示1。<br> 这个时候app显示的角标数和通知栏里app发送的通知数是对应的，即向通知栏发多少条通知就会显示多少角标数。</li>
-</ol>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/11/23/Android-小米桌面图标显示角标数/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/11/04/Android-部分作品鉴赏/" itemprop="url">
-                  Android-部分作品鉴赏
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-11-04T23:32:50+08:00" content="2015-11-04">
-              2015-11-04
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/11/04/Android-部分作品鉴赏/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/04/Android-部分作品鉴赏/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>时间过得真快，马上快毕业四年了，这里整理了下我做过的部分App，当然还有一些其他的App，不是外包就是没有纪念意义，这里就不列举了！</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/11/04/Android-部分作品鉴赏/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1403,7 +1423,7 @@ maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.C
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-count">46</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1413,7 +1433,7 @@ maskLayer<span class="variable">.path</span> = maskPath<span class="variable">.C
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

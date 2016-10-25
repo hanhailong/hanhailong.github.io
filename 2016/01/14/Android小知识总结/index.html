@@ -67,7 +67,7 @@ mWebView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.On
 <meta property="og:site_name" content="韩海龙的博客">
 <meta property="og:description" content="onCreate中计算View的高度可以借助getViewTreeObserver().addOnGlobalLayoutListener()来获得宽度或者高度，示例代码如下：
 mWebView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {">
-<meta property="og:updated_time" content="2016-07-25T02:44:44.000Z">
+<meta property="og:updated_time" content="2016-10-25T05:44:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android小知识总结">
 <meta name="twitter:description" content="onCreate中计算View的高度可以借助getViewTreeObserver().addOnGlobalLayoutListener()来获得宽度或者高度，示例代码如下：
@@ -381,6 +381,16 @@ int heapSize = manager.getMemoryClass()<span class="comment">;</span>
 dimBackground(<span class="number">1.0f</span>,<span class="number">0.5f</span>);
 <span class="comment">/** 窗口背景变亮*/</span>
 dimBackground(<span class="number">0.5f</span>,<span class="number">1.0f</span>);
+</code></pre><h1 id="Release模式下借助Proguard清除掉Log类日志">Release模式下借助Proguard清除掉Log类日志</h1><p>在Proguard配置文件中，确保没有添加 –dontoptimize选项，添加如下代码：</p>
+<pre><code>-assumenosideeffects <span class="keyword">class</span> android.util.Log {
+        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> *** <span class="title">d</span><span class="params">(...)</span></span>;
+        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> *** <span class="title">e</span><span class="params">(...)</span></span>;
+        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> *** <span class="title">i</span><span class="params">(...)</span></span>;
+        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> *** <span class="title">v</span><span class="params">(...)</span></span>;
+        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> *** <span class="title">println</span><span class="params">(...)</span></span>;
+        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> *** <span class="title">w</span><span class="params">(...)</span></span>;
+        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> *** <span class="title">wtf</span><span class="params">(...)</span></span>;
+}
 </code></pre><h1 id="待续…">待续…</h1>
       
     </div>
@@ -507,7 +517,7 @@ dimBackground(<span class="number">0.5f</span>,<span class="number">1.0f</span>)
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-count">46</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -517,7 +527,7 @@ dimBackground(<span class="number">0.5f</span>,<span class="number">1.0f</span>)
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -619,7 +629,7 @@ dimBackground(<span class="number">0.5f</span>,<span class="number">1.0f</span>)
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#onCreate中计算View的高度"><span class="nav-number">1.</span> <span class="nav-text">onCreate中计算View的高度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PopupWindow计算高度"><span class="nav-number">2.</span> <span class="nav-text">PopupWindow计算高度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Theme-NoDisplay"><span class="nav-number">3.</span> <span class="nav-text">Theme.NoDisplay</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#activity父级activity的重建"><span class="nav-number">4.</span> <span class="nav-text">activity父级activity的重建</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#兼容低版本修改图片的tintColor"><span class="nav-number">5.</span> <span class="nav-text">兼容低版本修改图片的tintColor</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用dumpsys命令查看系统信息"><span class="nav-number">6.</span> <span class="nav-text">使用dumpsys命令查看系统信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Recyleview的LayoutManager设置成StaggeredGridLayoutManager后获取某个字view的spanIndex（也就是在第几列）"><span class="nav-number">7.</span> <span class="nav-text">Recyleview的LayoutManager设置成StaggeredGridLayoutManager后获取某个字view的spanIndex（也就是在第几列）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如果获取当前手机为每个app分配的堆大小，也就是内存大小"><span class="nav-number">8.</span> <span class="nav-text">如果获取当前手机为每个app分配的堆大小，也就是内存大小</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#duplicate_entry:_android/support/annotation/ColorRes-class"><span class="nav-number">9.</span> <span class="nav-text">duplicate entry: android/support/annotation/ColorRes.class</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方便快捷实现Activity变暗，并带有动画"><span class="nav-number">10.</span> <span class="nav-text">方便快捷实现Activity变暗，并带有动画</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#待续…"><span class="nav-number">11.</span> <span class="nav-text">待续…</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#onCreate中计算View的高度"><span class="nav-number">1.</span> <span class="nav-text">onCreate中计算View的高度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PopupWindow计算高度"><span class="nav-number">2.</span> <span class="nav-text">PopupWindow计算高度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Theme-NoDisplay"><span class="nav-number">3.</span> <span class="nav-text">Theme.NoDisplay</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#activity父级activity的重建"><span class="nav-number">4.</span> <span class="nav-text">activity父级activity的重建</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#兼容低版本修改图片的tintColor"><span class="nav-number">5.</span> <span class="nav-text">兼容低版本修改图片的tintColor</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用dumpsys命令查看系统信息"><span class="nav-number">6.</span> <span class="nav-text">使用dumpsys命令查看系统信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Recyleview的LayoutManager设置成StaggeredGridLayoutManager后获取某个字view的spanIndex（也就是在第几列）"><span class="nav-number">7.</span> <span class="nav-text">Recyleview的LayoutManager设置成StaggeredGridLayoutManager后获取某个字view的spanIndex（也就是在第几列）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如果获取当前手机为每个app分配的堆大小，也就是内存大小"><span class="nav-number">8.</span> <span class="nav-text">如果获取当前手机为每个app分配的堆大小，也就是内存大小</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#duplicate_entry:_android/support/annotation/ColorRes-class"><span class="nav-number">9.</span> <span class="nav-text">duplicate entry: android/support/annotation/ColorRes.class</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方便快捷实现Activity变暗，并带有动画"><span class="nav-number">10.</span> <span class="nav-text">方便快捷实现Activity变暗，并带有动画</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Release模式下借助Proguard清除掉Log类日志"><span class="nav-number">11.</span> <span class="nav-text">Release模式下借助Proguard清除掉Log类日志</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#待续…"><span class="nav-number">12.</span> <span class="nav-text">待续…</span></a></li></ol></div>
             
           </div>
         </section>
