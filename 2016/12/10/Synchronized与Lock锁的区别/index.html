@@ -1,0 +1,901 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,Java," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="韩海龙的博客" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="楔子最近一直都比较忙，没有时间写博客了。今天项目终于灰度了，可以有时间写写博客，看看文章了！！！╮(╯▽╰)╭
+今天要写的主题是Java的基础知识，Synchronized和Lock锁的区别！！！
+区别1、ReentrantLock拥有Synchronized相同的并发性和内存语义，此外还多了 锁投票，定时锁等候和中断锁等候等特性。
+线程A和B都要获取对象O的锁定，假设A获取了对象O锁，B将等待A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Synchronized与Lock锁的区别">
+<meta property="og:url" content="http://hanhailong.com/2016/12/10/Synchronized与Lock锁的区别/index.html">
+<meta property="og:site_name" content="韩海龙的博客">
+<meta property="og:description" content="楔子最近一直都比较忙，没有时间写博客了。今天项目终于灰度了，可以有时间写写博客，看看文章了！！！╮(╯▽╰)╭
+今天要写的主题是Java的基础知识，Synchronized和Lock锁的区别！！！
+区别1、ReentrantLock拥有Synchronized相同的并发性和内存语义，此外还多了 锁投票，定时锁等候和中断锁等候等特性。
+线程A和B都要获取对象O的锁定，假设A获取了对象O锁，B将等待A">
+<meta property="og:updated_time" content="2016-12-10T03:50:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Synchronized与Lock锁的区别">
+<meta name="twitter:description" content="楔子最近一直都比较忙，没有时间写博客了。今天项目终于灰度了，可以有时间写写博客，看看文章了！！！╮(╯▽╰)╭
+今天要写的主题是Java的基础知识，Synchronized和Lock锁的区别！！！
+区别1、ReentrantLock拥有Synchronized相同的并发性和内存语义，此外还多了 锁投票，定时锁等候和中断锁等候等特性。
+线程A和B都要获取对象O的锁定，假设A获取了对象O锁，B将等待A">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> Synchronized与Lock锁的区别 | 韩海龙的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">韩海龙的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">学习总结 思考感悟 知识管理 代码分享</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/aboutme" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Synchronized与Lock锁的区别
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-10T10:38:36+08:00" content="2016-12-10">
+              2016-12-10
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/12/10/Synchronized与Lock锁的区别/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/10/Synchronized与Lock锁的区别/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="楔子">楔子</h2><p>最近一直都比较忙，没有时间写博客了。今天项目终于灰度了，可以有时间写写博客，看看文章了！！！╮(╯▽╰)╭</p>
+<p>今天要写的主题是Java的基础知识，Synchronized和Lock锁的区别！！！</p>
+<h2 id="区别">区别</h2><p>1、ReentrantLock拥有Synchronized相同的并发性和内存语义，此外还多了 锁投票，定时锁等候和中断锁等候等特性。</p>
+<p>线程A和B都要获取对象O的锁定，假设A获取了对象O锁，B将等待A释放对O的锁定</p>
+<p>如果使用 synchronized ，如果A不释放，B将一直等下去，不能被中断</p>
+<p>如果 使用ReentrantLock，如果A不释放，可以使B在等待了足够长的时间以后，中断等待，而干别的事情</p>
+<p>ReentrantLock获取锁定与三种方式：</p>
+<ul>
+<li><p>lock(), 如果获取了锁立即返回，如果别的线程持有锁，当前线程则一直处于休眠状态，直到获取锁</p>
+</li>
+<li><p>tryLock(), 如果获取了锁立即返回true，如果别的线程正持有锁，立即返回false；</p>
+</li>
+<li><p>tryLock(long timeout,TimeUnit unit)，   如果获取了锁定立即返回true，如果别的线程正持有锁，会等待参数给定的时间，在等待的过程中，如果获取了锁定，就返回true，如果等待超时，返回false；</p>
+</li>
+<li><p>lockInterruptibly:如果获取了锁定立即返回，如果没有获取锁定，当前线程处于休眠状态，直到或者锁定，或者当前线程被别的线程中断</p>
+</li>
+</ul>
+<p>2、synchronized是在JVM层面上实现的，不但可以通过一些监控工具监控synchronized的锁定，而且在代码执行时出现异常，JVM会自动释放锁定，但是使用Lock则不行，lock是通过代码实现的，要保证锁定一定会被释放，就必须将unLock()放到finally{}中</p>
+<p>3、在资源竞争不是很激烈的情况下，Synchronized的性能要优于ReetrantLock，但是在资源竞争很激烈的情况下，Synchronized的性能会下降几十倍，但是ReetrantLock的性能能维持常态；</p>
+<blockquote>
+<p>5.0的多线程任务包对于同步的性能方面有了很大的改进，在原有synchronized关键字的基础上，又增加了ReentrantLock，以及各种Atomic类。了解其性能的优劣程度，有助与我们在特定的情形下做出正确的选择。 </p>
+</blockquote>
+<h2 id="简单的总结">简单的总结</h2><ul>
+<li><p>synchronized：<br>在资源竞争不是很激烈的情况下，偶尔会有同步的情形下，synchronized是很合适的。原因在于，编译程序通常会尽可能的进行优化synchronize，另外可读性非常好，不管用没用过5.0多线程包的程序员都能理解。 </p>
+</li>
+<li><p>ReentrantLock:<br>ReentrantLock提供了多样化的同步，比如有时间限制的同步，可以被Interrupt的同步（synchronized的同步是不能Interrupt的）等。在资源竞争不激烈的情形下，性能稍微比synchronized差点点。但是当同步非常激烈的时候，synchronized的性能一下子能下降好几十倍。而ReentrantLock确还能维持常态。 </p>
+</li>
+<li><p>Atomic:<br>和上面的类似，不激烈情况下，性能比synchronized略逊，而激烈的时候，也能维持常态。激烈的时候，Atomic的性能会优于ReentrantLock一倍左右。但是其有一个缺点，就是只能同步一个值，一段代码中只能出现一个Atomic的变量，多于一个同步无效。因为他不能在多个Atomic之间同步。 </p>
+</li>
+</ul>
+<p>所以，我们写同步的时候，优先考虑synchronized，如果有特殊需要，再进一步优化。ReentrantLock和Atomic如果用的不好，不仅不能提高性能，还可能带来灾难。 </p>
+<h2 id="测试结果">测试结果</h2><p>先贴测试结果：再贴代码（Atomic测试代码不准确，一个同步中只能有1个Actomic，这里用了2个，但是这里的测试只看速度） </p>
+<hr>
+<p>round:100000 thread:5<br>Sync = 35301694<br>Lock = 56255753<br>Atom = 43467535 </p>
+<hr>
+<p>round:200000 thread:10<br>Sync = 110514604<br>Lock = 204235455<br>Atom = 170535361 </p>
+<hr>
+<p>round:300000 thread:15<br>Sync = 253123791<br>Lock = 448577123<br>Atom = 362797227 </p>
+<hr>
+<p>round:400000 thread:20<br>Sync = 16562148262<br>Lock = 846454786<br>Atom = 667947183 </p>
+<hr>
+<p>round:500000 thread:25<br>Sync = 26932301731<br>Lock = 1273354016<br>Atom = 982564544</p>
+<h2 id="Java代码">Java代码</h2><pre><code><span class="keyword">package</span> test.thread;     
+
+<span class="keyword">import</span> <span class="keyword">static</span> java.lang.System.out;     
+
+<span class="keyword">import</span> java.util.Random;     
+<span class="keyword">import</span> java.util.concurrent.BrokenBarrierException;     
+<span class="keyword">import</span> java.util.concurrent.CyclicBarrier;     
+<span class="keyword">import</span> java.util.concurrent.ExecutorService;     
+<span class="keyword">import</span> java.util.concurrent.Executors;     
+<span class="keyword">import</span> java.util.concurrent.atomic.AtomicInteger;     
+<span class="keyword">import</span> java.util.concurrent.atomic.AtomicLong;     
+<span class="keyword">import</span> java.util.concurrent.locks.ReentrantLock;     
+
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestSyncMethods</span> </span>{     
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">(<span class="keyword">int</span> round,<span class="keyword">int</span> threadNum,CyclicBarrier cyclicBarrier)</span></span>{     
+        <span class="keyword">new</span> SyncTest(<span class="string">"Sync"</span>,round,threadNum,cyclicBarrier).testTime();     
+        <span class="keyword">new</span> LockTest(<span class="string">"Lock"</span>,round,threadNum,cyclicBarrier).testTime();     
+        <span class="keyword">new</span> AtomicTest(<span class="string">"Atom"</span>,round,threadNum,cyclicBarrier).testTime();     
+    }     
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>{     
+
+        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++){     
+            <span class="keyword">int</span> round=<span class="number">100000</span>*(i+<span class="number">1</span>);     
+            <span class="keyword">int</span> threadNum=<span class="number">5</span>*(i+<span class="number">1</span>);     
+            CyclicBarrier cb=<span class="keyword">new</span> CyclicBarrier(threadNum*<span class="number">2</span>+<span class="number">1</span>);     
+            out.println(<span class="string">"=========================="</span>);     
+            out.println(<span class="string">"round:"</span>+round+<span class="string">" thread:"</span>+threadNum);     
+            test(round,threadNum,cb);     
+
+        }     
+    }     
+}     
+
+<span class="class"><span class="keyword">class</span> <span class="title">SyncTest</span> <span class="keyword">extends</span> <span class="title">TestTemplate</span></span>{     
+    <span class="function"><span class="keyword">public</span> <span class="title">SyncTest</span><span class="params">(String _id,<span class="keyword">int</span> _round,<span class="keyword">int</span> _threadNum,CyclicBarrier _cb)</span></span>{     
+        <span class="keyword">super</span>( _id, _round, _threadNum, _cb);     
+    }     
+    <span class="annotation">@Override</span>    
+    <span class="comment">/**   
+     * synchronized关键字不在方法签名里面，所以不涉及重载问题   
+     */</span>    
+    <span class="function"><span class="keyword">synchronized</span> <span class="keyword">long</span>  <span class="title">getValue</span><span class="params">()</span> </span>{     
+        <span class="keyword">return</span> <span class="keyword">super</span>.countValue;     
+    }     
+    <span class="annotation">@Override</span>    
+    <span class="function"><span class="keyword">synchronized</span> <span class="keyword">void</span>  <span class="title">sumValue</span><span class="params">()</span> </span>{     
+        <span class="keyword">super</span>.countValue+=preInit[index++%round];     
+    }     
+}     
+
+
+<span class="class"><span class="keyword">class</span> <span class="title">LockTest</span> <span class="keyword">extends</span> <span class="title">TestTemplate</span></span>{     
+    ReentrantLock lock=<span class="keyword">new</span> ReentrantLock();     
+    <span class="function"><span class="keyword">public</span> <span class="title">LockTest</span><span class="params">(String _id,<span class="keyword">int</span> _round,<span class="keyword">int</span> _threadNum,CyclicBarrier _cb)</span></span>{     
+        <span class="keyword">super</span>( _id, _round, _threadNum, _cb);     
+    }     
+    <span class="comment">/**   
+     * synchronized关键字不在方法签名里面，所以不涉及重载问题   
+     */</span>    
+    <span class="annotation">@Override</span>    
+    <span class="function"><span class="keyword">long</span> <span class="title">getValue</span><span class="params">()</span> </span>{     
+        <span class="keyword">try</span>{     
+            lock.lock();     
+            <span class="keyword">return</span> <span class="keyword">super</span>.countValue;     
+        }<span class="keyword">finally</span>{     
+            lock.unlock();     
+        }     
+    }     
+    <span class="annotation">@Override</span>    
+    <span class="function"><span class="keyword">void</span> <span class="title">sumValue</span><span class="params">()</span> </span>{     
+        <span class="keyword">try</span>{     
+            lock.lock();     
+            <span class="keyword">super</span>.countValue+=preInit[index++%round];     
+        }<span class="keyword">finally</span>{     
+            lock.unlock();     
+        }     
+    }     
+}     
+
+
+<span class="class"><span class="keyword">class</span> <span class="title">AtomicTest</span> <span class="keyword">extends</span> <span class="title">TestTemplate</span></span>{     
+    <span class="function"><span class="keyword">public</span> <span class="title">AtomicTest</span><span class="params">(String _id,<span class="keyword">int</span> _round,<span class="keyword">int</span> _threadNum,CyclicBarrier _cb)</span></span>{     
+        <span class="keyword">super</span>( _id, _round, _threadNum, _cb);     
+    }     
+    <span class="annotation">@Override</span>    
+    <span class="comment">/**   
+     * synchronized关键字不在方法签名里面，所以不涉及重载问题   
+     */</span>    
+    <span class="function"><span class="keyword">long</span>  <span class="title">getValue</span><span class="params">()</span> </span>{     
+        <span class="keyword">return</span> <span class="keyword">super</span>.countValueAtmoic.get();     
+    }     
+    <span class="annotation">@Override</span>    
+    <span class="function"><span class="keyword">void</span>  <span class="title">sumValue</span><span class="params">()</span> </span>{     
+        <span class="keyword">super</span>.countValueAtmoic.addAndGet(<span class="keyword">super</span>.preInit[indexAtomic.get()%round]);     
+    }     
+}     
+<span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">TestTemplate</span></span>{     
+    <span class="keyword">private</span> String id;     
+    <span class="keyword">protected</span> <span class="keyword">int</span> round;     
+    <span class="keyword">private</span> <span class="keyword">int</span> threadNum;     
+    <span class="keyword">protected</span> <span class="keyword">long</span> countValue;     
+    <span class="keyword">protected</span> AtomicLong countValueAtmoic=<span class="keyword">new</span> AtomicLong(<span class="number">0</span>);     
+    <span class="keyword">protected</span> <span class="keyword">int</span>[] preInit;     
+    <span class="keyword">protected</span> <span class="keyword">int</span> index;     
+    <span class="keyword">protected</span> AtomicInteger indexAtomic=<span class="keyword">new</span> AtomicInteger(<span class="number">0</span>);     
+    Random r=<span class="keyword">new</span> Random(<span class="number">47</span>);     
+    <span class="comment">//任务栅栏，同批任务，先到达wait的任务挂起，一直等到全部任务到达制定的wait地点后，才能全部唤醒，继续执行     </span>
+    <span class="keyword">private</span> CyclicBarrier cb;     
+    <span class="function"><span class="keyword">public</span> <span class="title">TestTemplate</span><span class="params">(String _id,<span class="keyword">int</span> _round,<span class="keyword">int</span> _threadNum,CyclicBarrier _cb)</span></span>{     
+        <span class="keyword">this</span>.id=_id;     
+        <span class="keyword">this</span>.round=_round;     
+        <span class="keyword">this</span>.threadNum=_threadNum;     
+        cb=_cb;     
+        preInit=<span class="keyword">new</span> <span class="keyword">int</span>[round];     
+        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;preInit.length;i++){     
+            preInit[i]=r.nextInt(<span class="number">100</span>);     
+        }     
+    }     
+
+    <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">sumValue</span><span class="params">()</span></span>;     
+    <span class="comment">/*   
+     * 对long的操作是非原子的，原子操作只针对32位   
+     * long是64位，底层操作的时候分2个32位读写，因此不是线程安全   
+     */</span>    
+    <span class="function"><span class="keyword">abstract</span> <span class="keyword">long</span> <span class="title">getValue</span><span class="params">()</span></span>;     
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testTime</span><span class="params">()</span></span>{     
+        ExecutorService se=Executors.newCachedThreadPool();     
+        <span class="keyword">long</span> start=System.nanoTime();     
+        <span class="comment">//同时开启2*ThreadNum个数的读写线程     </span>
+        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;threadNum;i++){     
+            se.execute(<span class="keyword">new</span> Runnable(){     
+                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{     
+                    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;round;i++){     
+                        sumValue();     
+                    }     
+
+                    <span class="comment">//每个线程执行完同步方法后就等待     </span>
+                    <span class="keyword">try</span> {     
+                        cb.await();     
+                    } <span class="keyword">catch</span> (InterruptedException e) {     
+                        <span class="comment">// TODO Auto-generated catch block     </span>
+                        e.printStackTrace();     
+                    } <span class="keyword">catch</span> (BrokenBarrierException e) {     
+                        <span class="comment">// TODO Auto-generated catch block     </span>
+                        e.printStackTrace();     
+                    }     
+
+
+                }     
+            });     
+            se.execute(<span class="keyword">new</span> Runnable(){     
+                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{     
+
+                    getValue();     
+                    <span class="keyword">try</span> {     
+                        <span class="comment">//每个线程执行完同步方法后就等待     </span>
+                        cb.await();     
+                    } <span class="keyword">catch</span> (InterruptedException e) {     
+                        <span class="comment">// TODO Auto-generated catch block     </span>
+                        e.printStackTrace();     
+                    } <span class="keyword">catch</span> (BrokenBarrierException e) {     
+                        <span class="comment">// TODO Auto-generated catch block     </span>
+                        e.printStackTrace();     
+                    }     
+
+                }     
+            });     
+        }     
+
+        <span class="keyword">try</span> {     
+            <span class="comment">//当前统计线程也wait,所以CyclicBarrier的初始值是threadNum*2+1     </span>
+            cb.await();     
+        } <span class="keyword">catch</span> (InterruptedException e) {     
+            <span class="comment">// TODO Auto-generated catch block     </span>
+            e.printStackTrace();     
+        } <span class="keyword">catch</span> (BrokenBarrierException e) {     
+            <span class="comment">// TODO Auto-generated catch block     </span>
+            e.printStackTrace();     
+        }     
+        <span class="comment">//所有线程执行完成之后，才会跑到这一步     </span>
+        <span class="keyword">long</span> duration=System.nanoTime()-start;     
+        out.println(id+<span class="string">" = "</span>+duration);     
+
+    }     
+
+}    
+</code></pre><h2 id="补充知识">补充知识</h2><p>CyclicBarrier和CountDownLatch一样，都是关于线程的计数器。</p>
+<ul>
+<li>CyclicBarrier初始化时规定一个数目，然后计算调用了CyclicBarrier.await()进入等待的线程数。当线程数达到了这个数目时，所有进入等待状态的线程被唤醒并继续。 </li>
+<li>CyclicBarrier就象它名字的意思一样，可看成是个障碍， 所有的线程必须到齐后才能一起通过这个障碍。 </li>
+<li>CyclicBarrier初始时还可带一个Runnable的参数， 此Runnable任务在CyclicBarrier的数目达到后，所有其它线程被唤醒前被执行。</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton", disable="enable", onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}", style="cursor: pointer; border: 0; outline: 0; border-radius: 100%; padding: 0; margin: 0; letter-spacing: normal; text-transform: none; text-indent: 0px; text-shadow: none">
+    <span onmouseover="this.style.color='rgb(236,96,0)';this.style.background='rgb(204,204,204)'" onMouseOut="this.style.color='#fff';this.style.background='rgb(236,96,0)'" style="display: inline-block; width: 70px; height: 70px; border-radius: 100%; line-height: 81px; color: #fff; font: 400 35px/75px 'microsofty'; background: rgb(236,96,0)">赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/path/to/wechat-reward-image.png" alt="韩海龙 WeChat Pay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <p>微信打赏</p>
+      </div>
+    
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/path/to/alipay-reward-image.png" alt="韩海龙 Alipay" style="width: 200px; max-width: 100%; display: inline-block"/>
+        <p>支付宝打赏</p>
+      </div>
+    
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+            <a href="/tags/Java/" rel="tag">#Java</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/31/Android构建神器之Gradle/" rel="next" title="Android构建神器之Gradle">
+                <i class="fa fa-chevron-left"></i> Android构建神器之Gradle
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/12/10/Synchronized与Lock锁的区别/"
+           data-title="Synchronized与Lock锁的区别" data-url="http://hanhailong.com/2016/12/10/Synchronized与Lock锁的区别/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars2.githubusercontent.com/u/4241807?v=3&s=460"
+               alt="韩海龙" />
+          <p class="site-author-name" itemprop="name">韩海龙</p>
+          <p class="site-description motion-element" itemprop="description">学习总结 思考感悟 知识管理 代码分享</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">47</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/hanhailong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/2824905385" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/hanhailong726188" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  csdn
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.v2ex.com/member/hanhailong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  v2ex
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/han-hai-long-16" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">Links</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xiedeliang.com/" target="_blank">小谢博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.zhaiyifan.cn/" target="_blank">markzhai's home</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/lmj623565791" target="_blank">鸿洋的博客</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#楔子"><span class="nav-number">1.</span> <span class="nav-text">楔子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#区别"><span class="nav-number">2.</span> <span class="nav-text">区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单的总结"><span class="nav-number">3.</span> <span class="nav-text">简单的总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试结果"><span class="nav-number">4.</span> <span class="nav-text">测试结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java代码"><span class="nav-number">5.</span> <span class="nav-text">Java代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#补充知识"><span class="nav-number">6.</span> <span class="nav-text">补充知识</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">韩海龙</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=0.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+<script type="text/javascript" src="/vendors/jquery-scrollintoview/jquery.scrollintoview.min.js?v=0.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=0.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"hanhailong"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>
