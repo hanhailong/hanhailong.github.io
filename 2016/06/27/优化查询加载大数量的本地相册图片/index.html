@@ -80,7 +80,7 @@
 <meta property="og:image" content="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/album/qq_albums.gif?raw=true">
 <meta property="og:image" content="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/album/xianyu_albums.gif?raw=true">
 <meta property="og:image" content="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/album/58_albums.gif?raw=true">
-<meta property="og:updated_time" content="2016-07-16T02:58:30.000Z">
+<meta property="og:updated_time" content="2016-12-10T03:56:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="优化查询加载大数量的本地相册图片">
 <meta name="twitter:description" content="优化查询加载大数量的本地相册图片一、概述讲解优化查询相册图片之前，我们先来看下PM提出的需求，PM的需求很简单，就是要做一个类似微信的本地相册图片查询控件，主要包含两个两部分：
@@ -306,6 +306,7 @@
 <p>QQ一上来是加载的最近100张照片，这个速度非常快，但是进入Camera相册（有5000多张）后，有一个进度条等待，我体验了下，等待的时间还是比较长的，这个体验比新浪微博稍微好点，比微信差</p>
 <h4 id="闲鱼">闲鱼</h4><p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/album/xianyu_albums.gif?raw=true" alt=""></p>
 <p>闲鱼是做的最烂的一个，一上来是卡死四五秒，然后是黑屏两三秒，最后才显示出来</p>
+<a id="more"></a>
 <h3 id="二、综合对比">二、综合对比</h3><p>经过综合对比后，就微信做的还比较好，基本上进入相册页面就能展示出所有照片，相册目录也非常快的展示出来！！！</p>
 <p>经过我们的调研，发现微信是采用循环分页加载策略，我们优化的思路也是采用这种策略，先看优化后的效果图：</p>
 <p><img src="https://github.com/hanhailong/AndroidStudyResources/blob/master/screenshot/album/58_albums.gif?raw=true" alt=""></p>

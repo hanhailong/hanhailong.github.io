@@ -61,23 +61,20 @@
 
 <meta name="description" content="楔子最近一直都比较忙，没有时间写博客了。今天项目终于灰度了，可以有时间写写博客，看看文章了！！！╮(╯▽╰)╭
 今天要写的主题是Java的基础知识，Synchronized和Lock锁的区别！！！
-区别1、ReentrantLock拥有Synchronized相同的并发性和内存语义，此外还多了 锁投票，定时锁等候和中断锁等候等特性。
-线程A和B都要获取对象O的锁定，假设A获取了对象O锁，B将等待A">
+区别1、ReentrantLock拥有Synchronized相同的并发性和内存语义，此外还多了 锁投票，定时锁等候和中断锁等候等特性。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Synchronized与Lock锁的区别">
 <meta property="og:url" content="http://hanhailong.com/2016/12/10/Synchronized与Lock锁的区别/index.html">
 <meta property="og:site_name" content="韩海龙的博客">
 <meta property="og:description" content="楔子最近一直都比较忙，没有时间写博客了。今天项目终于灰度了，可以有时间写写博客，看看文章了！！！╮(╯▽╰)╭
 今天要写的主题是Java的基础知识，Synchronized和Lock锁的区别！！！
-区别1、ReentrantLock拥有Synchronized相同的并发性和内存语义，此外还多了 锁投票，定时锁等候和中断锁等候等特性。
-线程A和B都要获取对象O的锁定，假设A获取了对象O锁，B将等待A">
-<meta property="og:updated_time" content="2016-12-10T03:50:16.000Z">
+区别1、ReentrantLock拥有Synchronized相同的并发性和内存语义，此外还多了 锁投票，定时锁等候和中断锁等候等特性。">
+<meta property="og:updated_time" content="2016-12-10T03:55:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Synchronized与Lock锁的区别">
 <meta name="twitter:description" content="楔子最近一直都比较忙，没有时间写博客了。今天项目终于灰度了，可以有时间写写博客，看看文章了！！！╮(╯▽╰)╭
 今天要写的主题是Java的基础知识，Synchronized和Lock锁的区别！！！
-区别1、ReentrantLock拥有Synchronized相同的并发性和内存语义，此外还多了 锁投票，定时锁等候和中断锁等候等特性。
-线程A和B都要获取对象O的锁定，假设A获取了对象O锁，B将等待A">
+区别1、ReentrantLock拥有Synchronized相同的并发性和内存语义，此外还多了 锁投票，定时锁等候和中断锁等候等特性。">
 
 
 
@@ -284,6 +281,7 @@
         <h2 id="楔子">楔子</h2><p>最近一直都比较忙，没有时间写博客了。今天项目终于灰度了，可以有时间写写博客，看看文章了！！！╮(╯▽╰)╭</p>
 <p>今天要写的主题是Java的基础知识，Synchronized和Lock锁的区别！！！</p>
 <h2 id="区别">区别</h2><p>1、ReentrantLock拥有Synchronized相同的并发性和内存语义，此外还多了 锁投票，定时锁等候和中断锁等候等特性。</p>
+<a id="more"></a>
 <p>线程A和B都要获取对象O的锁定，假设A获取了对象O锁，B将等待A释放对O的锁定</p>
 <p>如果使用 synchronized ，如果A不释放，B将一直等下去，不能被中断</p>
 <p>如果 使用ReentrantLock，如果A不释放，可以使B在等待了足够长的时间以后，中断等待，而干别的事情</p>
